@@ -4,6 +4,7 @@
   "description": "npm depencies for fantasy-league project",
   "main": "index.js",
   "scripts": {
+    "start": "npm install && node server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/ldifederico/Fantasy-League/issues"
   },
-  "homepage": "https://github.com/ldifederico/Fantasy-League#readme"
+  "homepage": "https://github.com/ldifederico/Fantasy-League#readme",
+  "dependencies": {
+    "inquirer": "^6.5.2",
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "express-handlebars": "^3.0.0",
+    "mysql": "^2.10.2"
+  }
 }
