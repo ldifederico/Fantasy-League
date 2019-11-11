@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ldifederico/Fantasy-League/issues"
   },
-  "homepage": "https://github.com/ldifederico/Fantasy-League#readme"
+  "homepage": "https://github.com/ldifederico/Fantasy-League#readme",
+  "dependencies": {
+    "jquery": "^3.4.1"
+  }
 }
