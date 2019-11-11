@@ -1,0 +1,21 @@
+.card-title {
+    text-align: center;
+}
+
+.row {
+    margin-top: 7%;
+    margin-left: 5%;
+    margin-right: 5%;
+    justify-content: space-evenly;
+}
+
+.card {
+    width: auto;
+    justify-content: flex-start;
+    width: fit-content;
+}
+
+#footer {
+    text-align: center;
+    color: grey;
+}

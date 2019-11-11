@@ -1,6 +1,13 @@
 .container {
   margin: 15%;
-  margin-top: 10%;
+}
+
+#content {
+  border-radius: 0.4;
+}
+
+#register {
+  padding: 3%;
 }
 
 h1 {

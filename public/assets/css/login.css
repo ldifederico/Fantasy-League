@@ -1,0 +1,16 @@
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+form {
+    margin-top: 15%;
+}
+
+.input-field {
+    width: 100%;
+}
+
+h3 {
+    text-align: center;
+}
