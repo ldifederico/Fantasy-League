@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="./assets/css/history.css"/>
-  <title>coleague</title>
+  <title>Bet History</title>
 </head>
 
 <body>
@@ -22,14 +22,17 @@
         <li class="nav-item">
           <a class="nav-link" href="main.html">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="profile.html">Profile</a>
-        </li>
         <li class="nav-item active">
           <a class="nav-link" href="history.html">Bet History<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Sign Out</a>
+          <a class="nav-link" href="FAQ.html">FAQ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="profile.html">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="login.html">Sign Out</a>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
@@ -41,10 +44,10 @@
   
   <div class="container">
     
-    <br>
+    <h4>${username}</h4>
+    <h5>${company}</h5>
 
-    <h3>${username}</h3>
-    <h4>${company}</h4>
+    <br>
 
     <table class="table table-hover" id="historyTable">
       <thead>

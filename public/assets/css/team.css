@@ -157,10 +157,12 @@ h5 {
 
 .row {
     justify-content: space-evenly;
+    font-size: small;
 }
 
 .card {
     width: fit-content;
+    font-size: small;
 }
 
 #standing {
@@ -180,4 +182,5 @@ h5 {
 #footer {
     text-align: center;
     color: grey;
+    font-size: xx-small;
 }

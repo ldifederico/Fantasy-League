@@ -4,18 +4,21 @@
 
 .row {
     margin-top: 7%;
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 3%;
+    margin-right: 3%;
     justify-content: space-evenly;
+    font-size: small;
 }
 
 .card {
     width: auto;
     justify-content: flex-start;
     width: fit-content;
+    font-size: small;
 }
 
 #footer {
     text-align: center;
     color: grey;
+    font-size: xx-small;
 }
