@@ -6,10 +6,13 @@ h5 {
     text-align: center;
 }
 
+.list-group-item {
+    border: none;
+}
+
 .card {
     border: none;
-    margin-top: 10%;
-    margin-left: 35%;
+    text-align: center;
 }
 
 #footer {
