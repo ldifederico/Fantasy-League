@@ -1,12 +1,14 @@
 .container {
     margin-top: 7%;
+    font-size: small;
 }
 
-h1, h2 {
+h4, h5 {
     text-align: center;
 }
 
 #footer {
     text-align: center;
     color: grey;
+    font-size: xx-small;
 }

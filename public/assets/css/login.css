@@ -2,15 +2,29 @@ html, body {
     height: 100%;
     width: 100%;
 }
-
-form {
-    margin-top: 15%;
+  
+#signin {
+    padding: 3%;
 }
 
-.input-field {
+#content {
+    border-radius: 3%;
+}
+
+.input-container {
     width: 100%;
 }
 
-h3 {
+#forgot {
+    color: #007bff;
+    font-weight: lighter; 
+}
+
+h1 {
     text-align: center;
+}
+
+p {
+    font-weight: lighter;
+    text-align: left;
 }

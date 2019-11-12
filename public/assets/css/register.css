@@ -1,19 +1,24 @@
-.container {
-  margin: 15%;
+#register {
+  padding: 3%;
 }
 
 #content {
-  border-radius: 0.4;
+  border-radius: 3%;
 }
 
-#register {
-  padding: 3%;
+.input-container {
+  width: 100%;
+  align-content: center;
 }
 
 h1 {
   text-align: center;
 }
 
-p {
+#signin {
+  text-align: center;
+}
+
+#sub {
   text-align: center;
 }
