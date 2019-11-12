@@ -1,5 +1,6 @@
-const express = require('express');
 const path = require('path');
+const express = require('express');
+const mysql = require('mysql');
 
 const PORT = process.env.PORT || 8080;
 
@@ -31,7 +32,7 @@ class Database {
             } );
         } );
     }
-}
+};
   
 if (process.env.JAWSDB_URL) {
     const db = mysql.createConnection(process.env.JAWSDB_URL);
@@ -44,20 +45,30 @@ if (process.env.JAWSDB_URL) {
   });
 };
 
+var settings = {
+	"async": true,
+	"crossDomain": true,
+	"url": "",
+	"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "api-football-v1.p.rapidapi.com",
+		"x-rapidapi-key": "f01f638c42msh4d70f52d10f6b45p1a4b54jsnc4117f6c2a19"
+	}
+};
+
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
 });
 
-//End Points=
+//End Points
 app.get("/", function(req, res) {
     res.sendFile(path.join(__dirname, "./public/main.html"));
 });
 
 app.get("/team", function(req, res) {
     res.sendFile(path.join(__dirname, "./public/team.html"));
-    
+    //add 4 get requests and res.JSON(results) to team.js
 });
-
 
 module.exports = function(app) {
 

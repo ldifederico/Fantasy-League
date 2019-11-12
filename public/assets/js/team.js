@@ -1,6 +1,5 @@
-
+var url
 var teamName = "Manchester United"
-var url = ""
 
 var settings = {
 	"async": true,
@@ -11,22 +10,25 @@ var settings = {
 		"x-rapidapi-host": "api-football-v1.p.rapidapi.com",
 		"x-rapidapi-key": "f01f638c42msh4d70f52d10f6b45p1a4b54jsnc4117f6c2a19"
 	}
-}
+};
 
 async function getTeam() {
+    //Team
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/teams/search/${teamName}`
     data = await $.get(settings)
     let teamData = data.api.teams[0]
     $("#teamName").text(teamData.name)
     $("#teamPhoto").attr("src", teamData.logo)
 
-    settings.url = `https://api-football-v1.p.rapidapi.com/v2/players/squad/${teamData.team_id}/2018-2019`
+    //Roster
+    settings.url = `https://api-football-v1.p.rapidapi.com/v2/players/squad/${teamData.team_id}/2019-2020`
     let roster = await $.get(settings)
     for (player of roster.api.players){
         $("<p>").css("font-size", "15px").text(`${player.firstname} ${player.lastname}`).appendTo("#roster")
     }
 
-    settings.url = `https://api-football-v1.p.rapidapi.com/v2/fixtures/team/${teamData.team_id}?timezone=Europe%2FLondon`
+    //Fixtures
+    settings.url = `https://api-football-v1.p.rapidapi.com/v2/fixtures/team/${teamData.team_id}/524?timezone=Europe%2FLondon`
     data = await $.get(settings);
     let fixtures = data.api.fixtures;
     date_timestamp = Date.now().toString();
@@ -44,17 +46,13 @@ async function getTeam() {
         $("<p>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#results")
     }
 
-
-    settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/2`
+    //Standings
+    settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`
     let standings = await $.get(settings)
     for (team of standings.api.standings[0]){
         $("<p>").css("font-size", "15px").text(`${team.teamName} W/L/D: ${team.all.win}/${team.all.lose}/${team.all.draw}`).appendTo("#standing")
     }
-
-    
 }
-
-
 
 getTeam()
 
