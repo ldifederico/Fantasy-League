@@ -2,13 +2,18 @@ html, body {
     height: 100%;
     width: 100%;
 }
+
+form {
+    padding: 5%;
+}
   
 #signin {
     padding: 3%;
 }
 
 #content {
-    border-radius: 3%;
+    border-radius: 5%;
+    margin: 10%;
 }
 
 .input-container {
