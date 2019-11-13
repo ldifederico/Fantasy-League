@@ -2,14 +2,16 @@
     margin-top: 7%;
 }
 
+nav, .container {
+    font-family: 'Prompt', sans-serif;
+}
+
 h5 {
     text-align: center;
 }
 
 .card {
     border: none;
-    margin-top: 10%;
-    margin-left: 35%;
 }
 
 #footer {

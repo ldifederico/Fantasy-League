@@ -1,3 +1,11 @@
+a {
+    color: #212529;
+}
+
+nav, .card {
+    font-family: 'Prompt', sans-serif;
+}
+
 .card-title {
     text-align: center;
 }
@@ -17,8 +25,15 @@
     font-size: small;
 }
 
+#homeBet {
+    margin: 2%;
+}
+
+#visitorBet {
+    margin: 2%;
+}
+
 #footer {
-    text-align: center;
     color: grey;
     font-size: xx-small;
 }

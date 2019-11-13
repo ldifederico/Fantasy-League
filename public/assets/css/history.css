@@ -3,6 +3,10 @@
     font-size: small;
 }
 
+nav, .container {
+    font-family: 'Prompt', sans-serif;
+}
+
 h4, h5 {
     text-align: center;
 }

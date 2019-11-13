@@ -143,6 +143,10 @@ const colours = {
     }
 } 
 
+nav, .container {
+    font-family: 'Prompt', sans-serif;
+}
+
 h5 {
     text-align: center;
 }

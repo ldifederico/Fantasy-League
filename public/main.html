@@ -5,15 +5,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Prompt:300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/main.css"/>
+  <script src="https://kit.fontawesome.com/581e33120b.js" crossorigin="anonymous"></script>
   <title>coleague</title>
 </head>
 
 <body>
   
-  <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand">co<strong>league</strong></a>
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="color:white;">co<strong>league</strong></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -37,8 +42,13 @@
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
+<<<<<<< HEAD
         <input class="form-control mr-sm-2" type="search" placeholder="Search for team" id="teamName">
         <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" id="submit">Search</button>
+=======
+        <input class="form-control mr-sm-2" type="search" placeholder="Search for team">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit"><a href="team.html" class="text-light"><i class="fas fa-search"></i></a></button>
+>>>>>>> 6a939a7088232c2008d58d042d1281759fcb6f45
       </form>
     </div>
   </nav>
@@ -48,7 +58,12 @@
       <div class="card-body">
         <h5 class="card-title" id="companyRanking">Company Ranking</h5>
         <p class="card-text">
-          <table class="table table-hover">
+          <div style="display: block">
+            <div class="form-control form-control-sm" id="nameCompanyGroup" type="text" placeholder="Create name for company group"></div>
+              <br>
+              <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="button">Create Group</button>
+            </div>
+          <table class="table table-hover" style="display: none">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -68,23 +83,20 @@
       </div>
     </div>
     <br>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title" id="fixtures">Fixtures</h5>
-          <p class="card-text">
-            <div class="col"></div>
-            <div class="col">
-              <div class="row">
-                <div class="form-control form-control-sm" id="placeBet" type="text" placeholder="Bet amount"></div>
-                  <br>
-                  <button class="btn btn-light btn-sm" id="homeBet" type="button">Home</button>
-                  <br>
-                  <button class="btn btn-light btn-sm" id="visitorBet" type="button">Visitor</button>
-                </div>
-              </div>
-            </div> 
-          </p>
-        </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title" id="fixtures">Fixtures</h5>
+        <p class="card-text">
+          <div class="row">
+            <div class="form-control form-control-sm" id="placeBet" type="text" placeholder="Bet amount"></div>
+            <br>
+            <button class="btn btn-outline-dark btn-sm" id="homeBet" type="button">Home</button>
+            <br>
+            <button class="btn btn-outline-dark btn-sm" id="visitorBet" type="button">Visitor</button>
+            <br>
+            <button class="btn btn-outline-dark btn-sm" id="draw" type="button">Draw</button>
+          </div>
+        </p>
       </div>
     <br>
       <div class="card">
@@ -112,12 +124,13 @@
           </p>
         </div>
       </div>
+    </div>
   </div>
 
   <br>
 
-  <nav class="navbar sticky-bottom navbar-light bg-light">
-    <a class="navbar-brand" id="footer">Copyright &copy;</a>
+  <nav class="navbar sticky-bottom navbar-dark bg-dark">
+    <a class="navbar-brand" id="footer"><p class="text-muted">Copyright &copy;</p></a>
   </nav>
 
 </body>
