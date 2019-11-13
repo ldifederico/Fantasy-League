@@ -2,6 +2,10 @@ a {
     color: #212529;
 }
 
+nav, .card {
+    font-family: 'Prompt', sans-serif;
+}
+
 .card-title {
     text-align: center;
 }

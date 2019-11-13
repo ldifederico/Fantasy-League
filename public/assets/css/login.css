@@ -5,6 +5,7 @@ html, body {
 
 form {
     padding: 5%;
+    font-family: 'Prompt', sans-serif;
 }
   
 #signin {

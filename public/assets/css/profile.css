@@ -2,6 +2,10 @@
     margin-top: 7%;
 }
 
+nav, .container {
+    font-family: 'Prompt', sans-serif;
+}
+
 h5 {
     text-align: center;
 }

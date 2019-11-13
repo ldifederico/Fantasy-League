@@ -8,7 +8,10 @@
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script><link rel="stylesheet" href="./assets/css/profile.css"/>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Prompt:300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/profile.css"/>
+  <script src="https://kit.fontawesome.com/581e33120b.js" crossorigin="anonymous"></script>
   <title>My Profile</title>
 </head>
 
@@ -39,7 +42,7 @@
       </ul>
       <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search for team">
-        <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
+        <button class="btn btn-outline-dark my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
       </form>
     </div>
   </nav>
@@ -56,8 +59,8 @@
         <li class="list-group-item" id="company">Company: ${res.company}</li>
       </ul>
       <div class="card-body">
-        <button type="button" class="btn btn-outline-dark" id="edit">Edit Profile</button>
-        <button type="button" class="btn btn-outline-dark" id="delete">Delete Account</button>
+        <button type="button" class="btn btn-outline-dark" id="edit"><i class="fas fa-user-edit"></i> Edit Profile</button>
+        <button type="button" class="btn btn-outline-dark" id="delete"><i class="far fa-trash-alt"></i> Delete Account</button>
       </div>
     </div>
   </div>
