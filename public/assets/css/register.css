@@ -8,11 +8,13 @@ form {
 
 #content {
   border-radius: 3%;
+  margin: 3%;
 }
 
 .input-container {
   width: 100%;
   align-content: center;
+  margin-bottom: 3%;
 }
 
 h1 {

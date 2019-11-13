@@ -6,6 +6,10 @@ nav, .container {
     font-family: 'Prompt', sans-serif;
 }
 
+#edit, #delete {
+    margin: 1%;
+}
+
 h5 {
     text-align: center;
 }
