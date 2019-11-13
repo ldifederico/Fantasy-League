@@ -65,9 +65,13 @@ app.get("/", function(req, res) {
     res.sendFile(path.join(__dirname, "./public/main.html"));
 });
 
-app.get("/team", function(req, res) {
-    res.sendFile(path.join(__dirname, "./public/team.html"));
-    //add 4 get requests and res.JSON(results) to team.js
+app.post("/team", function(req, res) {
+    console.log(req.body.name)
+    res.sendFile(path.join(__dirname, "public/team.html"));
+    // API call for team
+
+    // res.send(JSON.stringify(teamData));
+    // add 4 get requests and res.JSON(results) to team.js
 });
 
 module.exports = function(app) {
