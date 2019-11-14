@@ -6,6 +6,10 @@ nav {
     font-family: 'Prompt', sans-serif;
 }
 
+#form {
+    width: 100%;
+}
+
 #card {
     font-family: 'Prompt', sans-serif;
     justify-content: flex-start;
@@ -24,20 +28,49 @@ nav {
     margin-top: 7%;
     margin-left: 3%;
     margin-right: 3%;
-    justify-content: space-evenly;
     font-size: x-small;
 }
 
+#joinGroup {
+    margin: 1%;
+    font-size: 5%;
+    width: 110px;
+}
+
+#joinCompanyGroup {
+    margin: 1%;
+    font-size: 5%;
+}
+
+#createCompanyGroup {
+    margin: 1%;
+    font-size: 5%;
+}
+
+#nameCompanyGroup {
+    margin: 1%;
+    font-size: 5%;
+    width: 110px;
+}
+
 #homeBet {
-    margin: 2%;
+    margin: 1%;
+    font-size: 5%;
 }
 
 #visitorBet {
-    margin: 2%;
+    margin: 1%;
+    font-size: 5%;
 }
 
 #draw {
-    margin: 2%;
+    margin: 1%;
+    font-size: 5%;
+}
+
+#betAmount {
+    width: 35%;
+    font-size: 5%;
 }
 
 #footer {

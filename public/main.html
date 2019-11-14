@@ -38,7 +38,7 @@
           <a class="nav-link" href="profile.html">Profile</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="login.html">Sign Out</a>
+          <a class="nav-link" href="login.html"><i class="fas fa-sign-out-alt"></i>Sign Out</a>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
@@ -54,10 +54,19 @@
         <h5 class="card-title" id="companyRanking">Company Ranking</h5>
         <p class="card-text">
           <div style="display: block">
-            <div class="form-control form-control-sm" id="nameCompanyGroup" type="text" placeholder="Create name for company group"></div>
-              <br>
-              <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="button">Create Group</button>
-            </div>
+            <form class="form-inline my-2 my-sm-0" id="form">
+              <div class="row">
+                <input class="form-control mr-sm-2" id="joinGroup" type="input">
+                <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
+              </div>
+            </form>
+            <form class="form-inline my-2 my-sm-0" id="form">
+              <div class="row">
+                <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
+                <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
+              </div>
+            </form>
+          </div>            
           <table class="table table-hover" style="display: none">
             <thead>
               <tr>
@@ -77,24 +86,21 @@
         </p>
       </div>
     </div>
-    <br>
     <div class="card col-12 col-md-4" id="card">
       <div class="card-body">
         <h5 class="card-title" id="fixtures">Fixtures</h5>
         <p class="card-text">
           <div class="row">
-            <div class="form-control form-control-sm" id="placeBet" type="text" placeholder="Bet amount"></div>
-            <br>
-            <button class="btn btn-outline-dark btn-sm" id="homeBet" type="button">Home</button>
-            <br>
-            <button class="btn btn-outline-dark btn-sm" id="visitorBet" type="button">Visitor</button>
-            <br>
-            <button class="btn btn-outline-dark btn-sm" id="draw" type="button">Draw</button>
+              <form class="form-inline my-2 my-sm-0" id="form">
+                <input class="form-control mr-sm-2" id="betAmount" type="input" placeholder="Bet amount">
+                <button class="btn btn-outline-dark btn-sm" id="homeBet" type="button">Home</button>
+                <button class="btn btn-outline-dark btn-sm" id="visitorBet" type="button">Visitor</button>
+                <button class="btn btn-outline-dark btn-sm" id="draw" type="button">Draw</button>
+              </form>
           </div>
         </p>
       </div>
     </div>
-    <br>
     <div class="card col-12 col-md-6" id="card">
       <div class="card-body">
         <h5 class="card-title" id="standings">Standings</h5>
