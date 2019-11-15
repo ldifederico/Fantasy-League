@@ -45,6 +45,7 @@
         <input class="form-control mr-sm-2" type="search" placeholder="Search for team">
         <button class="btn btn-outline-light my-2 my-sm-0" type="submit"><a href="team.html" class="text-light"><i class="fas fa-search"></i></a></button>
       </form>
+      <span class="navbar-text"> Points:</span>
     </div>
   </nav>
 
@@ -90,13 +91,113 @@
       <div class="card-body">
         <h5 class="card-title" id="fixtures">Fixtures</h5>
         <p class="card-text">
-          <div class="row">
-              <form class="form-inline my-2 my-sm-0" id="form">
-                <input class="form-control mr-sm-2" id="betAmount" type="input" placeholder="Bet amount">
-                <button class="btn btn-outline-dark btn-sm" id="homeBet" type="button">Home</button>
-                <button class="btn btn-outline-dark btn-sm" id="visitorBet" type="button">Visitor</button>
-                <button class="btn btn-outline-dark btn-sm" id="draw" type="button">Draw</button>
-              </form>
+          <div class="accordion" id="accordionExample">
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Game Week 1
+                  </button>
+                </h2>
+              </div>
+              
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                  <div class="row">
+                    <h7 id="homeTeam"></h7>
+                    <p>vs.</p>
+                    <h7 id="AwayTeam"></h7>
+                  </div>
+                  <div class="row">
+                    <p>HOME</p>
+                    <p>   </p>
+                    <p>AWAY</p>
+                  </div>
+                  <div class="row">
+                    <p id="date"></p>
+                    <p id="time"></p>
+                  </div>
+                  <div class="row">
+                    <form class="form-inline my-2 my-sm-0" id="form">
+                      <input class="form-control mr-sm-2" id="betAmount" type="input" placeholder="Bet amount">
+                      <button class="btn btn-outline-dark btn-sm" id="homeBet" type="button">Home</button>
+                      <button class="btn btn-outline-dark btn-sm" id="visitorBet" type="button">Visitor</button>
+                      <button class="btn btn-outline-dark btn-sm" id="draw" type="button">Draw</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Game Week 2
+                  </button>
+                </h2>
+              </div>
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                  <div class="row">
+                    <h7 id="homeTeam"></h7>
+                      <p>vs.</p>
+                    <h7 id="AwayTeam"></h7>
+                  </div>
+                  <div class="row">
+                    <p>HOME</p>
+                    <p>   </p>
+                    <p>AWAY</p>
+                  </div>
+                  <div class="row">
+                    <p id="date"></p>
+                    <p id="time"></p>
+                  </div>
+                  <div class="row">
+                    <form class="form-inline my-2 my-sm-0" id="form">
+                      <input class="form-control mr-sm-2" id="betAmount" type="input" placeholder="Bet amount">
+                      <button class="btn btn-outline-dark btn-sm" id="homeBet" type="button">Home</button>
+                      <button class="btn btn-outline-dark btn-sm" id="visitorBet" type="button">Visitor</button>
+                      <button class="btn btn-outline-dark btn-sm" id="draw" type="button">Draw</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Game Week 3
+                  </button>
+                </h2>
+              </div>
+              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                  <div class="row">
+                    <h7 id="homeTeam"></h7>
+                    <p>vs.</p>
+                    <h7 id="AwayTeam"></h7>
+                  </div>
+                  <div class="row">
+                    <p>HOME</p>
+                    <p>   </p>
+                    <p>AWAY</p>
+                  </div>
+                  <div class="row">
+                    <p id="date"></p>
+                    <p id="time"></p>
+                  </div>
+                  <div class="row">
+                    <form class="form-inline my-2 my-sm-0" id="form">
+                      <input class="form-control mr-sm-2" id="betAmount" type="input" placeholder="Bet amount">
+                      <button class="btn btn-outline-dark btn-sm" id="homeBet" type="button">Home</button>
+                      <button class="btn btn-outline-dark btn-sm" id="visitorBet" type="button">Visitor</button>
+                      <button class="btn btn-outline-dark btn-sm" id="draw" type="button">Draw</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </p>
       </div>
