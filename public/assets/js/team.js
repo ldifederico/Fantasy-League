@@ -1,6 +1,6 @@
 // const main = require(`main.js`);
 var url;
-var teamName = "Manchester United";
+// var teamName = "Manchester United";
 
 var settings = {
 	"async": true,
@@ -15,22 +15,22 @@ var settings = {
 
 async function getTeam() {
     //Team
-    allCookies = document.cookie.split(';')
+    allCookies = document.cookie.split(';');
     for (cookie of allCookies) {
         if (cookie.includes("teamName=")) {
-            teamName = cookie.substring(10)
-            document.cookie = "teamName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+            teamName = cookie.substring(10);
+            document.cookie = "teamName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
         }
     }
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/teams/search/${teamName}`;
     data = await $.get(settings);
     teamData = data.api.teams[0];
-    $("#club").text(teamData.name)
-    $("#teamLogo").attr("src", teamData.logo)
+    $("#club").text(teamData.name);
+    $("#teamLogo").attr("src", teamData.logo);
 
     //Roster
-    settings.url = `https://api-football-v1.p.rapidapi.com/v2/players/squad/${teamData.team_id}/2019-2020`
-    let roster = await $.get(settings)
+    settings.url = `https://api-football-v1.p.rapidapi.com/v2/players/squad/${teamData.team_id}/2019-2020`;
+    let roster = await $.get(settings);
     i=1
     for (player of roster.api.players) {
         $("<tr>").attr("id","rosterRow"+i).appendTo("#rosterBody");
@@ -41,7 +41,7 @@ async function getTeam() {
     }
 
     //Fixtures
-    settings.url = `https://api-football-v1.p.rapidapi.com/v2/fixtures/team/${teamData.team_id}/524?timezone=Europe%2FLondon`
+    settings.url = `https://api-football-v1.p.rapidapi.com/v2/fixtures/team/${teamData.team_id}/524?timezone=Europe%2FLondon`;
     data = await $.get(settings);
     let fixtures = data.api.fixtures;
     date_timestamp = Date.now().toString();
@@ -93,6 +93,13 @@ $("#submit").click(function() {
     document.cookie = "teamName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     document.cookie = `teamName=${$("#teamName").val()}`
     console.log("sucess")
+});
+
+$("#searchSubmit").click(function() {
+    window.location.href = "/team.html"
+    event.preventDefault();
+    document.cookie = "teamName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie = `teamName=${$("#teamName").val()}`;
 });
 
 getTeam()

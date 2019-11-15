@@ -42,8 +42,8 @@
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search for team">
-        <button class="btn btn-outline-light my-2 my-sm-0" type="submit"><a href="team.html" class="text-light"><i class="fas fa-search"></i></a></button>
+        <input class="form-control mr-sm-2" type="search" placeholder="Search for team" id="teamName">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" id="searchSubmit"><i class="fas fa-search"></i></button>
       </form>
     </div>
   </nav>
@@ -53,13 +53,13 @@
       <div class="card-body" id="card">
         <h5 class="card-title" id="companyRanking">Company Ranking</h5>
         <p class="card-text">
-          <div style="display: block">
+          <div style="display: block" id="companySelect">
             <input class="form-control form-control-sm" id="nameCompanyGroup" type="text" placeholder="Create name for company group"></input>
               <br>
               <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="button">Create Group</button>
               <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="button">Join Group</button>
             </div>
-          <table class="table table-hover" style="display: none">
+          <table class="table table-hover" style="display: none" id="companyDisplay">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -67,12 +67,7 @@
                 <th scope="col">Pts</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td></td>
-                <td></td>
-              </tr>
+            <tbody id="companyTable">
             </tbody>
           </table>
         </p>

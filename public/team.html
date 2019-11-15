@@ -98,15 +98,15 @@
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search for team">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+                <input class="form-control mr-sm-2" type="search" placeholder="Search for team" id="teamName">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit" id="searchSubmit"><i class="fas fa-search"></i></button>
             </form>
         </div>
     </nav>
 
     <div class="container">
-        <div class="row" id="club">
-            <h2>Team Name</h2>
+        <div class="row">
+            <h2 id="club">Team Name</h2>
             <img id="teamLogo">
         </div>
         <div class="row">
@@ -117,7 +117,6 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th scope="col">No.</th>
                                         <th scope="col">Position</th>
                                         <th scope="col">Player</th>
                                     </tr>
