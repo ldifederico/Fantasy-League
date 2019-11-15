@@ -164,6 +164,7 @@ h5 {
 }
 
 .row {
+    padding-top: 60px;
     justify-content: space-evenly;
     font-size: small;
 }
