@@ -49,22 +49,21 @@
   
   <div class="container">
     
-    <h4><i class="fas fa-user" id="username"></i> ${username}</h4>
-    <h5><i class="fas fa-users" id="company"></i> ${company}</h5>
+    <h4><i class="fas fa-user" id="username"></i> </h4>
+    <h5><i class="fas fa-users" id="company"></i> </h5>
 
     <br>
 
     <table class="table table-hover" id="historyTable">
       <thead>
         <tr>
-          <th scope="col">Fixtures</th>
-          <th scope="col">Bet ID</th>
+          <th scope="col">Fixture</th>
           <th scope="col">Bet Amt.</th>
           <th scope="col">Chosen</th>
           <th scope="col">Result</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="betTable">
         <tr>
           <td></td>
           <td></td>
@@ -85,8 +84,6 @@
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-
-</script>
+<script src="./assets/js/history.js"></script>
 
 </html>

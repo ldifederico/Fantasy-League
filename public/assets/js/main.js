@@ -150,28 +150,27 @@ $("#createCompanyGroup").click(function() {
 $("#joinCompanyGroup").click(async function() {
     data = $("#nameCompanyGroup").val()
     data = ({groupName: data})
-    console.log(data)
     let groupSearch = await $.ajax({
         url: "/searchGroup",
         data: data,
         method: "POST"
     })
     for (group of groupSearch) {
-        console.log(group)
         $("<div>").attr({
             id: group.id,
             class: "result"
         }).text(group.name).appendTo("#card")
     }
-    console.log(groupSearch)
     $(".result").on("click", async function() {
         data = this.id
         data = ({companyID: data})
-        $.ajax({
+        let company = await $.ajax({
             url: "joinGroup",
             data: data,
             method: "POST"
         })
+        
+
     })
 });
 

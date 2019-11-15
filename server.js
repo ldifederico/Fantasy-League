@@ -92,29 +92,34 @@ app.get("/register", async function(req,res) {
     res.sendFile(path.join(__dirname, "./public/register.html"));
 });
 
+app.get("/main", async function(req,res) {
+    res.sendFile(path.join(__dirname, "./public/main.html"));
+});
+
 app.post("/register", async function(req,res) {
     let existUser = await db.query(`SELECT * FROM user WHERE username = '${req.body.username}' OR email = '${req.body.email}'`);
     if (existUser[0] !== undefined){
+        res.send({text: "User exists"})
         console.log("User with this username or email address already exists");
     }
     else {
+        res.send({text: "User created"})
         await db.query(`INSERT INTO user (firstName, lastName, email, username, password) VALUES ('${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.username}', '${req.body.password}')`);
         let useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}'`);
         userid = useridObj[0].id;
         console.log("Congrats user created, please join or create a company league");
-        //redirect to main.html
-        //does userid change when multiple people log in
-    }
+    };
 });
 
 app.post("/searchGroup", async function(req,res) {
     let groupSearch = await db.query(`SELECT * FROM company WHERE name LIKE '%${req.body.groupName}%' `);
-    res.json(groupSearch)
+    res.json(groupSearch);
 });
 
 app.post("/joinGroup", async function(req,res) {
     await db.query(`UPDATE user SET companyId = ${req.body.companyID} WHERE id = ${userid}`);
-    let table = await db.query(`SELECT * FROM user WHERE companyId = ${req.body.companyID} `);
+    let table = await db.query(`SELECT * FROM user WHERE companyId = ${req.body.companyID} ORDER BY points`);
+    res.json(table)
 });
 
 app.post("/createGroup", async function(req,res) {
@@ -133,6 +138,12 @@ app.post("/createGroup", async function(req,res) {
     console.table(table);
     }
 })
+
+app.get("/betHistory", async function(req, res) {
+    userid = 3;
+    let userBets = await db.query(`SELECT * FROM bet WHERE user_Id = '${userid}'`);
+    res.json(userBets);
+});
 
 app.post("/team", function(req, res) {
     console.log(req.body.name)

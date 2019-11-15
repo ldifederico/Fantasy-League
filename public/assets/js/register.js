@@ -93,7 +93,7 @@
 //     return false;
 //   }
 // }
-function createNewUser(event) {
+async function createNewUser(event) {
 
     event.preventDefault();
     var data = {}
@@ -104,11 +104,23 @@ function createNewUser(event) {
     data.password = $("#psw").val();
     console.log(data)
 
-    $.ajax({
+    let response = await $.ajax({
         url: "/register",
         method: "POST",
-        data: data
+        data: data,
     });
+
+    if (response.text == "User exists") {
+        console.log("user exists")
+        if($("#exists")[0] == null) {
+            $("<p>").attr("id","exists").text("Account with that username/email already exists.").appendTo("#registerdiv")
+        }
+        else {
+        }
+    }
+    else {
+        window.location.href = "/main"
+    }
 
 }
 
