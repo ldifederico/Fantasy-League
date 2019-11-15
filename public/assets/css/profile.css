@@ -10,6 +10,10 @@ nav, .container {
     margin: 1%;
 }
 
+span {
+    padding: 1%;
+}
+
 h5 {
     text-align: center;
 }
