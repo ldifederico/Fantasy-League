@@ -79,7 +79,12 @@ async function loadFixtures(gameWeek) {
     for (fixture of weekFixtures) {
         if (fixture.status == "Not Started") {
             $("<div>").attr("id","fixRow"+i).addClass("row").appendTo("#fixtures")
-            $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date})`).appendTo("#fixRow"+i)
+            $("<p>").attr({
+                id: "fixture"+i,
+                fixtureID: fixture.fixture_id,
+                homeTeam: fixture.homeTeam.team_name,
+                awayTeam: fixture.awayTeam.team_name,
+            }).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date})`).appendTo("#fixRow"+i)
             $("<input>").attr({
                 class: "form-control form-control-sm",
                 id: "placeBet",
@@ -100,7 +105,6 @@ async function loadCompany() {
         method: "GET",
         url: "/group"
     });
-    console.log(company)
     if (company !== "") {
         $("#companySelect").attr("style","display: none")
         $("#companyDisplay").attr("style","display: block")
@@ -113,6 +117,21 @@ async function loadCompany() {
             i++
         }
     }
+}
+
+async function placeBet() {
+    var bet = {}
+    bet.fixtureID = $("#fixture1").attr("fixtureID")
+    bet.fixture = `${$("#fixture1").attr("homeTeam")} vs. ${$("#fixture1").attr("awayTeam")}`
+    bet.team = "Tottenham"
+    bet.amount = 5
+    bet.odds = 2
+    console.log(bet)
+    $.ajax({
+        method: "POST",
+        url: "/placeBet",
+        data: bet
+    })
 }
 
 async function mainLoad() {
@@ -175,3 +194,4 @@ $("#joinCompanyGroup").click(async function() {
     })
 });
 
+$("#homeBet").on("click", placeBet)
