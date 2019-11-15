@@ -110,24 +110,25 @@ async function refreshGames(incompleteGames) {
     }
 }
 
-// async function requestTeam(teamName) {
-//     $.ajax({
-//         url: "/team",
-//         data: teamName,
-//         method: "POST"
-//     });
-//     console.log(teamName)
-// }
-
 async function mainLoad() {
     loadFixtures(Date.now())
     getStandings()
+    if (hasCompany) {
+        let groupStandings = await $.ajax({
+            method: "GET",
+            url: "/main"
+        })
+    }
+    else {
+
+    }
+
 }
 
 mainLoad()
 
-var incompleteGames = [{fixtureID: 157026, result: ""},{fixtureID: 157027, result: ""}]
-refreshGames(incompleteGames)
+// var incompleteGames = [{fixtureID: 157026, result: ""},{fixtureID: 157027, result: ""}]
+// refreshGames(incompleteGames)
 
 $("#submit").click(function() {
     window.location.href = "/team.html"
@@ -135,3 +136,42 @@ $("#submit").click(function() {
     document.cookie = "teamName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     document.cookie = `teamName=${$("#teamName").val()}`
 });
+
+$("#createCompanyGroup").click(function() {
+    data = $("#nameCompanyGroup").val()
+    data = ({groupName: data})
+    $.ajax({
+        url: "/createGroup",
+        data: data,
+        method: "POST"
+    })
+});
+
+$("#joinCompanyGroup").click(async function() {
+    data = $("#nameCompanyGroup").val()
+    data = ({groupName: data})
+    console.log(data)
+    let groupSearch = await $.ajax({
+        url: "/searchGroup",
+        data: data,
+        method: "POST"
+    })
+    for (group of groupSearch) {
+        console.log(group)
+        $("<div>").attr({
+            id: group.id,
+            class: "result"
+        }).text(group.name).appendTo("#card")
+    }
+    console.log(groupSearch)
+    $(".result").on("click", async function() {
+        data = this.id
+        data = ({companyID: data})
+        $.ajax({
+            url: "joinGroup",
+            data: data,
+            method: "POST"
+        })
+    })
+});
+
