@@ -17,11 +17,14 @@ span {
 #card {
     font-family: 'Prompt', sans-serif;
     justify-content: flex-start;
-    width: 100%;
     font-size: x-small;
     text-align: center;
     overflow: scroll;
     margin: 1%;
+}
+
+.navbar-text {
+    color: rgb(255, 255, 255);
 }
 
 .card-title {
