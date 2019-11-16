@@ -35,6 +35,18 @@ span {
     padding: 1%;
 }
 
+.container {
+    font-size: x-small;
+    padding: 1%;
+    justify-content: space-evenly;
+    margin-bottom: 5%;
+}
+
+#homeBet {
+    margin: 1%;
+    font-size: x-small;
+}
+
 .row {
     padding-top: 60px;
     margin-left: 1%;
