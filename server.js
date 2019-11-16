@@ -172,6 +172,12 @@ app.get("/main", async function(req,res) {
     }
 })
 
+app.post("/placeBet", async function(req,res) {
+    console.log(req.body)
+    await db.query(`INSERT INTO bet (fixture, fixture_id, team, amountPlaced, odds, user_Id ) VALUES( '${req.body.fixture}', ${req.body.fixtureID}, '${req.body.team}', ${req.body.amount}, ${req.body.odds}, ${userid})` );
+    await db.query(`UPDATE user SET points = points - ${req.body.amount} WHERE id = ${userid}; `)
+})
+
 async function checkGames() {
 
     var incompleteGames = [];
