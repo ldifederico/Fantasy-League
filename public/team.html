@@ -34,18 +34,13 @@
             text-align: center;
         }
 
-        .container {
-            margin: 5%;
-        }
-
         .row {
-            justify-content: space-evenly;
             font-size: small;
+            justify-content: flex-start;
+            justify-content: space-between;
         }
 
-        .card {
-            width: fit-content;
-            font-size: small;
+        #card {
             background-color: ${colours[id].cardBackground};
             border: 1px solid ${colours[id].cardBorder};
         }
@@ -106,13 +101,13 @@
     </nav>
 
     <div class="container">
-        <div class="row">
+        <div class="header">
             <h2 id="club">Team Name</h2>
             <img id="teamLogo">
         </div>
         <div class="row">
-                <div class="card"  id="roster">
-                    <div class="card-body">
+                <div class="card col-12 col-md-3"  id="roster">
+                    <div class="card-body" id="card">
                         <h5 class="card-title">Roster</h5>
                         <p class="card-text">
                             <table class="table table-hover">
@@ -244,8 +239,8 @@
                         </p>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-body">
+                <div class="card col-12 col-md-3" id="games">
+                    <div class="card-body" id="card">
                         <h5 class="card-title" id="fixtures">Fixtures</h5>
                         <hr>
                         <p class="card-text"></p>
@@ -254,8 +249,8 @@
                         <p class="card-text"></p>
                     </div>
                 </div>
-                <div class="card" id="standing">
-                    <div class="card-body">
+                <div class="card col-12 col-md-5" id="standing">
+                    <div class="card-body" id="card">
                         <h5 class="card-title">Standing</h5>
                         <p class="card-text">
                             <table class="table table-hover">
@@ -263,7 +258,6 @@
                                     <tr>
                                         <th scope="col">Rank</th>
                                         <th scope="col">Club</th>
-                                        <th scope="col">Played</th>
                                         <th scope="col">Won</th>
                                         <th scope="col">Drawn</th>
                                         <th scope="col">Lost</th>
