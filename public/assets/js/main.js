@@ -75,23 +75,47 @@ async function loadFixtures(gameWeek) {
     for (fixture of fixtures) {
         if (fixture.round == gameWeek) {weekFixtures.push(fixture)};
     }
+    console.log(weekFixtures);
     i = 1
     for (fixture of weekFixtures) {
         if (fixture.status == "Not Started") {
             $("<div>").attr("id","fixRow"+i).addClass("row").appendTo("#fixtures")
-            $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date})`).appendTo("#fixRow"+i)
+            $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} HOME vs. AWAY (${fixture.event_date}) ${fixture.event_date}`).appendTo("#fixRow"+i)
             $("<input>").attr({
                 class: "form-control form-control-sm",
                 id: "placeBet",
                 type: "text",
                 placeholder: "Bet Amount",
-                style: "width: 50px"
+                style: "width: 100%"
             }).appendTo("#fixture"+i)
+            $("<button>").attr({
+                class: "btn btn-outline-dark btn-sm",
+                id: "homeBet"+i,
+                type: "button",
+                innerText: "Home"
+            }).appendTo("#fixture"+i)
+            $("<button>").attr({
+                class: "btn btn-outline-dark btn-sm",
+                id: "visitorBet"+i,
+                type: "button",
+                text: "Away"
+            }).appendTo("#fixture"+i)
+            $("<button>").attr({
+                class: "btn btn-outline-dark btn-sm",
+                id: "draw"+i,
+                type: "button",
+                innerHTML: "Draw"
+            }).appendTo("#fixture"+i)
+
+            document.getElementById("homeBet"+i).innerHTML = "HOME";
+            document.getElementById("visitorBet"+i).innerHTML = "AWAY";
+            document.getElementById("draw"+i).innerHTML = "DRAW";
         }
         else {
             $("<p>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.status} ${fixture.goalsHomeTeam} ${fixture.goalsAwayTeam}`).appendTo("#fixtures");
         }
         i++
+        
     }
 }
 
