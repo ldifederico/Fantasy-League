@@ -173,9 +173,14 @@ app.get("/main", async function(req,res) {
 })
 
 app.post("/placeBet", async function(req,res) {
-    console.log(req.body)
-    await db.query(`INSERT INTO bet (fixture, fixture_id, team, amountPlaced, odds, user_Id ) VALUES( '${req.body.fixture}', ${req.body.fixtureID}, '${req.body.team}', ${req.body.amount}, ${req.body.odds}, ${userid})` );
-    await db.query(`UPDATE user SET points = points - ${req.body.amount} WHERE id = ${userid}; `)
+    let userpoint = await db.query(`SELECT points FROM user WHERE id = '${userid}'`);
+    if(userpoint[0].points>=req.body.amount){
+        await db.query(`INSERT INTO bet (fixture, fixture_id, team, amountPlaced, odds, user_Id ) VALUES( '${req.body.fixture}', ${req.body.fixtureID}, '${req.body.team}', ${req.body.amount}, ${req.body.odds}, ${userid})` );
+        await db.query(`UPDATE user SET points = points - ${req.body.amount} WHERE id = ${userid}; `)
+    }
+    else{
+        console.log("No Money no Honey")
+    }
 })
 
 async function checkGames() {
