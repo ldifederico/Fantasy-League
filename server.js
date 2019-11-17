@@ -67,7 +67,7 @@ uniqueGames = [];
 let userid;
 let companyid;
 userid = 1;
-companyid = 1
+companyid = 1;
 
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
@@ -84,7 +84,7 @@ app.post("/", async function(req, res) {
         companyid = companyidObj[0].companyId;
         userid = useridObj[0].id;
         res.send({text: "correct login"})
-    } catch(error){
+    } catch(error) {
         res.send({text: "incorrect login"})
     }
 });
@@ -102,7 +102,6 @@ app.get("/profile", async function(req,res) {
     companyInfo = await db.query(`SELECT * FROM company WHERE id = ${userInfo[0].companyId}`);
     userInfo[0].companyName = companyInfo[0].name
     res.json(userInfo)
-    console.log(userInfo)
 });
 
 app.post("/register", async function(req,res) {
@@ -157,7 +156,7 @@ app.post("/createGroup", async function(req,res) {
 })
 
 app.get("/betHistory", async function(req, res) {
-    let userBets = await db.query(`SELECT bet.fixture, bet.team, bet.amountPlaced, bet.amountwon, bet.odds, bet.amountwon, user.username, company.name FROM bet LEFT JOIN user ON user.id = bet.user_Id LEFT JOIN company ON company.id = user.companyid WHERE user_Id = '${userid}'`);
+    let userBets = await db.query(`SELECT bet.fixture_id, bet.fixture, bet.team, bet.amountPlaced, bet.amountwon, bet.odds, bet.amountwon, user.username, company.name FROM bet LEFT JOIN user ON user.id = bet.user_Id LEFT JOIN company ON company.id = user.companyid WHERE user_Id = '${userid}'`);
     res.json(userBets);
 });
 
@@ -177,10 +176,17 @@ app.post("/placeBet", async function(req,res) {
     if(userpoint[0].points>=req.body.amount){
         await db.query(`INSERT INTO bet (fixture, fixture_id, team, amountPlaced, odds, user_Id ) VALUES( '${req.body.fixture}', ${req.body.fixtureID}, '${req.body.team}', ${req.body.amount}, ${req.body.odds}, ${userid})` );
         await db.query(`UPDATE user SET points = points - ${req.body.amount} WHERE id = ${userid}; `)
+        status = "placed"
     }
     else{
-        console.log("No Money no Honey")
+        status = "no funds"
     }
+    res.json(status)
+})
+
+app.get("/getPoints", async function(req,res) {
+    let userpoint = await db.query(`SELECT points FROM user WHERE id = '${userid}'`);
+    res.json(userpoint)
 })
 
 async function checkGames() {
