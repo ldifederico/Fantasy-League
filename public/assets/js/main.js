@@ -89,9 +89,9 @@ async function loadFixtures(gameWeek) {
         if (fixture.status == "Not Started") {
             $("<div>").attr("id","fixRow"+i).addClass("container").appendTo("#fixtures")
             // $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} HOME vs. AWAY (${fixture.event_date}) ${fixture.event_date}`).appendTo("#fixRow"+i)
-            $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.event_date}`).appendTo("#fixRow"+i)
-            $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name}`).appendTo("#fixRow"+i)
-            $("<p>").attr("id","fixture"+i).addClass("card-text").text(`HOME vs. AWAY`).appendTo("#fixRow"+i)
+            $("<p>").attr("id","fixtures"+i).addClass("card-text").text(`${fixture.event_date}`).appendTo("#fixRow"+i)
+            $("<p>").attr("id","fixtures"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name}`).appendTo("#fixRow"+i)
+            $("<p>").attr("id","fixtures"+i).addClass("card-text").text(`HOME vs. AWAY`).appendTo("#fixRow"+i)
             $("<p>").attr("id","fixture"+i).addClass("card-text").text(`Home: ${fixtureOdds.values[0].odd}  Away: ${fixtureOdds.values[2].odd}  Draw: ${fixtureOdds.values[1].odd}`).appendTo("#fixRow"+i)
             // $("<p>").attr({
             //     id: "fixture"+i,

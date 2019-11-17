@@ -147,6 +147,10 @@ nav, .container {
     font-family: 'Prompt', sans-serif;
 }
 
+.container {
+    background-color: ${containerBackground}
+}
+
 span {
     padding: 1%;
 }
