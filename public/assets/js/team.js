@@ -1,11 +1,7 @@
-// const main = require(`main.js`);
-var url;
-// var teamName = "Manchester United";
-
 var settings = {
 	"async": true,
 	"crossDomain": true,
-	"url": url,
+	"url": "",
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-host": "api-football-v1.p.rapidapi.com",
@@ -13,20 +9,149 @@ var settings = {
 	}
 };
 
+var teams = [
+    {
+        teamName: "Bournemouth",
+        containerBackground: "#8b0304",
+        h2: "black"
+    },
+    /* Arsenal F.C. */
+    {
+        teamName: "Arsenal",
+        containerBackground: "#ef0107",
+        h2: "#023474"
+    },
+    /* Brighton & Hove Albion F.C. */
+     {
+        teamName: "Brighton",
+        containerBackground: "#005daa",
+        h2: "white"
+    },
+    /* Burnley F.C. */
+    {
+        teamName: "Burnley",
+        containerBackground: "#97d7f5",
+        h2: "white"
+    },
+    /* Aston Villa */
+    {
+        teamName: "Aston Villa",
+        containerBackground: "#7b003a",
+        h2: "#a3c5e9"
+    },
+    /* Chelsea F.C. */
+    {
+        teamName: "Chelsea",
+        containerBackground: "#034694",
+        h2: "white"
+    },
+    /* Crystal Palace F.C. */
+    {
+        teamName: "Crystal Palace",
+        containerBackground: "#f4f4f4",
+        h2: "#27409b"
+    },
+    /* Everton F.C. */
+    {
+        teamName: "Everton",
+        containerBackground: "#274488",
+        h2: "white"
+    },
+    /* Norwich F.C. */
+    {
+        teamName: "Norwich",
+        containerBackground: "#00a650",
+        h2: "#fff200"
+    },
+    /* Sheffield United */
+    {
+        teamName: "Sheffield",
+        containerBackground: "#ec2227",
+        h2: "white"
+    },
+    /* Leicester City F.C. */
+    {
+        teamName: "Leicester",
+        containerBackground: "#0053a0",
+        h2: "white"
+    },
+    /* Liverpool F.C. */
+    {
+        teamName: "Liverpool",
+        containerBackground: "#dd0000",
+        h2: "white"
+    },
+    /* Manchester City F.C. */
+    {
+        teamName: "Manchester City",
+        containerBackground: "#6caddf",
+        h2: "#00285e"
+    },
+    /* Manchester United F.C. */
+    {
+        teamName: "Manchester United",
+        containerBackground: "#da020e",
+        h2: "#ffe500"
+    },
+    /* Newcastle United F.C. */
+    {
+        teamName: "Newcastle",
+        containerBackground: "#00b6f1",
+        h2: "#231f20"
+    },
+    /* Southampton F.C. */
+    {
+        teamName: "Southampton",
+        containerBackground: "#211e1f",
+        h2: "#ffc20e"
+    },
+    /* Tottenham Hotspur F.C. */
+    {
+        teamName: "Tottenham",
+        containerBackground: "#132257",
+        h2: "white"
+    },
+    /* Watford F.C. */
+    {
+        teamName: "Watford",
+        containerBackground: "#fbee23",
+        h2: "black"
+    },
+    /* West Ham United F.C. */
+    {
+        teamName: "West Ham",
+        containerBackground: "#7c2c3b",
+        h2: "#f8d742"
+    },
+    /* Wolverhampton Wanderers F.C. */
+    {
+        teamName: "Wolves",
+        containerBackground: "#fdb913",
+        h2: "#231f20"
+    }
+
+];
+
 async function getTeam() {
     //Team
     allCookies = document.cookie.split(';');
+    console.log(allCookies)
     for (cookie of allCookies) {
         if (cookie.includes("teamName=")) {
             teamName = cookie.substring(10);
             document.cookie = "teamName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-        }
-    }
+        };
+    };
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/teams/search/${teamName}`;
     data = await $.get(settings);
     teamData = data.api.teams[0];
-    $("#club").text(teamData.name);
-    $("#teamLogo").attr("src", teamData.logo);
+    console.log(teamData);
+    var team = teams.filter(obj => {
+        return obj.teamName == teamData.name
+    });
+    $("#club").text(`${teamData.name}`).css("color", team[0].h2);
+    $("#teamLogo").attr("src", teamData.logo).css({"width": "40px", "height": "40px"});
+    $(".container").css({"background" : `${team[0].containerBackground}`});
 
     //Roster
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/players/squad/${teamData.team_id}/2019-2020`;
@@ -34,9 +159,8 @@ async function getTeam() {
     i=1
     for (player of roster.api.players) {
         $("<tr>").attr("id","rosterRow"+i).appendTo("#rosterBody");
-        $("<td>").text(player.number).appendTo($("#rosterRow"+i));
-        $("<td>").text(player.position).appendTo($("#rosterRow"+i));
         $("<td>").text(`${player.firstname} ${player.lastname}`).appendTo($("#rosterRow"+i));
+        $("<td>").text(player.position).appendTo($("#rosterRow"+i));
         i++
     }
 
@@ -52,19 +176,20 @@ async function getTeam() {
         if (fixture.event_timestamp > date_timestamp) {futureFixtures.push(fixture)}
         else {pastFixtures.push(fixture)}
     }
+    i = 1
     for (fixture of futureFixtures) {
-        $("<p>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date.slice(0,10)})`).appendTo("#fixtures")
+        $("<tr>").attr("id","fixtureRow"+i).appendTo("#fixtureBody");
+        $("<td>").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date.slice(0,10)})`).appendTo($("#fixtureRow"+i));
+        i++
     }
+    i = 1
     for (fixture of pastFixtures) {
-        $("<p>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#results")
+        $("<tr>").attr("id","resultsRow"+i).appendTo("#resultsBody");
+        $("<td>").text(`${fixture.homeTeam.team_name} (${fixture.goalsHomeTeam}) vs. ${fixture.awayTeam.team_name} (${fixture.goalsAwayTeam}) (${fixture.event_date.slice(0,10)})`).appendTo($("#resultsRow"+i));
+        i++
     }
 
-    //Standings
-    // settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`
-    // let standings = await $.get(settings)
-    // for (team of standings.api.standings[0]){
-    //     $("<p>").css("font-size", "15px").text(`${team.teamName} W/L/D: ${team.all.win}/${team.all.lose}/${team.all.draw}`).appendTo("#standing")
-    // }
+    //standings
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
     let standings = await $.get(settings);
     i=1
@@ -79,21 +204,9 @@ async function getTeam() {
         $("<td>").text(team.all.win).appendTo($("#row"+i));
         $("<td>").text(team.all.draw).appendTo($("#row"+i));
         $("<td>").text(team.all.lose).appendTo($("#row"+i));
-        $("<td>").text(team.all.goalsFor).appendTo($("#row"+i));
-        $("<td>").text(team.all.goalsAgainst).appendTo($("#row"+i));
-        $("<td>").text(team.goalsDiff).appendTo($("#row"+i));
-        $("<td>").text(team.points).appendTo($("#row"+i));
         i++
     }
 }
-
-$("#submit").click(function() {
-    window.location.href = "/team.html"
-    event.preventDefault();
-    document.cookie = "teamName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
-    document.cookie = `teamName=${$("#teamName").val()}`
-    console.log("sucess")
-});
 
 $("#searchSubmit").click(function() {
     window.location.href = "/team.html"

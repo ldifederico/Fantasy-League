@@ -208,6 +208,7 @@ mainLoad();
 
 $("#searchSubmit").click( function() {
     window.location.href = "/team.html";
+    console.log("team")
     event.preventDefault();
     document.cookie = "teamName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
     document.cookie = `teamName=${$("#teamName").val()}`;

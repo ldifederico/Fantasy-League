@@ -102,8 +102,10 @@
 
     <div class="container">
         <div class="header">
-            <h2 id="club">Team Name</h2>
+          <div class="row" style="justify-content:center">
             <img id="teamLogo">
+            <h2 id="club" style="padding-left: 1%"></h2>
+          </div>
         </div>
         <div class="row">
                 <div class="card col-12 col-md-3"  id="roster">
@@ -117,139 +119,34 @@
                                         <th scope="col">Position</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                <tbody id="rosterBody">
                                 </tbody>
                             </table>
                         </p>
                     </div>
                 </div>
-                <div class="card col-12 col-md-3" id="games">
+                <div class="card col-12 col-md-2" id="games">
                     <div class="card-body" id="card">
                         <h5 class="card-title" id="fixtures">Fixtures</h5>
+                        <table class="table table-hover">
+                            <tbody id="fixtureBody">
+                            </tbody>
+                        </table>
                         <hr>
-                        <p class="card-text"></p>
-                        <h5 class="card-title" id="results">Results</h5>
-                        <hr>
-                        <p class="card-text"></p>
                     </div>
                 </div>
-                <div class="card col-12 col-md-5" id="standing">
+                <div class="card col-12 col-md-2" id="games">
+                    <div class="card-body" id="card">
+                        <h5 class="card-title" id="fixtures">Results</h5>
+                        <table class="table table-hover">
+                            <tbody id="resultsBody">
+                            </tbody>
+                        </table>
+                        <hr>
+                    </div>
+                </div>
+                
+                <div class="card col-12 col-md-4" id="standing">
                     <div class="card-body" id="card">
                         <h5 class="card-title">Standing</h5>
                         <p class="card-text">
