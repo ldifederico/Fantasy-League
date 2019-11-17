@@ -83,13 +83,19 @@ async function loadFixtures(gameWeek) {
     console.log(weekFixtures);
     i = 1
     for (fixture of weekFixtures) {
+    
+        // odds
+        settings.url = `https://api-football-v1.p.rapidapi.com/v2/odds/fixture/${fixture.fixture_id}`;
+        data = await $.get(settings);
+        let fixtureOdds = data.api.odds[0].bookmakers[0].bets[0];
+
         if (fixture.status == "Not Started") {
             $("<div>").attr("id","fixRow"+i).addClass("container").appendTo("#fixtures")
             // $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} HOME vs. AWAY (${fixture.event_date}) ${fixture.event_date}`).appendTo("#fixRow"+i)
             $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.event_date}`).appendTo("#fixRow"+i)
             $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name}`).appendTo("#fixRow"+i)
             $("<p>").attr("id","fixture"+i).addClass("card-text").text(`HOME vs. AWAY`).appendTo("#fixRow"+i)
-            // $("<p>").attr("id","fixture"+i).addClass("card-text").text(`Home: ${fixtureOdds[0].values[0].odd}  Away: ${fixtureOdds[0].values[2].odd}  Draw: ${fixtureOdds[0].values[1].odd}`).appendTo("#fixRow"+i)
+            $("<p>").attr("id","fixture"+i).addClass("card-text").text(`Home: ${fixtureOdds.values[0].odd}  Away: ${fixtureOdds.values[2].odd}  Draw: ${fixtureOdds.values[1].odd}`).appendTo("#fixRow"+i)
             // $("<p>").attr({
             //     id: "fixture"+i,
             //     fixtureID: fixture.fixture_id,

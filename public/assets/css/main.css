@@ -35,8 +35,16 @@ span {
     padding: 1%;
 }
 
+.card-text {
+    margin-bottom: 1%;
+}
+
+h6 {
+    padding: 5%;
+}
+
 .container {
-    font-size: x-small;
+    font-size: small;
     padding: 1%;
     justify-content: space-evenly;
     margin-bottom: 15%;
