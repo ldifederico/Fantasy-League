@@ -79,14 +79,14 @@ async function loadFixtures(gameWeek) {
     i = 1
     for (fixture of weekFixtures) {
         if (fixture.status == "Not Started") {
-            $("<div>").attr("id","fixRow"+i).addClass("container").appendTo("#fixtures")
-            $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} HOME vs. AWAY (${fixture.event_date}) ${fixture.event_date}`).appendTo("#fixRow"+i)
-            // $("<p>").attr({
-            //     id: "fixture"+i,
-            //     fixtureID: fixture.fixture_id,
-            //     homeTeam: fixture.homeTeam.team_name,
-            //     awayTeam: fixture.awayTeam.team_name,
-            // }).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date})`).appendTo("#fixRow"+i)
+            $("<div>").attr("id","fixRow"+i).addClass("row").appendTo("#fixtures")
+            $("<p>").attr({
+                id: "fixture"+i,
+                fixtureID: fixture.fixture_id,
+                homeTeam: fixture.homeTeam.team_name,
+                awayTeam: fixture.awayTeam.team_name,
+                odds
+            }).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date})`).appendTo("#fixRow"+i)
             $("<input>").attr({
                 class: "form-control form-control-sm",
                 id: "placeBet",
@@ -149,8 +149,8 @@ async function placeBet() {
     bet.fixtureID = $("#fixture1").attr("fixtureID")
     bet.fixture = `${$("#fixture1").attr("homeTeam")} vs. ${$("#fixture1").attr("awayTeam")}`
     bet.team = "Tottenham"
-    bet.amount = 5
-    bet.odds = 2
+    bet.amount = 1500
+    bet.odds = $()
     console.log(bet)
     $.ajax({
         method: "POST",
