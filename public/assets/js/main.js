@@ -70,6 +70,11 @@ async function loadFixtures(gameWeek) {
         gameWeek = futureFixtures[0].round
     }
 
+    // odds
+    // settings.url = "https://api-football-v1.p.rapidapi.com/v2/odds/fixture/${fixtureID}";
+    // data = await $.get(settings);
+    // let fixtureOdds = data.api.odds[0].bookmakers[0].bets[0];
+
     $("<h6>").text(gameWeek).appendTo("#fixtures")
     var weekFixtures = [];
     for (fixture of fixtures) {
@@ -79,14 +84,18 @@ async function loadFixtures(gameWeek) {
     i = 1
     for (fixture of weekFixtures) {
         if (fixture.status == "Not Started") {
-            $("<div>").attr("id","fixRow"+i).addClass("row").appendTo("#fixtures")
-            $("<p>").attr({
-                id: "fixture"+i,
-                fixtureID: fixture.fixture_id,
-                homeTeam: fixture.homeTeam.team_name,
-                awayTeam: fixture.awayTeam.team_name,
-                odds
-            }).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date})`).appendTo("#fixRow"+i)
+            $("<div>").attr("id","fixRow"+i).addClass("container").appendTo("#fixtures")
+            // $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} HOME vs. AWAY (${fixture.event_date}) ${fixture.event_date}`).appendTo("#fixRow"+i)
+            $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.event_date}`).appendTo("#fixRow"+i)
+            $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name}`).appendTo("#fixRow"+i)
+            $("<p>").attr("id","fixture"+i).addClass("card-text").text(`HOME vs. AWAY`).appendTo("#fixRow"+i)
+            // $("<p>").attr("id","fixture"+i).addClass("card-text").text(`Home: ${fixtureOdds[0].values[0].odd}  Away: ${fixtureOdds[0].values[2].odd}  Draw: ${fixtureOdds[0].values[1].odd}`).appendTo("#fixRow"+i)
+            // $("<p>").attr({
+            //     id: "fixture"+i,
+            //     fixtureID: fixture.fixture_id,
+            //     homeTeam: fixture.homeTeam.team_name,
+            //     awayTeam: fixture.awayTeam.team_name,
+            // }).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date})`).appendTo("#fixRow"+i)
             $("<input>").attr({
                 class: "form-control form-control-sm",
                 id: "placeBet",
@@ -95,19 +104,19 @@ async function loadFixtures(gameWeek) {
                 style: "width: 100%"
             }).appendTo("#fixture"+i)
             $("<button>").attr({
-                class: "btn btn-outline-dark btn-sm",
+                class: "btn btn-outline-dark btn-sm betButton",
                 id: "homeBet"+i,
                 type: "button",
                 style: "font-size: x-small; margin: 1%"
             }).appendTo("#fixture"+i)
             $("<button>").attr({
-                class: "btn btn-outline-dark btn-sm",
+                class: "btn btn-outline-dark btn-sm betButton",
                 id: "visitorBet"+i,
                 type: "button",
                 style: "font-size: x-small; margin: 1%"
             }).appendTo("#fixture"+i)
             $("<button>").attr({
-                class: "btn btn-outline-dark btn-sm",
+                class: "btn btn-outline-dark btn-sm betButton",
                 id: "draw"+i,
                 type: "button",
                 style: "font-size: x-small; margin: 1%"
