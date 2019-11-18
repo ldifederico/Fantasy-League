@@ -17,7 +17,7 @@ span {
 #card {
     font-family: 'Prompt', sans-serif;
     justify-content: flex-start;
-    font-size: x-small;
+    font-size: small;
     text-align: center;
     overflow: scroll;
     margin: 1%;

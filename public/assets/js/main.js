@@ -229,7 +229,8 @@ async function placeBet() {
     });
     if (status == "placed") {
         $(`#placeBet${number}, #homeBet${number}, #visitorBet${number}, #draw${number}`).hide()
-        $("<div>").text(`${bet.amount} points for ${bet.team} at odds of ${bet.odds}`).appendTo("#fixture"+number)
+        // $("<div>").text(`${bet.amount} points for ${bet.team} at odds of ${bet.odds}`).appendTo("#fixture"+number)
+        $("<div>").text(`${bet.amount} points for ${bet.team}`).appendTo("#fixture"+number)
         updatePoints()
     }
     else if(status == "no funds") {
