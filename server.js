@@ -35,10 +35,11 @@ class Database {
     }
 };
   
+let db;
 if (process.env.JAWSDB_URL) {
-    const db = mysql.createConnection(process.env.JAWSDB_URL);
+    db = new Database(process.env.JAWSDB_URL);
 } else {
-    const db = new Database({
+    db = new Database({
     host: "localhost",
     port: 3306,
     user: "root",
@@ -66,8 +67,7 @@ incompleteGames = [];
 uniqueGames = [];
 let userid;
 let companyid;
-userid = 1;
-companyid = 1;
+
 
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
@@ -78,7 +78,7 @@ app.get("/", function(req, res) {
 });
 
 app.post("/", async function(req, res) {
-    try{
+    try {
         let companyidObj = await db.query(`SELECT companyId FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`);
         let useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`);
         companyid = companyidObj[0].companyId;
@@ -100,7 +100,9 @@ app.get("/main", async function(req,res) {
 app.get("/profile", async function(req,res) {
     userInfo = await db.query(`SELECT * FROM user WHERE id = ${userid}`);
     companyInfo = await db.query(`SELECT * FROM company WHERE id = ${userInfo[0].companyId}`);
-    userInfo[0].companyName = companyInfo[0].name
+    if (companyInfo[0] !== undefined) {
+        userInfo[0].companyName = companyInfo[0].name
+    }
     res.json(userInfo)
 });
 
@@ -111,10 +113,9 @@ app.post("/register", async function(req,res) {
     }
     else {
         res.send({text: "User created"})
-        await db.query(`INSERT INTO user (firstName, lastName, email, username, password) VALUES ('${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.username}', '${req.body.password}')`);
+        await db.query(`INSERT INTO user (firstName, lastName, email, username, password, points) VALUES ('${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.username}', '${req.body.password}', 0)`);
         let useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}'`);
         userid = useridObj[0].id;
-        companyID = ""
     };
 });
 
@@ -126,7 +127,7 @@ app.get("/group", async function (req, res) {
         group = ""
     };
     res.json(group);
-})
+});
 
 app.post("/searchGroup", async function(req,res) {
     let groupSearch = await db.query(`SELECT * FROM company WHERE name LIKE '%${req.body.groupName}%' `);
@@ -134,7 +135,7 @@ app.post("/searchGroup", async function(req,res) {
 });
 
 app.post("/joinGroup", async function(req,res) {
-    await db.query(`UPDATE user SET companyId = ${req.body.companyID} WHERE id = ${userid}`);
+    await db.query(`UPDATE user SET user.companyId = ${req.body.companyID}, points = 2000 WHERE id = ${userid}`);
     companyid = req.body.companyID;
     let table = await db.query(`SELECT * FROM user WHERE companyid = ${req.body.companyID}`);
     res.json(table);
@@ -149,11 +150,11 @@ app.post("/createGroup", async function(req,res) {
         await db.query(`INSERT INTO company (name) VALUES ('${req.body.groupName}')`);
         let companyidObj = await db.query(`SELECT id FROM company WHERE name = '${req.body.groupName}'`);
         companyid = companyidObj[0].id;
-        await db.query(`UPDATE user SET companyId = ${companyid} WHERE id = ${userid}`);
+        await db.query(`UPDATE user SET user.companyId = ${req.body.companyID}, points = 2000 WHERE id = ${userid}`);
         let table = await db.query(`SELECT * FROM user WHERE companyId = ${companyid} `);
         res.json(table)
-    }
-})
+    };
+});
 
 app.get("/betHistory", async function(req, res) {
     let userBets = await db.query(`SELECT bet.fixture_id, bet.fixture, bet.team, bet.amountPlaced, bet.amountwon, bet.odds, bet.amountwon, user.username, company.name FROM bet LEFT JOIN user ON user.id = bet.user_Id LEFT JOIN company ON company.id = user.companyid WHERE user_Id = '${userid}'`);

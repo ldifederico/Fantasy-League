@@ -3,7 +3,7 @@ async function loadHistory() {
     let betHistory = await $.ajax({
     method: "GET",
     url: "/betHistory"
-    });    
+    });
     $("#company").text(` ${betHistory[0].name}`)
     $("#username").text(` ${betHistory[0].username}`)
     i=1
@@ -15,8 +15,13 @@ async function loadHistory() {
         $("<td>").text(bet.odds).appendTo("#row"+i)
         $("<td>").text(bet.amountwon).appendTo("#row"+i)
         i++
-    }
-} 
+    };
+};
+
+async function updatePoints() {
+    let points = await $.get("/getPoints")
+    $("#points").text(`Points: ${points[0].points}`)
+};
 
 $("#searchSubmit").click(function() {
     window.location.href = "/team.html"
@@ -25,7 +30,8 @@ $("#searchSubmit").click(function() {
     document.cookie = `teamName=${$("#teamName").val()}`;
 });
 
-loadHistory()
+loadHistory();
+updatePoints();
 
 
 

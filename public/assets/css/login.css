@@ -33,7 +33,7 @@ form {
 }
 
 #content {
-    border-radius: 5%;
+    border-radius: 25px;
     text-align: center;
     z-index: 1;
 }
