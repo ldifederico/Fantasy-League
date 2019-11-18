@@ -5,7 +5,7 @@ var settings = {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-		"x-rapidapi-key": process.env.api_key
+		"x-rapidapi-key": "f01f638c42msh4d70f52d10f6b45p1a4b54jsnc4117f6c2a19"
 	}
 }
 
