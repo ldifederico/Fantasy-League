@@ -35,10 +35,11 @@ class Database {
     }
 };
   
+const db;
 if (process.env.JAWSDB_URL) {
-    const db = mysql.createConnection(process.env.JAWSDB_URL);
+    db = mysql.createConnection(process.env.JAWSDB_URL);
 } else {
-    const db = new Database({
+    db = new Database({
     host: "localhost",
     port: 3306,
     user: "root",
