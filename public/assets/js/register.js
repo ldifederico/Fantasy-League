@@ -120,8 +120,7 @@ async function createNewUser(event) {
     }
     else {
         window.location.href = "/main"
-    }
+    };
+};
 
-}
-
-$("#registerbtn").click(createNewUser)
+$("#registerbtn").click(createNewUser);

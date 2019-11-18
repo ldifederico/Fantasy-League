@@ -9,31 +9,6 @@ var settings = {
 	}
 }
 
-
-// async function loadFixtures(gameWeek) {
-//     settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
-//     data = await $.get(settings);
-//     fixtures = data.api.fixtures;
-
-//     date_timestamp = Date.now().toString();
-//     date_timestamp = date_timestamp.slice(0,-3);
-
-//     var weekFixtures = [];
-//     for (fixture of fixtures) {
-//         if (fixture.round == gameWeek) {weekFixtures.push(fixture)};
-//     };
-//     for (fixture of weekFixtures) {
-//         // $("<div>").addClass("row").appendTo("#")
-//         $("<p>").attr("id","fixture"+i).addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date}) ${fixture.status} ${fixture.goalsHomeTeam} ${fixture.goalsAwayTeam}`).appendTo("#fixtures")
-//         $("<div>").attr({
-//             class: "form-control form-control-sm",
-//             id: "placeBet",
-//             type: "text",
-//             placeholder: "Bet Amount",
-//         }).appendTo("#fixture"+i)
-//     };
-// }
-
 async function loadStandings() {
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
     let standings = await $.get(settings);
@@ -174,37 +149,7 @@ async function loadCompany() {
 
 async function placeBet() {
     number = this.id.replace(/[^0-9]/g,'')
-<<<<<<< HEAD
-    fixture = $("#fixture" + number);
-    var bet = {}
-    bet.fixtureID = fixture.attr("fixtureid");
-    bet.fixture = `${fixture.attr("homeTeam")} vs. ${fixture.attr("awayTeam")}`;
-    team = $(this).text()
-    switch(team) {
-        case "Home": bet.team = fixture.attr("homeTeam") 
-        break;
-        case "Away": bet.team = fixture.attr("awayTeam") 
-        break;
-        case "Draw": bet.team = "Draw"
-        break;
-    }
-    bet.amount = $("#placeBet" + number).val()
-    bet.odds = 2
-    let status = await $.ajax({
-        method: "POST",
-        url: "/placeBet",
-        data: bet
-    });
-    if (status == "placed") {
-        $(`#placeBet${number}, #homeBet${number}, #visitorBet${number}, #draw${number}`).hide()
-        // $("<div>").text(`${bet.amount} points for ${bet.team} at odds of ${bet.odds}`).appendTo("#fixture"+number)
-        $("<div>").text(`${bet.amount} points for ${bet.team}`).appendTo("#fixture"+number)
-        updatePoints()
-    }
-    else if(status == "no funds") {
-=======
     if ($("#placeBet" + number).val() < 5) {
->>>>>>> dbc5bc2afdc31f934d3a08e3414d0bb2286031ae
         $("#funds"+number).remove()
         $("<div>").attr("id","funds"+number).text(`Bet minimum of 5 points.`).appendTo("#fixture"+number)
     }
@@ -315,3 +260,6 @@ $("#joinCompanyGroup").click( async function() {
     });
 });
 
+$("#signOut").click(function() {
+    $.post("/signout");
+});

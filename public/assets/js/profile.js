@@ -27,5 +27,9 @@ $("#searchSubmit").click(function() {
     console.log(document.cookie)
 });
 
+$("#signOut").click(function() {
+    $.post("/signout");
+});
+
 loadProfile();
 updatePoints();

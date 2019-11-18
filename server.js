@@ -65,8 +65,8 @@ companyList = [];
 userList = [];
 incompleteGames = [];
 uniqueGames = [];
-let userid;
-let companyid;
+var userid;
+var companyid;
 
 
 app.listen(PORT, function() {
@@ -91,6 +91,11 @@ app.post("/", async function(req, res) {
 
 app.get("/register", async function(req,res) {
     res.sendFile(path.join(__dirname, "./public/register.html"));
+});
+
+app.post("/signout", async function (req,res) {
+    userid = null;
+    companyid = null;
 });
 
 app.get("/main", async function(req,res) {

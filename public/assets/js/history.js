@@ -30,6 +30,10 @@ $("#searchSubmit").click(function() {
     document.cookie = `teamName=${$("#teamName").val()}`;
 });
 
+$("#signOut").click(function() {
+    $.post("/signout");
+});
+
 loadHistory();
 updatePoints();
 

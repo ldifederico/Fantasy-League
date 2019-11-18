@@ -190,6 +190,7 @@ async function getTeam() {
     //standings
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
     let standings = await $.get(settings);
+    console.log(standings)
     i=1
     for (team of standings.api.standings[0]){
         $("<tr>").attr("id","row"+i).appendTo("#leagueBody");
@@ -198,10 +199,8 @@ async function getTeam() {
             id: "header"+i,
         }).text(i).appendTo("#row"+i)
         $("<td>").text(team.teamName).appendTo($("#row"+i));
-        $("<td>").text(team.all.matchsPlayed).appendTo($("#row"+i));
-        $("<td>").text(team.all.win).appendTo($("#row"+i));
-        $("<td>").text(team.all.draw).appendTo($("#row"+i));
-        $("<td>").text(team.all.lose).appendTo($("#row"+i));
+        $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($("#row"+i));
+        $("<td>").text(team.points).appendTo($("#row"+i));
         i++
     }
 }
@@ -216,6 +215,10 @@ $("#searchSubmit").click(function() {
     event.preventDefault();
     document.cookie = "teamName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
     document.cookie = `teamName=${$("#teamName").val()}`;
+});
+
+$("#signOut").click(function() {
+    $.post("/signout");
 });
 
 getTeam()
