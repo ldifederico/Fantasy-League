@@ -35,9 +35,9 @@ class Database {
     }
 };
   
-// if (process.env.JAWSDB_URL) {
-//     const db = mysql.createConnection(process.env.JAWSDB_URL);
-// } else {
+if (process.env.JAWSDB_URL) {
+    const db = mysql.createConnection(process.env.JAWSDB_URL);
+} else {
     const db = new Database({
     host: "localhost",
     port: 3306,
@@ -45,7 +45,7 @@ class Database {
     password: "password",
     database: "FantasyDB"
   });
-//  }
+ }
 
 
 var settings = {
