@@ -37,7 +37,7 @@ class Database {
   
 let db;
 if (process.env.JAWSDB_URL) {
-    db = mysql.createConnection(process.env.JAWSDB_URL);
+    db = new Database(process.env.JAWSDB_URL);
 } else {
     db = new Database({
     host: "localhost",
