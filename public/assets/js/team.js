@@ -135,7 +135,6 @@ var teams = [
 async function getTeam() {
     //Team
     allCookies = document.cookie.split(';');
-    console.log(allCookies)
     for (cookie of allCookies) {
         if (cookie.includes("teamName=")) {
             teamName = cookie.substring(10);
@@ -145,7 +144,6 @@ async function getTeam() {
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/teams/search/${teamName}`;
     data = await $.get(settings);
     teamData = data.api.teams[0];
-    console.log(teamData);
     var team = teams.filter(obj => {
         return obj.teamName == teamData.name
     });
@@ -208,6 +206,11 @@ async function getTeam() {
     }
 }
 
+async function updatePoints() {
+    let points = await $.get("/getPoints")
+    $("#points").text(`Points: ${points[0].points}`)
+}
+
 $("#searchSubmit").click(function() {
     window.location.href = "/team.html"
     event.preventDefault();
@@ -216,5 +219,6 @@ $("#searchSubmit").click(function() {
 });
 
 getTeam()
+updatePoints()
 
     

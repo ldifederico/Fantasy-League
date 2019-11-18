@@ -20,12 +20,12 @@ CREATE TABLE user(
 
 CREATE TABLE bet(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    fixture VARCHAR(30),
+    fixture VARCHAR(100),
     fixture_id INT NOT NULL,
-    team VARCHAR(30),
+    team VARCHAR(50),
     amountPlaced DECIMAL NOT NULL,
     odds DECIMAL,
-    winningTeam VARCHAR(30),
+    winningTeam VARCHAR(50),
     amountwon DECIMAL,
     user_Id INT NOT NULL
 );
