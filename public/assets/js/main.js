@@ -1,3 +1,5 @@
+// import { promises } from "fs";
+
 var settings = {
 	"async": true,
 	"crossDomain": true,
@@ -39,14 +41,13 @@ async function loadFixtures(gameWeek) {
     if (!isNaN(gameWeek)) {
         date_timestamp = gameWeek.toString();
         date_timestamp = date_timestamp.slice(0,-3);
-        var futureFixtures = []
+        var futureFixtures = [];
         for (fixture of fixtures) {
-            if (fixture.event_timestamp > date_timestamp) {futureFixtures.push(fixture)}
+            if (fixture.event_timestamp > date_timestamp) {futureFixtures.push(fixture)};
         }
-        gameWeek = futureFixtures[0].round
-    }
+        gameWeek = futureFixtures[0].round;
+    };
 
-    $("<h6>").text("Game Week " + gameWeek.replace(/[^0-9]/g,'')).appendTo("#fixtures")
     var weekFixtures = [];
     for (fixture of fixtures) {
         if (fixture.round == gameWeek) {weekFixtures.push(fixture)};
@@ -54,13 +55,40 @@ async function loadFixtures(gameWeek) {
 
     let betHistory = await $.get("/betHistory");
 
-    i = 1
-    for (fixture of weekFixtures) {
-    
-        settings.url = `https://api-football-v1.p.rapidapi.com/v2/odds/fixture/${fixture.fixture_id}`;
-        data = await $.get(settings);
+    $("<div>").addClass("spinner-border").attr("role","status").insertAfter("#fixtures");
+    $("<p>").text("Loading fixtures...").insertAfter("#fixtures");
+
+    apiCalls = weekFixtures.map(fixture =>
+        //remove entire settings object, just need fixtureID passed in
+        settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": `https://api-football-v1.p.rapidapi.com/v2/odds/fixture/${fixture.fixture_id}`,
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
+                "x-rapidapi-key": "f01f638c42msh4d70f52d10f6b45p1a4b54jsnc4117f6c2a19"
+            }
+        }
+    );
+
+    let allFixtures = await Promise.all(apiCalls.map(url =>
+        $.get(url)
+    ));
+
+    $("#fixtures").siblings().remove();
+    $("<h6>").text("Game Week " + gameWeek.replace(/[^0-9]/g,'')).appendTo("#fixtures");
+
+    for ([i, fixture] of weekFixtures.entries()) {
+
+    // for ([i, fixture] of weekFixtures.entries()) {
+
+    //     settings.url = `https://api-football-v1.p.rapidapi.com/v2/odds/fixture/${fixture.fixture_id}`;
+    //     data = await $.get(settings);
         try {
-            fixtureOdds = data.api.odds[0].bookmakers[0].bets[0];
+            fixtureOdds = allFixtures[0].api.odds[0].bookmakers[0].bets[0];
+            fixtureID = allFixtures.filter(fixture => allFixtures.api.odds.fixture.fixture_id = fixture.fixture_id);
+            // allFixtures[0].api.odds[0].bookmakers[0].bets[0];
         }
         catch {
             fixtureOdds.values[0].odd = 2.55
@@ -78,11 +106,11 @@ async function loadFixtures(gameWeek) {
                 awayTeam: fixture.awayTeam.team_name,
                 odds: 2
             }).addClass("card-text").text(`${fixture.homeTeam.team_name} (H) vs. ${fixture.awayTeam.team_name} (A)`).appendTo("#fixRow"+i)
-            betPlaced = false
+            betPlaced = false;
             for (bet of betHistory) {
                 if (fixture.fixture_id == bet.fixture_id) {
-                    betInfo = bet
-                    betPlaced = true
+                    betInfo = bet;
+                    betPlaced = true;
                 };
             };
             if (betPlaced == false) {
@@ -123,7 +151,6 @@ async function loadFixtures(gameWeek) {
         else {
             $("<div>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.status} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#fixtures");
         };
-        i++
     }
     $(".betButton").on("click", placeBet)
 };
@@ -139,13 +166,11 @@ async function loadCompany() {
         });
         $("#companySelect").attr("style","display: none")
         $("#companyDisplay").attr("style","display: block")
-        i=1
-        for (user of company) {
+        for ([i,user] of company.entries()) {
             $("<tr>").attr("id","row"+i).appendTo("#companyTable")
             $("<th>").attr("scope","row").text(i).appendTo("#row"+i)
             $("<td>").text(user.username).appendTo("#row"+i)
             $("<td>").text(user.points).appendTo("#row"+i)
-            i++
         };
     };
 };
@@ -239,15 +264,12 @@ $("#joinCompanyGroup").click( async function() {
         data: data,
         method: "POST"
     });
-    i=1
-    for (group of groupSearch) {
+    for ([i,group] of groupSearch.entries()) {
         $("<tr>").attr({
             id: "searchRow"+i,
             class: "result"
         }).appendTo("#searchTable")
         $("<td>").addClass("result").text(group.name).appendTo("#searchRow"+i)
-
-        i++
     };
     $(".result").on("click", async function() {
         data = this.id.replace(/[^0-9]/g,'');
