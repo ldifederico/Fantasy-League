@@ -194,7 +194,7 @@ async function placeBet() {
         };
         bet.amount = $("#placeBet" + number).val();
         bet.odds = `${$(this).text().replace(/[^0-9]/g,'').slice(0,1)}.${$(this).text().replace(/[^0-9]/g,'').slice(1,3)}`
-        bed.userID = localStorage.getItem("userID");
+        bet.userID = localStorage.getItem("userID");
         status = await $.ajax({
             method: "POST",
             url: "/placeBet",

@@ -125,7 +125,6 @@ app.post("/register", async function(req,res) {
 });
 
 app.post("/group", async function (req, res) {
-    console.log(req.body);
     group = await db.query(`SELECT * FROM user WHERE companyid = ${req.body.companyID} ORDER BY points DESC`);
     res.json(group);
 });
