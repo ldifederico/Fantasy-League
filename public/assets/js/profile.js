@@ -1,9 +1,10 @@
 async function loadProfile () {
+    let userID = {userID: localStorage.getItem("userID")};
     let userInfo = await $.ajax({
-        method: "GET",
-        url: "/profile"
+        method: "POST",
+        url: "/profile",
+        data: userID
     });
-    console.log(userInfo)
     
     $("#username").text(`Username: ${userInfo[0].username}`)
     $("#firstname").text(`First Name: ${userInfo[0].firstName}`)
@@ -15,8 +16,13 @@ async function loadProfile () {
 };
 
 async function updatePoints() {
-    let points = await $.get("/getPoints")
-    $("#points").text(`Points: ${points[0].points}`)
+    let data = {userID: localStorage.getItem("userID")};
+    let points = await $.ajax({
+        method: "POST",
+        url: "/getPoints",
+        data: data
+    });
+    $("#points").text(`Points: ${points[0].points}`);
 };
 
 $("#searchSubmit").click(function() {
@@ -24,7 +30,6 @@ $("#searchSubmit").click(function() {
     event.preventDefault();
     document.cookie = "teamName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
     document.cookie = `teamName=${$("#teamName").val()}`;
-    console.log(document.cookie)
 });
 
 $("#signOut").click(function() {

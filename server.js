@@ -64,6 +64,8 @@ companyList = [];
 userList = [];
 incompleteGames = [];
 uniqueGames = [];
+var userID;
+var companyID;
 
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
@@ -100,8 +102,8 @@ app.get("/main", async function(req,res) {
     // companyInfo = await db.query(`SELECT * FROM company WHERE id = ${userInfo[0].companyId}`);
 });
 
-app.get("/profile", async function(req,res) {
-    userInfo = await db.query(`SELECT * FROM user WHERE id = ${userid}`);
+app.post("/profile", async function(req,res) {
+    userInfo = await db.query(`SELECT * FROM user WHERE id = ${req.body.userID}`);
     companyInfo = await db.query(`SELECT * FROM company WHERE id = ${userInfo[0].companyId}`);
     if (companyInfo[0] !== undefined) {
         userInfo[0].companyName = companyInfo[0].name
@@ -155,17 +157,16 @@ app.post("/createGroup", async function(req,res) {
     };
 });
 
-app.get("/betHistory", async function(req, res) {
-    let userBets = await db.query(`SELECT bet.fixture_id, bet.fixture, bet.team, bet.amountPlaced, bet.amountwon, bet.odds, bet.amountwon, user.username, company.name FROM bet LEFT JOIN user ON user.id = bet.user_Id LEFT JOIN company ON company.id = user.companyid WHERE user_Id = '${userid}'`);
+app.post("/betHistory", async function(req, res) {
+    let userBets = await db.query(`SELECT bet.fixture_id, bet.fixture, bet.team, bet.amountPlaced, bet.amountwon, bet.odds, bet.amountwon, user.username, company.name FROM bet LEFT JOIN user ON user.id = bet.user_Id LEFT JOIN company ON company.id = user.companyid WHERE user_Id = '${req.body.userID}'`);
     res.json(userBets);
 });
 
 app.post("/placeBet", async function(req,res) {
-    console.log(req.body)
-    let userpoint = await db.query(`SELECT points FROM user WHERE id = '${userid}'`);
+    let userpoint = await db.query(`SELECT points FROM user WHERE id = '${req.body.userID}'`);
     if(userpoint[0].points>=req.body.amount){
-        await db.query(`INSERT INTO bet (fixture, fixture_id, team, amountPlaced, odds, user_Id ) VALUES( '${req.body.fixture}', ${req.body.fixtureID}, '${req.body.team}', ${req.body.amount}, ${req.body.odds}, ${userid})` );
-        await db.query(`UPDATE user SET points = points - ${req.body.amount} WHERE id = ${userid}; `);
+        await db.query(`INSERT INTO bet (fixture, fixture_id, team, amountPlaced, odds, user_Id ) VALUES( '${req.body.fixture}', ${req.body.fixtureID}, '${req.body.team}', ${req.body.amount}, ${req.body.odds}, ${req.body.userID})` );
+        await db.query(`UPDATE user SET points = points - ${req.body.amount} WHERE id = ${req.body.userID}; `);
         status = "placed";
     }
     else{
@@ -174,7 +175,7 @@ app.post("/placeBet", async function(req,res) {
     res.json(status);
 });
 
-app.get("/getPoints", async function(req,res) {
+app.post("/getPoints", async function(req,res) {
     let userpoint = await db.query(`SELECT points FROM user WHERE id = '${req.body.userID}'`);
     res.json(userpoint)
 });

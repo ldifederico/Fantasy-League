@@ -1,4 +1,3 @@
-// import { promises } from "fs";
 
 var settings = {
 	"async": true,
@@ -53,7 +52,12 @@ async function loadFixtures(gameWeek) {
         if (fixture.round == gameWeek) {weekFixtures.push(fixture)};
     };
 
-    let betHistory = await $.get("/betHistory");
+    let userID = ({userID: localStorage.getItem("userID")})
+    let betHistory = await $.post({
+        url: "/betHistory",
+        method: "POST",
+        data: userID
+    });
 
     apiCalls = weekFixtures.map(fixture =>
         //remove entire settings object, just need fixtureID passed in
@@ -150,7 +154,6 @@ async function loadFixtures(gameWeek) {
 
 async function loadCompany() {
     let companyID = ({companyID: localStorage.getItem("companyID")})
-    console.log(companyID)
     if (companyID !== null) {
         let company = await $.ajax({
             method: "POST",
@@ -191,6 +194,7 @@ async function placeBet() {
         };
         bet.amount = $("#placeBet" + number).val();
         bet.odds = `${$(this).text().replace(/[^0-9]/g,'').slice(0,1)}.${$(this).text().replace(/[^0-9]/g,'').slice(1,3)}`
+        bed.userID = localStorage.getItem("userID");
         status = await $.ajax({
             method: "POST",
             url: "/placeBet",
@@ -210,16 +214,21 @@ async function placeBet() {
 };
 
 async function updatePoints() {
-    let points = await $.get("/getPoints")
-    $("#points").text(`Points: ${points[0].points}`)
-}
+    let data = ({userID: localStorage.getItem("userID")})
+    let points = await $.ajax({
+        method: "POST",
+        url: "/getPoints",
+        data: data
+    });
+    $("#points").text(`Points: ${points[0].points}`);
+};
 
 async function mainLoad() {
     loadFixtures(Date.now());
     loadStandings();
     loadCompany();
     updatePoints();
-}
+};
 
 mainLoad();
 

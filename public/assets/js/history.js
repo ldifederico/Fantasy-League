@@ -1,25 +1,30 @@
 
 async function loadHistory() {
+    let userID = {userID: localStorage.getItem("userID")}
     let betHistory = await $.ajax({
-    method: "GET",
-    url: "/betHistory"
+        method: "POST",
+        url: "/betHistory",
+        data: userID
     });
-    $("#company").text(` ${betHistory[0].name}`)
-    $("#username").text(` ${betHistory[0].username}`)
-    i=1
-    for (bet of betHistory) {
+    $("#company").text(` ${betHistory[0].name}`);
+    $("#username").text(` ${betHistory[0].username}`);
+    for ([i,bet] of betHistory.entries()) {
         $("<tr>").attr("id","row"+i).appendTo("#betTable")
         $("<td>").text(bet.fixture).appendTo("#row"+i)
         $("<td>").text(bet.amountPlaced).appendTo("#row"+i)
         $("<td>").text(bet.team).appendTo("#row"+i)
         $("<td>").text(bet.odds).appendTo("#row"+i)
         $("<td>").text(bet.amountwon).appendTo("#row"+i)
-        i++
     };
 };
 
 async function updatePoints() {
-    let points = await $.get("/getPoints")
+    let data = ({userID: localStorage.getItem("userID")})
+    let points = await $.ajax({
+        method: "POST",
+        url: "/getPoints",
+        data: data
+    });
     $("#points").text(`Points: ${points[0].points}`)
 };
 
