@@ -64,8 +64,6 @@ companyList = [];
 userList = [];
 incompleteGames = [];
 uniqueGames = [];
-var userid = 2
-var companyid = 4
 
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
