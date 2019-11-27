@@ -163,22 +163,23 @@ app.get("/betHistory", async function(req, res) {
 });
 
 app.post("/placeBet", async function(req,res) {
+    console.log(req.body)
     let userpoint = await db.query(`SELECT points FROM user WHERE id = '${userid}'`);
     if(userpoint[0].points>=req.body.amount){
         await db.query(`INSERT INTO bet (fixture, fixture_id, team, amountPlaced, odds, user_Id ) VALUES( '${req.body.fixture}', ${req.body.fixtureID}, '${req.body.team}', ${req.body.amount}, ${req.body.odds}, ${userid})` );
-        await db.query(`UPDATE user SET points = points - ${req.body.amount} WHERE id = ${userid}; `)
-        status = "placed"
+        await db.query(`UPDATE user SET points = points - ${req.body.amount} WHERE id = ${userid}; `);
+        status = "placed";
     }
     else{
-        status = "no funds"
-    }
-    res.json(status)
-})
+        status = "no funds";
+    };
+    res.json(status);
+});
 
 app.get("/getPoints", async function(req,res) {
     let userpoint = await db.query(`SELECT points FROM user WHERE id = '${req.body.userID}'`);
     res.json(userpoint)
-})
+});
 
 async function checkGames() {
 
@@ -187,7 +188,7 @@ async function checkGames() {
     var completedGames = [];
     let games = await db.query("SELECT fixture_id FROM bet WHERE winningTeam IS NULL ");
     if (games[0].fixture_id == !null) {
-        for (i = 0; i<games.length; i++) {
+        for (i = 0; i < games.length; i++) {
             incompleteGames.push(games[i].fixture_id);
         }
         set = new Set(incompleteGames);

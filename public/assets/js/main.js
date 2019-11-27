@@ -14,8 +14,7 @@ var settings = {
 async function loadStandings() {
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
     let standings = await $.get(settings);
-    i=1
-    for (team of standings.api.standings[0]){
+    for ([i,team] of standings.api.standings[0].entries()){
         $("<tr>").attr("id","standRow"+i).appendTo("#leagueBody");
         $("<th>").attr({
             scope: "row",
@@ -30,11 +29,12 @@ async function loadStandings() {
         $("<td>").text(team.all.goalsAgainst).appendTo($("#standRow"+i));
         $("<td>").text(team.goalsDiff).appendTo($("#standRow"+i));
         $("<td>").text(team.points).appendTo($("#standRow"+i));
-        i++
     };
 };
 
 async function loadFixtures(gameWeek) {
+    $("<div>").addClass("spinner-border").attr("role","status").insertAfter("#fixtures");
+    $("<p>").text("Loading fixtures...").insertAfter("#fixtures");
     settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
     data = await $.get(settings);
     fixtures = data.api.fixtures;
@@ -55,9 +55,6 @@ async function loadFixtures(gameWeek) {
 
     let betHistory = await $.get("/betHistory");
 
-    $("<div>").addClass("spinner-border").attr("role","status").insertAfter("#fixtures");
-    $("<p>").text("Loading fixtures...").insertAfter("#fixtures");
-
     apiCalls = weekFixtures.map(fixture =>
         //remove entire settings object, just need fixtureID passed in
         settings = {
@@ -72,7 +69,7 @@ async function loadFixtures(gameWeek) {
         }
     );
 
-    let allFixtures = await Promise.all(apiCalls.map(url =>
+    let allFixtureOdds = await Promise.all(apiCalls.map(url =>
         $.get(url)
     ));
 
@@ -80,21 +77,17 @@ async function loadFixtures(gameWeek) {
     $("<h6>").text("Game Week " + gameWeek.replace(/[^0-9]/g,'')).appendTo("#fixtures");
 
     for ([i, fixture] of weekFixtures.entries()) {
-
-    // for ([i, fixture] of weekFixtures.entries()) {
-
-    //     settings.url = `https://api-football-v1.p.rapidapi.com/v2/odds/fixture/${fixture.fixture_id}`;
-    //     data = await $.get(settings);
         try {
-            fixtureOdds = allFixtures[0].api.odds[0].bookmakers[0].bets[0];
-            fixtureID = allFixtures.filter(fixture => allFixtures.api.odds.fixture.fixture_id = fixture.fixture_id);
-            // allFixtures[0].api.odds[0].bookmakers[0].bets[0];
+            for (odds of allFixtureOdds) {
+                if (odds.api.odds[0].fixture.fixture_id == fixture.fixture_id) {fixtureOdds = odds.api.odds[0].bookmakers[0].bets[0].values};
+            };
         }
         catch {
-            fixtureOdds.values[0].odd = 2.55
-            fixtureOdds.values[1].odd = 5.10
-            fixtureOdds.values[2].odd = 1.20
-        }
+            //Solution when odds not received from API
+            fixtureOdds[0].odd = 2.55
+            fixtureOdds[1].odd = 5.10
+            fixtureOdds[2].odd = 1.20
+        };
 
         if (fixture.status == "Not Started") {
             $("<div>").attr("id","fixRow"+i).addClass("container").appendTo("#fixtures")
@@ -140,9 +133,9 @@ async function loadFixtures(gameWeek) {
                     style: "font-size: x-small; margin: 1%"
                 }).appendTo("#fixture"+i);
 
-                document.getElementById("homeBet"+i).innerHTML = `Home: ${fixtureOdds.values[0].odd}`;
-                document.getElementById("visitorBet"+i).innerHTML = `Away: ${fixtureOdds.values[2].odd}`;
-                document.getElementById("draw"+i).innerHTML = `Draw: ${fixtureOdds.values[1].odd}`;
+                document.getElementById("homeBet"+i).innerHTML = `Home: ${fixtureOdds[0].odd}`;
+                document.getElementById("visitorBet"+i).innerHTML = `Away: ${fixtureOdds[2].odd}`;
+                document.getElementById("draw"+i).innerHTML = `Draw: ${fixtureOdds[1].odd}`;
             }
             else {
                 $("<div>").text(`${betInfo.amountPlaced} points for ${betInfo.team}`).appendTo("#fixture"+i)
@@ -197,7 +190,7 @@ async function placeBet() {
             default: console.log("default");
         };
         bet.amount = $("#placeBet" + number).val();
-        bet.odds = $(this).text().replace(/[^0-9]/g,'').substring(0,1) + "." + $(this).text().replace(/[^0-9]/g,'').substring(1,2) 
+        bet.odds = `${$(this).text().replace(/[^0-9]/g,'').slice(0,1)}.${$(this).text().replace(/[^0-9]/g,'').slice(1,3)}`
         status = await $.ajax({
             method: "POST",
             url: "/placeBet",

@@ -24,7 +24,7 @@ CREATE TABLE bet(
     fixture_id INT NOT NULL,
     team VARCHAR(50),
     amountPlaced DECIMAL NOT NULL,
-    odds DECIMAL,
+    odds DECIMAL(10,2),
     winningTeam VARCHAR(50),
     amountwon DECIMAL,
     user_Id INT NOT NULL
