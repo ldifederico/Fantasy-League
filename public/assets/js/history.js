@@ -8,7 +8,8 @@ async function loadHistory() {
     });
     $("#company").text(` ${betHistory[0].name}`);
     $("#username").text(` ${betHistory[0].username}`);
-    for ([i,bet] of betHistory.entries()) {
+    for ([index,bet] of betHistory.entries()) {
+        i = index + 1
         $("<tr>").attr("id","row"+i).appendTo("#betTable")
         $("<td>").text(bet.fixture).appendTo("#row"+i)
         $("<td>").text(bet.amountPlaced).appendTo("#row"+i)

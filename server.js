@@ -81,6 +81,7 @@ app.post("/", async function(req, res) {
         let useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`);
         let companyid = companyidObj[0].companyId;
         let userid = useridObj[0].id;
+        console.log(({userID: userid, companyID: companyid}))
         res.send({userID: userid, companyID: companyid})
     } catch(error) {
         res.send({text: "incorrect login"})
@@ -117,10 +118,10 @@ app.post("/register", async function(req,res) {
         res.send({text: "User exists"})
     }
     else {
-        res.send({text: "User created"})
         await db.query(`INSERT INTO user (firstName, lastName, email, username, password, points) VALUES ('${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.username}', '${req.body.password}', 0)`);
         let useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}'`);
         userid = useridObj[0].id;
+        res.send({text: userid});
     };
 });
 

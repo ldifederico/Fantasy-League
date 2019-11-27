@@ -13,7 +13,8 @@ var settings = {
 async function loadStandings() {
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
     let standings = await $.get(settings);
-    for ([i,team] of standings.api.standings[0].entries()){
+    for ([index,team] of standings.api.standings[0].entries()){
+        i = index+1
         $("<tr>").attr("id","standRow"+i).appendTo("#leagueBody");
         $("<th>").attr({
             scope: "row",
@@ -80,7 +81,8 @@ async function loadFixtures(gameWeek) {
     $("#fixtures").siblings().remove();
     $("<h6>").text("Game Week " + gameWeek.replace(/[^0-9]/g,'')).appendTo("#fixtures");
 
-    for ([i, fixture] of weekFixtures.entries()) {
+    for ([index, fixture] of weekFixtures.entries()) {
+        i = index+1
         try {
             for (odds of allFixtureOdds) {
                 if (odds.api.odds[0].fixture.fixture_id == fixture.fixture_id) {fixtureOdds = odds.api.odds[0].bookmakers[0].bets[0].values};
@@ -162,7 +164,8 @@ async function loadCompany() {
         });
         $("#companySelect").attr("style","display: none")
         $("#companyDisplay").attr("style","display: block")
-        for ([i,user] of company.entries()) {
+        for ([index,user] of company.entries()) {
+            i = index + 1
             $("<tr>").attr("id","row"+i).appendTo("#companyTable")
             $("<th>").attr("scope","row").text(i).appendTo("#row"+i)
             $("<td>").text(user.username).appendTo("#row"+i)
@@ -266,7 +269,8 @@ $("#joinCompanyGroup").click( async function() {
         data: data,
         method: "POST"
     });
-    for ([i,group] of groupSearch.entries()) {
+    for ([index,group] of groupSearch.entries()) {
+        i = index + 1
         $("<tr>").attr({
             id: "searchRow"+i,
             class: "result"
@@ -281,8 +285,9 @@ $("#joinCompanyGroup").click( async function() {
             data: data,
             method: "POST"
         });
+        localStorage.setItem("companyID", data.companyID)
         $(".result").remove();
-        loadCompany(company);
+        loadCompany();
         updatePoints();
     });
 });

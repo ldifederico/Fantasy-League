@@ -102,7 +102,6 @@ async function createNewUser(event) {
     data.email = $("#email").val();
     data.username = $("#username").val();
     data.password = $("#psw").val();
-    console.log(data)
 
     let response = await $.ajax({
         url: "/register",
@@ -111,15 +110,13 @@ async function createNewUser(event) {
     });
 
     if (response.text == "User exists") {
-        console.log("user exists")
         if($("#exists")[0] == null) {
-            $("<p>").attr("id","exists").text("Account with that username/email already exists.").appendTo("#registerdiv")
-        }
-        else {
+            $("<p>").attr("id","exists").text("Account with that username/email already exists.").appendTo("#registerdiv");
         }
     }
     else {
-        window.location.href = "/main"
+      localStorage.setItem("userID",response.text);
+      window.location.href = "/main";
     };
 };
 
