@@ -8,14 +8,14 @@ async function sendLogin(event){
         url: "/",
         data: login
     })
-    console.log(result.text)
-    if (result.text == "correct login") {
-        window.location.href = "/main"
-    }
-    else {
+    if (result.text == "incorrect login") {
         $("#incorrect").remove()
         $("<div>").attr("id","incorrect").text(`Incorrect username and/or password`).appendTo("#buttonContainer")
-        console.log("incorrect")
+    }
+    else {
+        localStorage.setItem("userID", result.userID,)
+        localStorage.setItem("companyID", result.companyID)
+        window.location.href = "/main"
     };
 }
 

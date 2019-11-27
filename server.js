@@ -35,7 +35,6 @@ class Database {
     }
 };
   
-let db;
 if (process.env.JAWSDB_URL) {
     db = new Database(process.env.JAWSDB_URL);
 } else {
@@ -65,9 +64,8 @@ companyList = [];
 userList = [];
 incompleteGames = [];
 uniqueGames = [];
-var userid;
-var companyid;
-
+var userid = 2
+var companyid = 4
 
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
@@ -81,9 +79,9 @@ app.post("/", async function(req, res) {
     try {
         let companyidObj = await db.query(`SELECT companyId FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`);
         let useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`);
-        companyid = companyidObj[0].companyId;
-        userid = useridObj[0].id;
-        res.send({text: "correct login"})
+        let companyid = companyidObj[0].companyId;
+        let userid = useridObj[0].id;
+        res.send({userID: userid, companyID: companyid})
     } catch(error) {
         res.send({text: "incorrect login"})
     }
@@ -93,13 +91,15 @@ app.get("/register", async function(req,res) {
     res.sendFile(path.join(__dirname, "./public/register.html"));
 });
 
-app.post("/signout", async function (req,res) {
-    userid = null;
-    companyid = null;
-});
+// app.post("/signout", async function (req,res) {
+//     userid = null;
+//     companyid = null;
+// });
 
 app.get("/main", async function(req,res) {
     res.sendFile(path.join(__dirname, "./public/main.html"));
+    // userInfo = await db.query(`SELECT * FROM user WHERE id = ${userid}`);
+    // companyInfo = await db.query(`SELECT * FROM company WHERE id = ${userInfo[0].companyId}`);
 });
 
 app.get("/profile", async function(req,res) {
@@ -124,13 +124,9 @@ app.post("/register", async function(req,res) {
     };
 });
 
-app.get("/group", async function (req, res) {
-    if (companyid) {
-        group = await db.query(`SELECT * FROM user WHERE companyid = ${companyid} ORDER BY points DESC`);
-    }
-    else {
-        group = ""
-    };
+app.post("/group", async function (req, res) {
+    console.log(req.body);
+    group = await db.query(`SELECT * FROM user WHERE companyid = ${req.body.companyID} ORDER BY points DESC`);
     res.json(group);
 });
 
@@ -166,17 +162,6 @@ app.get("/betHistory", async function(req, res) {
     res.json(userBets);
 });
 
-app.get("/main", async function(req,res) {
-    let check = await db.query(`SELECT * FROM user WHERE companyId = ${companyid} `);
-
-    if (check[0] == undefined){
-        console.log("You are not currently a part of any leagues please join or create one");
-    }
-    else{
-        res.json(check);
-    }
-})
-
 app.post("/placeBet", async function(req,res) {
     let userpoint = await db.query(`SELECT points FROM user WHERE id = '${userid}'`);
     if(userpoint[0].points>=req.body.amount){
@@ -191,7 +176,7 @@ app.post("/placeBet", async function(req,res) {
 })
 
 app.get("/getPoints", async function(req,res) {
-    let userpoint = await db.query(`SELECT points FROM user WHERE id = '${userid}'`);
+    let userpoint = await db.query(`SELECT points FROM user WHERE id = '${req.body.userID}'`);
     res.json(userpoint)
 })
 

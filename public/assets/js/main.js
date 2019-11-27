@@ -129,11 +129,14 @@ async function loadFixtures(gameWeek) {
 };
 
 async function loadCompany() {
-    let company = await $.ajax({
-        method: "GET",
-        url: "/group"
-    });
-    if (company !== "") {
+    let companyID = ({companyID: localStorage.getItem("companyID")})
+    console.log(companyID)
+    if (companyID !== null) {
+        let company = await $.ajax({
+            method: "POST",
+            url: "/group",
+            data: companyID
+        });
         $("#companySelect").attr("style","display: none")
         $("#companyDisplay").attr("style","display: block")
         i=1
@@ -261,5 +264,7 @@ $("#joinCompanyGroup").click( async function() {
 });
 
 $("#signOut").click(function() {
+    localStorage.removeItem("companyID");
+    localStorage.removeItem("userID");
     $.post("/signout");
 });
