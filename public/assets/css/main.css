@@ -6,6 +6,24 @@ nav {
     font-family: 'Prompt', sans-serif;
 }
 
+@media screen and (max-width: 1024px) {
+    .mobile {
+        display: block;
+    }
+    .fullscreen {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    .mobile {
+      display: none;
+    }
+    .fullscreen {
+        display: block;
+    }
+}
+
 #form {
     width: 100%;
 }

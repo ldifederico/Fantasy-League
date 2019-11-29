@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="./assets/css/main.css"/>
   <script src="https://kit.fontawesome.com/581e33120b.js" crossorigin="anonymous"></script>
   <title>coleague</title>
-</head>
+</head>git
 
 <body>
   
@@ -38,104 +38,169 @@
           <a class="nav-link" href="profile.html">Profile</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="login.html" id="signOut"><i class="fas fa-sign-out-alt"></i>Sign Out</a>
+          <a class="nav-link" href="login.html"><i class="fas fa-sign-out-alt"></i>Sign Out</a>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search for team" id="teamName">
         <button class="btn btn-outline-light my-2 my-sm-0" type="submit" id="searchSubmit"><i class="fas fa-search"></i></button>
       </form>
-      <span class="navbar-text" id="points"> Points:</span>
+      <span class="navbar-text" id="points"> Pts:</span>
     </div>
   </nav>
 
   <div class="row">
-    <div class="card col-12 col-md-2" id="card">
-      <div class="card-body">
-        <h5 class="card-title" id="companyRanking">Company Ranking</h5>
-        <p class="card-text">
-          <div style="display: block" id = "companySelect">
-            <form class="form-inline my-2 my-sm-0">
-              <div class="row" >
-                <input class="form-control mr-sm-2" id="joinGroup" type="input">
-                <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
-              </div>
-              <table class="table table-hover">
-                <tbody id="searchTable">
-                  <tr></tr>
+    <div class="mobile" style="display: none">
+      <b-tabs content-class="mt-3" fill>
+        <b-tab title="Company Ranking" active>
+          <p class="card-text">
+            <div style="display: block" id = "companySelect">
+              <form class="form-inline my-2 my-sm-0">
+                <div class="row" >
+                  <input class="form-control mr-sm-2" id="joinGroup" type="input">
+                    <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
+                </div>
+                <table class="table table-hover">
+                  <tbody id="searchTable">
+                    <tr></tr>
+                  </tbody>
+                </table>
+              </form>
+              <form class="form-inline my-2 my-sm-0" id="form">
+                <div class="row">
+                  <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
+                  <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
+                </div>
+              </form>
+            </div>            
+              <table class="table table-hover" style="display: none" id="companyDisplay">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Pts</th>
+                  </tr>
+                </thead>
+                <tbody id="companyTable">
                 </tbody>
               </table>
-            </form>
-            <form class="form-inline my-2 my-sm-0" id="form">
-              <div class="row">
-                <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
-                <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
-              </div>
-            </form>
-          </div>            
-          <table class="table table-hover" style="display: none" id="companyDisplay">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Pts</th>
-              </tr>
-            </thead>
-            <tbody id="companyTable">
-            </tbody>
-          </table>
-        </p>
-      </div>
-    </div>
-    <div class="card col-12 col-md-3" id="card">
-      <div class="card-body">
-        <h5 class="card-title" id="fixtures">Fixtures</h5>
-        <br>
-        <p class="card-text">
-          <!-- <div class="row">
-            <div class="col-4">
-              <h7 id="homeTeam"></h7>
-            </div>
-            <div class="col-4">
-              <p>vs.</p>
-            </div>
-            <div class="col-4">
-              <h7 id="AwayTeam"></h7>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-5">
-              <p>Home</p>
-            </div>
-            <div class="col-2"></div>
-            <div class="col-5">
-              <p>Away</p>
-            </div>
-          </div>
-          <div class="row">
-            <p id="date"></p>
-            <p id="time"></p>
-          </div>
-          <div class="row">
-            <h7 id="odds">Odds</h7>
-            <p id="winOdds"></p>
-            <p id="loseOdds"></p>
-            <p id="drawOdds"></p>
-          </div>
-          <div class="row">
-            <form class="form my-2 my-sm-0" id="form">
-              <input class="form-control mr-sm-2" id="betAmount" type="input" placeholder="Bet amount">
-              <button class="btn btn-outline-dark btn-sm" id="homeBet" type="button">Home</button>
-              <button class="btn btn-outline-dark btn-sm" id="visitorBet" type="button">Away</button>
-              <button class="btn btn-outline-dark btn-sm" id="draw" type="button">Draw</button>
-            </form>
-          </div> -->
-        </p>
-      </div>
-    </div>
+            </p>
+        </b-tab>
+        <b-tab title="Fixtures">
+          <p class="card-text">
 
-    <div class="card" id="card">
-      <div class="card-body">
+          </p>
+        </b-tab>
+        <b-tab title="Standings">
+              <p class="card-text">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">Rank</th>
+                        <th scope="col">Club</th>
+                        <th scope="col">Played</th>
+                        <th scope="col">Won</th>
+                        <th scope="col">Drawn</th>
+                        <th scope="col">Lost</th>
+                        <th scope="col">GF</th>
+                        <th scope="col">GA</th>
+                        <th scope="col">GD</th>
+                        <th scope="col">Pts</th>
+                      </tr>
+                    </thead>
+                    <tbody id="leagueBody"></tbody>
+                  </table>
+                </p>
+        </b-tab>
+      </b-tabs>
+    </div>
+    <div class="fullscreen" style="display: block">
+      <div class="card col-12 col-lg-2" id="card">
+        <div class="card-body">
+          <h5 class="card-title" id="companyRanking">Company Ranking</h5>
+          <p class="card-text">
+            <div style="display: block" id = "companySelect">
+              <form class="form-inline my-2 my-sm-0">
+                <div class="row" >
+                  <input class="form-control mr-sm-2" id="joinGroup" type="input">
+                  <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
+                </div>
+                <table class="table table-hover">
+                  <tbody id="searchTable">
+                    <tr></tr>
+                  </tbody>
+                </table>
+              </form>
+              <form class="form-inline my-2 my-sm-0" id="form">
+                <div class="row">
+                  <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
+                  <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
+                </div>
+              </form>
+            </div>            
+            <table class="table table-hover" style="display: none" id="companyDisplay">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Pts</th>
+                </tr>
+              </thead>
+              <tbody id="companyTable">
+              </tbody>
+            </table>
+          </p>
+        </div>
+      </div>
+      <div class="card col-12 col-lg-3" id="card">
+        <div class="card-body">
+          <h5 class="card-title" id="fixtures">Fixtures</h5>
+          <br>
+          <p class="card-text">
+            <!-- <div class="row">
+              <div class="col-4">
+                <h7 id="homeTeam"></h7>
+              </div>
+              <div class="col-4">
+                <p>vs.</p>
+              </div>
+              <div class="col-4">
+                <h7 id="AwayTeam"></h7>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-5">
+                <p>Home</p>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-5">
+                <p>Away</p>
+              </div>
+            </div>
+            <div class="row">
+              <p id="date"></p>
+              <p id="time"></p>
+            </div>
+            <div class="row">
+              <h7 id="odds">Odds</h7>
+              <p id="winOdds"></p>
+              <p id="loseOdds"></p>
+              <p id="drawOdds"></p>
+            </div>
+            <div class="row">
+              <form class="form my-2 my-sm-0" id="form">
+                <input class="form-control mr-sm-2" id="betAmount" type="input" placeholder="Bet amount">
+                <button class="btn btn-outline-dark btn-sm" id="homeBet" type="button">Home</button>
+                <button class="btn btn-outline-dark btn-sm" id="visitorBet" type="button">Away</button>
+                <button class="btn btn-outline-dark btn-sm" id="draw" type="button">Draw</button>
+              </form>
+            </div> -->
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card col-12 col-lg-6" id="card">
+        <div class="card-body">
         <h5 class="card-title" id="standings">Standings</h5>
         <p class="card-text">
           <table class="table table-hover">
