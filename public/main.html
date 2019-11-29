@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="./assets/css/main.css"/>
   <script src="https://kit.fontawesome.com/581e33120b.js" crossorigin="anonymous"></script>
   <title>coleague</title>
-</head>git
+</head>
 
 <body>
   
@@ -45,77 +45,89 @@
         <input class="form-control mr-sm-2" type="search" placeholder="Search for team" id="teamName">
         <button class="btn btn-outline-light my-2 my-sm-0" type="submit" id="searchSubmit"><i class="fas fa-search"></i></button>
       </form>
-      <span class="navbar-text" id="points"> Pts:</span>
+      <span class="navbar-text" id="points" style="font-size: small;"> Pts:</span>
     </div>
   </nav>
 
   <div class="row">
-    <div class="mobile" style="display: none">
-      <b-tabs content-class="mt-3" fill>
-        <b-tab title="Company Ranking" active>
-          <p class="card-text">
-            <div style="display: block" id = "companySelect">
-              <form class="form-inline my-2 my-sm-0">
-                <div class="row" >
-                  <input class="form-control mr-sm-2" id="joinGroup" type="input">
-                    <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
-                </div>
-                <table class="table table-hover">
-                  <tbody id="searchTable">
-                    <tr></tr>
-                  </tbody>
-                </table>
-              </form>
-              <form class="form-inline my-2 my-sm-0" id="form">
-                <div class="row">
-                  <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
-                  <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
-                </div>
-              </form>
-            </div>            
-              <table class="table table-hover" style="display: none" id="companyDisplay">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Pts</th>
-                  </tr>
-                </thead>
-                <tbody id="companyTable">
-                </tbody>
-              </table>
-            </p>
-        </b-tab>
-        <b-tab title="Fixtures">
-          <p class="card-text">
-
-          </p>
-        </b-tab>
-        <b-tab title="Standings">
-              <p class="card-text">
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th scope="col">Rank</th>
-                        <th scope="col">Club</th>
-                        <th scope="col">Played</th>
-                        <th scope="col">Won</th>
-                        <th scope="col">Drawn</th>
-                        <th scope="col">Lost</th>
-                        <th scope="col">GF</th>
-                        <th scope="col">GA</th>
-                        <th scope="col">GD</th>
-                        <th scope="col">Pts</th>
-                      </tr>
-                    </thead>
-                    <tbody id="leagueBody"></tbody>
-                  </table>
+    <div class="mobile">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Company Ranking</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Fixtures</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Standings</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <p class="card-text">
+                    <div style="display: block" id = "companySelect">
+                      <form class="form-inline my-2 my-sm-0">
+                        <div class="row" >
+                          <input class="form-control mr-sm-2" id="joinGroup" type="input">
+                            <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
+                        </div>
+                        <table class="table table-hover">
+                          <tbody id="searchTable">
+                            <tr></tr>
+                          </tbody>
+                        </table>
+                      </form>
+                      <form class="form-inline my-2 my-sm-0" id="form">
+                        <div class="row">
+                          <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
+                          <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
+                        </div>
+                      </form>
+                    </div>            
+                      <table class="table table-hover" style="display: none" id="companyDisplay">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Pts</th>
+                          </tr>
+                        </thead>
+                        <tbody id="companyTable">
+                        </tbody>
+                      </table>
                 </p>
-        </b-tab>
-      </b-tabs>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <p class="card-text">
+
+                </p>
+            </div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <p class="card-text">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th scope="col">Rank</th>
+                          <th scope="col">Club</th>
+                          <th scope="col">Played</th>
+                          <th scope="col">Won</th>
+                          <th scope="col">Drawn</th>
+                          <th scope="col">Lost</th>
+                          <th scope="col">GF</th>
+                          <th scope="col">GA</th>
+                          <th scope="col">GD</th>
+                          <th scope="col">Pts</th>
+                        </tr>
+                      </thead>
+                      <tbody id="leagueBody"></tbody>
+                    </table>
+                  </p>
+            </div>
+        </div>
+      
     </div>
-    <div class="fullscreen" style="display: block">
-      <div class="card col-12 col-lg-2" id="card">
+    <div class="fullscreen" style="width: 100%">
+      <div class="card col-12 col-md-2" id="card">
         <div class="card-body">
           <h5 class="card-title" id="companyRanking">Company Ranking</h5>
           <p class="card-text">
@@ -152,7 +164,7 @@
           </p>
         </div>
       </div>
-      <div class="card col-12 col-lg-3" id="card">
+      <div class="card col-12 col-md-4" id="card">
         <div class="card-body">
           <h5 class="card-title" id="fixtures">Fixtures</h5>
           <br>
@@ -160,7 +172,7 @@
           </p>
         </div>
       </div>
-      <div class="card col-12 col-lg-6" id="card">
+      <div class="card col-12 col-md-6" id="card">
         <div class="card-body">
           <h5 class="card-title" id="standings">Standings</h5>
           <p class="card-text">
