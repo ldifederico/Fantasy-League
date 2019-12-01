@@ -41,6 +41,16 @@ span {
     margin: 1%;
 }
 
+.card {
+    font-family: 'Prompt', sans-serif;
+    justify-content: flex-start;
+    font-size: small;
+    text-align: center;
+    overflow: scroll;
+    margin: 1%;
+    float: left;  
+}
+
 .navbar-text {
     color: rgb(255, 255, 255);
 }

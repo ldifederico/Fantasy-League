@@ -5,12 +5,41 @@
 
 nav, .container {
     font-family: 'Prompt', sans-serif;
-    padding-right: -15px !important;
-    padding-left: -5px !important;
 }
 
-.container {
-    background-color: ${containerBackground}
+@media screen and (max-width: 1024px) {
+    .mobile {
+        display: block;
+    }
+    .fullscreen {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    .mobile {
+      display: none;
+    }
+    .fullscreen {
+        display: block;
+    }
+}
+
+th, #myTab {
+    font-weight: bold;
+}
+
+.nav-link.active {
+    background-color: white;
+    color: black;
+}
+
+a {
+    color: white;
+}
+
+.nav-link {
+    color: white;
 }
 
 span {
@@ -27,6 +56,9 @@ h5 {
 
 #card {
     overflow: scroll;
+    background-color: white;
+    color: black;
+    float: left;
 }
 
 .header {
@@ -37,7 +69,8 @@ h5 {
 
 #roster, #games, #standing {
     width: fit-content;
-    margin: 1%;
+    margin: 2%;
+    float: left;
 }
 
 #placeBet {
@@ -54,4 +87,14 @@ h5 {
     text-align: center;
     color: grey;
     font-size: xx-small;
+}
+
+.row {
+    font-size: small;
+    justify-content: flex-start;
+    justify-content: space-between;
+}
+
+#standing {
+    width: fit-content;
 }

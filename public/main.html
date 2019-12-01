@@ -12,7 +12,8 @@
   <link href="https://fonts.googleapis.com/css?family=Prompt:300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/main.css"/>
   <script src="https://kit.fontawesome.com/581e33120b.js" crossorigin="anonymous"></script>
-  <title>coleague</title>
+  <link rel="icon" href="./assets/media/favicon.ico" />
+  <title>coleague </title>
 </head>
 
 <body>
@@ -50,7 +51,7 @@
   </nav>
 
   <div class="row">
-    <div class="mobile">
+    <div class="mobile" style="width: 100%;">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
               <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Company Ranking</a>
@@ -64,64 +65,76 @@
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <p class="card-text">
-                    <div style="display: block" id = "companySelect">
-                      <form class="form-inline my-2 my-sm-0">
-                        <div class="row" >
-                          <input class="form-control mr-sm-2" id="joinGroup" type="input">
-                            <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
-                        </div>
-                        <table class="table table-hover">
-                          <tbody id="searchTable">
-                            <tr></tr>
-                          </tbody>
-                        </table>
-                      </form>
-                      <form class="form-inline my-2 my-sm-0" id="form">
-                        <div class="row">
-                          <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
-                          <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
-                        </div>
-                      </form>
-                    </div>            
-                      <table class="table table-hover" style="display: none" id="companyDisplay">
+              <div id="card">
+                <div class="card-body">
+                    <p class="card-text">
+                        <div style="display: block" id = "companySelect">
+                          <form class="form-inline my-2 my-sm-0">
+                            <div class="row" >
+                              <input class="form-control mr-sm-2" id="joinGroup" type="input">
+                                <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
+                            </div>
+                            <table class="table table-hover">
+                              <tbody id="searchTable">
+                                <tr></tr>
+                              </tbody>
+                            </table>
+                          </form>
+                          <form class="form-inline my-2 my-sm-0" id="form">
+                            <div class="row">
+                              <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
+                              <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
+                            </div>
+                          </form>
+                        </div>            
+                          <table class="table table-hover" style="display: none" id="companyDisplay">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Pts</th>
+                              </tr>
+                            </thead>
+                            <tbody id="companyTable">
+                            </tbody>
+                          </table>
+                    </p>
+                  </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+              <div id="card">
+                <div class="card-body">
+                  <p class="card-text">
+
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+              <div id="card">
+                <div class="card-body">
+                  <p class="card-text">
+                      <table class="table table-hover">
                         <thead>
                           <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
+                            <th scope="col">Rank</th>
+                            <th scope="col">Club</th>
+                            <th scope="col">Played</th>
+                            <th scope="col">Won</th>
+                            <th scope="col">Drawn</th>
+                            <th scope="col">Lost</th>
+                            <th scope="col">GF</th>
+                            <th scope="col">GA</th>
+                            <th scope="col">GD</th>
                             <th scope="col">Pts</th>
                           </tr>
                         </thead>
-                        <tbody id="companyTable">
-                        </tbody>
+                        <tbody id="leagueBody"></tbody>
                       </table>
-                </p>
-            </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <p class="card-text">
-
-                </p>
-            </div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                <p class="card-text">
-                    <table class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th scope="col">Rank</th>
-                          <th scope="col">Club</th>
-                          <th scope="col">Played</th>
-                          <th scope="col">Won</th>
-                          <th scope="col">Drawn</th>
-                          <th scope="col">Lost</th>
-                          <th scope="col">GF</th>
-                          <th scope="col">GA</th>
-                          <th scope="col">GD</th>
-                          <th scope="col">Pts</th>
-                        </tr>
-                      </thead>
-                      <tbody id="leagueBody"></tbody>
-                    </table>
-                  </p>
+                    </p>
+                  </div>
+                </div>
             </div>
         </div>
       
@@ -130,7 +143,6 @@
       <div class="card col-12 col-md-2" id="card">
         <div class="card-body">
           <h5 class="card-title" id="companyRanking">Company Ranking</h5>
-          <p class="card-text">
             <div style="display: block" id = "companySelect">
               <form class="form-inline my-2 my-sm-0">
                 <div class="row" >
@@ -161,21 +173,17 @@
               <tbody id="companyTable">
               </tbody>
             </table>
-          </p>
         </div>
       </div>
-      <div class="card col-12 col-md-4" id="card">
+      <div class="card col-12 col-md-3" id="card">
         <div class="card-body">
           <h5 class="card-title" id="fixtures">Fixtures</h5>
           <br>
-          <p class="card-text">
-          </p>
         </div>
       </div>
-      <div class="card col-12 col-md-6" id="card">
+      <div class="card col-12 col-md-6" id="card"  style="padding-left: 0">
         <div class="card-body">
           <h5 class="card-title" id="standings">Standings</h5>
-          <p class="card-text">
             <table class="table table-hover">
               <thead>
                 <tr>
@@ -193,7 +201,6 @@
               </thead>
               <tbody id="leagueBody"></tbody>
             </table>
-          </p>
         </div>
       </div>
     </div>
@@ -201,7 +208,7 @@
 
   <br>
 
-  <nav class="navbar sticky-bottom navbar-dark bg-dark">
+  <nav class="navbar fixed-bottom navbar-dark bg-dark">
     <a class="navbar-brand" id="footer"><p class="text-muted">Copyright &copy;</p></a>
   </nav>
 

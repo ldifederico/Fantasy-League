@@ -38,6 +38,7 @@ Linda Di Federico
 - API-Football
 - Live Sports Odds API
 - Martins, Guigia. Soccer ball rolling on grass. Accessible at www.shutterstock.com.
+- Favicon from www.freefavicon.com.
 
 **License**
 

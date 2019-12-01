@@ -148,7 +148,8 @@ async function loadFixtures(gameWeek) {
             };
         }
         else {
-            $("<div>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.status} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#fixtures");
+            // $("<div>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.status} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#fixtures");
+            $("<div>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#fixtures");
         };
     }
     $(".betButton").on("click", placeBet)
@@ -223,7 +224,7 @@ async function updatePoints() {
         url: "/getPoints",
         data: data
     });
-    $("#points").text(`Points: ${points[0].points}`);
+    $("#points").text(`Pts: ${points[0].points}`);
 };
 
 async function mainLoad() {
