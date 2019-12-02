@@ -39,7 +39,7 @@
           <a class="nav-link" href="profile.html">Profile</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="login.html"><i class="fas fa-sign-out-alt"></i>Sign Out</a>
+          <a class="nav-link" href="login.html" id="signOut"><i class="fas fa-sign-out-alt"></i>Sign Out</a>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
@@ -68,36 +68,36 @@
               <div id="card">
                 <div class="card-body">
                     <p class="card-text">
-                        <div style="display: block" id = "companySelect">
-                          <form class="form-inline my-2 my-sm-0">
-                            <div class="row" >
-                              <input class="form-control mr-sm-2" id="joinGroup" type="input">
-                                <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
-                            </div>
-                            <table class="table table-hover">
-                              <tbody id="searchTable">
-                                <tr></tr>
-                              </tbody>
-                            </table>
-                          </form>
-                          <form class="form-inline my-2 my-sm-0" id="form">
-                            <div class="row">
-                              <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
-                              <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
-                            </div>
-                          </form>
-                        </div>            
-                          <table class="table table-hover" style="display: none" id="companyDisplay">
-                            <thead>
-                              <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Pts</th>
-                              </tr>
-                            </thead>
-                            <tbody id="companyTable">
+                      <div style="display: block" id="companySelect">
+                        <form class="form-inline my-2 my-sm-0">
+                          <div class="row">
+                            <input class="form-control mr-sm-2" id="joinGroup" >
+                              <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type='button'>Join Group</button>
+                          </div>
+                          <table class="table table-hover">
+                            <tbody id="searchTable">
+                              <tr></tr>
                             </tbody>
                           </table>
+                        </form>
+                        <form class="form-inline my-2 my-sm-0" id="form">
+                          <div class="row">
+                            <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
+                            <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="button">Create Group</button>
+                          </div>
+                        </form>
+                      </div>            
+                      <table class="table table-hover" style="display: none" id="companyDisplay">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Pts</th>
+                          </tr>
+                        </thead>
+                        <tbody id="companyTable">
+                        </tbody>
+                      </table>
                     </p>
                   </div>
                 </div>
@@ -106,7 +106,6 @@
               <div id="card">
                 <div class="card-body">
                   <p class="card-text">
-
                   </p>
                 </div>
               </div>
@@ -143,11 +142,11 @@
       <div class="card col-12 col-md-2" id="card">
         <div class="card-body">
           <h5 class="card-title" id="companyRanking">Company Ranking</h5>
-            <div style="display: block" id = "companySelect">
+            <div style="display: block" id = "companySelec">
               <form class="form-inline my-2 my-sm-0">
                 <div class="row" >
                   <input class="form-control mr-sm-2" id="joinGroup" type="input">
-                  <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
+                  <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type='button'>Join Group</button>
                 </div>
                 <table class="table table-hover">
                   <tbody id="searchTable">
@@ -158,7 +157,7 @@
               <form class="form-inline my-2 my-sm-0" id="form">
                 <div class="row">
                   <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
-                  <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
+                  <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type='button'>Create Group</button>
                 </div>
               </form>
             </div>            
@@ -181,7 +180,7 @@
           <br>
         </div>
       </div>
-      <div class="card col-12 col-md-6" id="card"  style="padding-left: 0">
+      <div class="card col-12 col-md-6" id="card" style="padding-left: 0">
         <div class="card-body">
           <h5 class="card-title" id="standings">Standings</h5>
             <table class="table table-hover">
@@ -211,6 +210,27 @@
   <nav class="navbar fixed-bottom navbar-dark bg-dark">
     <a class="navbar-brand" id="footer"><p class="text-muted">Copyright &copy;</p></a>
   </nav>
+
+    <!-- Generic Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="myModal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalTitle"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success">Continue</button>
+              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
 
 </body>
 
