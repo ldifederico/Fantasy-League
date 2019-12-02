@@ -51,17 +51,25 @@
 
   <div class="container">
     <div class="card">
-      <div class="card-body">
-        <h5 class="card-title" id="username"></h5>
+      <div class="row d-flex justify-content-center">
+        <ul class="list-group list-group-flush col-2 text-left">
+          <li class="list-group-item"><b>Username:</b></li>
+          <li class="list-group-item"><b>First Name:</b></li>
+          <li class="list-group-item"><b>Last Name:</b></li>
+          <li class="list-group-item"><b>Email:</b></li>
+          <li class="list-group-item"><b>Company:</b></li>
+        </ul>
+        <ul class="list-group list-group-flush col-4 text-left">
+          <li class="list-group-item" id="username"></li>
+          <li class="list-group-item profileItem" id="firstname"></li>
+          <li class="list-group-item profileItem" id="lastname"></li>
+          <li class="list-group-item profileItem" id="email"></li>
+          <li class="list-group-item" id="company"></li>
+        </ul>
       </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item" id="firstname"></li>
-        <li class="list-group-item" id="lastname"></li>
-        <li class="list-group-item" id="email"></li>
-        <li class="list-group-item" id="company"></li>
-      </ul>
       <div class="card-body">
         <button type="button" class="btn btn-outline-dark" id="edit"><i class="fas fa-user-edit"></i> Edit Profile</button>
+        <button type="button" class="btn btn-outline-dark" id="save" style="display: none"><i class="fas fa-user-edit"></i> Save Profile</button>
         <button type="button" class="btn btn-outline-dark" id="leave"><i class="fas fa-user-minus"></i> Leave Company</button>
         <button type="button" class="btn btn-outline-dark" id="delete"><i class="far fa-trash-alt"></i> Delete Account</button>
       </div>

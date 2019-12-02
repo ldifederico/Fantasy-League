@@ -42,7 +42,7 @@ if (process.env.JAWSDB_URL) {
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "linda123",
+    password: "password",
     database: "FantasyDB"
   });
  }
@@ -177,7 +177,11 @@ app.post("/placeBet", async function(req,res) {
 
 app.post("/getPoints", async function(req,res) {
     let userpoint = await db.query(`SELECT points FROM user WHERE id = '${req.body.userID}'`);
-    res.json(userpoint)
+    res.json(userpoint);
+});
+
+app.post("/updateUserProfile", async function(req,res) {
+    let newUserInfo = await db.query(`UPDATE user SET firstName = '${req.body.firstname}' WHERE id = ${req.body.userID}; `);
 });
 
 async function checkGames() {
