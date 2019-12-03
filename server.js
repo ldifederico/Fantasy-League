@@ -2,6 +2,10 @@ const path = require('path');
 const express = require('express');
 const mysql = require('mysql');
 const axios = require('axios');
+const sha256 = require('js-sha256');
+const nodemailer = require('nodemailer');
+const jwt = require('jwt-simple');
+const bodyParser = require('body-parser');
 
 const PORT = process.env.PORT || 8080;
 
@@ -10,7 +14,9 @@ const app = express();
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
+  
 class Database {
     constructor( config ) {
         this.connection = mysql.createConnection( config );
@@ -60,6 +66,21 @@ var settings = {
     }
 };
 
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'coleageassistance@gmail.com',
+      pass: 'middleman'
+    }
+  });
+  
+var mailOptions = {
+    from: 'coleageassistance@gmail.com',
+    to: '',
+    subject: "Password reset",
+    text: "Hello! You've requested to reset your password. Please click the link below to reset your password."
+};
+
 companyList = [];
 userList = [];
 incompleteGames = [];
@@ -75,11 +96,10 @@ app.get("/", function(req, res) {
 
 app.post("/", async function(req, res) {
     try {
-        var companyidObj = await db.query(`SELECT companyId FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`);
-        var useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`);
+        var companyidObj = await db.query(`SELECT companyId FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
+        var useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
         var companyid = companyidObj[0].companyId;
         var userid = useridObj[0].id;
-        console.log(companyid)
         if (companyid == null) 
             { res.send({userID: userid}) } 
         else { res.send({userID: userid, companyID: companyid}) ;}
@@ -90,6 +110,48 @@ app.post("/", async function(req, res) {
 
 app.get("/register", async function(req,res) {
     res.sendFile(path.join(__dirname, "./public/register.html"));
+});
+
+app.post("/forgotUsername", async function(req,res) {
+    var username = await db.query(`SELECT username FROM user WHERE email = '${req.body.email}'`)
+    mailOptions.to = req.body.email;
+    mailOptions.subject = "Forgot username";
+    mailOptions.text = `Hello! Your username is: ${username[0].username}`;
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+});
+
+app.post("/forgotPassword", async function(req,res) {
+    var userInfo = await db.query(`SELECT id, password FROM user WHERE email = "${req.body.email}"`)
+    var payload = {
+        userID: userInfo[0].id,
+        email: req.body.email
+    };
+    var secret = userInfo[0].password
+    var token = jwt.encode(payload,secret)
+    var link = `http://localhost:8080/resetpassword/${payload.userID}/${token}`
+    console.log(link)
+    mailOptions.to = req.body.email;
+    mailOptions.subject = "Password reset";
+    mailOptions.text = `Hello! You've requested to reset your password. To reset your password, please click this link: ${link}`;
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+});
+
+app.post("/resetpassword/:id/:token", async function (req, res) {
+    var secret = await db.query(`SELECT password FROM user WHERE id = ${req.params.id}`);
+    var payload = jwt.decode(req.params.token, secret);
+    console.log(payload);
 });
 
 app.get("/main", async function(req,res) {
@@ -111,7 +173,7 @@ app.post("/register", async function(req,res) {
         res.send({text: "User exists"})
     }
     else {
-        await db.query(`INSERT INTO user (firstName, lastName, email, username, password, points) VALUES ('${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.username}', '${req.body.password}', 0)`);
+        await db.query(`INSERT INTO user (firstName, lastName, email, username, password, points) VALUES ('${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.username}', '${sha256(req.body.password)}', 0)`);
         let useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}'`);
         userid = useridObj[0].id;
         res.send({text: userid});
@@ -196,8 +258,34 @@ app.post("/updateUserProfile", async function(req,res) {
 });
 
 app.post("/deleteAccount", async function(req,res) {
-    await db.query(`DELETE FROM user WHERE id = '${req.body.userID}'`);
-    await db.query(`DELETE FROM bet WHERE user_id = '${req.body.userID}'`);
+    inputPassword = sha256(req.body.password);
+    dbPassword = await db.query(`SELECT password FROM user WHERE id = ${req.body.userID}`);
+    if (inputPassword == dbPassword[0].password) {
+        res.send("correct password")
+        await db.query(`DELETE FROM user WHERE id = '${req.body.userID}'`);
+        await db.query(`DELETE FROM bet WHERE user_id = '${req.body.userID}'`);
+        bet_id =  await db.query(`SELECT id FROM bet WHERE user_id = ${req.body.userID}`);
+        for (a = 0; a < bet_id.length; a++){
+            await db.query(`DELETE FROM bet WHERE id = ${bet_id[a].id}`);
+        };
+    }
+    else { res.send("incorrect password") };
+});
+
+app.post("/leaveCompany", async function (req, res) {
+    inputPassword = sha256(req.body.password);
+    dbPassword = await db.query(`SELECT password FROM user WHERE id = ${req.body.userID}`);
+    if (inputPassword == dbPassword[0].password) {
+        res.send("correct password")
+        await db.query(`UPDATE user SET companyId = NULL WHERE id = ${req.body.userID}`);
+        bet_id =  await db.query(`SELECT id FROM bet WHERE user_id = ${req.body.userID}`);
+        console.log(bet_id);
+        for (a = 0; a < bet_id.length; a++){
+            await db.query(`DELETE FROM bet WHERE id = ${bet_id[a].id}`);
+        };
+    }
+    else { res.send("incorrect password") };
+    console.log("back end done");
 });
 
 async function startingPoints() {
@@ -212,9 +300,10 @@ async function startingPoints() {
             futureFixturesCount++;
         };
     };
-    var points = 1900 * (futureFixturesCount / allFixturesCount);
+    ptsPerGame = 5;
+    var points = futureFixturesCount * ptsPerGame
     return points;
-}
+};
 
 async function checkGames() {
 

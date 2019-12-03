@@ -288,8 +288,8 @@ $("#searchSubmit").click( function() {
     document.cookie = `teamName=${$("#teamName").val()}`;
 });
 
-$("#joinCompanyGroup").on("click", joinCompanyGroup)
-$("#createCompanyGroup").on("click", createCompanyGroup)
+$("#joinCompanyGroup").on("click", joinCompanyGroup);
+$("#createCompanyGroup").on("click", createCompanyGroup);
 
 $("#signOut").click(function() {
     localStorage.removeItem("companyID");
