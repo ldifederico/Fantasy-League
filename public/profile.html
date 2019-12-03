@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Prompt:300&display=swap" rel="stylesheet">
@@ -17,6 +17,7 @@
 </head>
 
 <body>
+
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" style="color:white;">co<strong>league</strong></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,19 +50,51 @@
     </div>
   </nav>
 
+  <!-- Delete account modal -->
+  <div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm account delete</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete your account? Please type in "Confirm" below.</p>
+        </div>
+        <input style="width: 150px" class="mt-n3 ml-3 mb-3" id="confirmDeleteInput"></input>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <div class="card">
-      <div class="card-body">
-        <h5 class="card-title" id="username"></h5>
+      <div class="row d-flex justify-content-center">
+        <div class="col-0 col-lg-4"></div>
+        <ul class="list-group list-group-flush col-5 col-lg-2 text-left">
+          <li class="list-group-item"><b>Username:</b></li>
+          <li class="list-group-item"><b>First Name:</b></li>
+          <li class="list-group-item"><b>Last Name:</b></li>
+          <li class="list-group-item"><b>Email:</b></li>
+          <li class="list-group-item"><b>Company:</b></li>
+        </ul>
+        <ul class="list-group list-group-flush col-6 col-lg-4 text-left">
+          <li class="list-group-item profileItem ml-n5" id="username"></li>
+          <li class="list-group-item profileItem ml-n5" id="firstName"></li>
+          <li class="list-group-item profileItem ml-n5" id="lastName"></li>
+          <li class="list-group-item profileItem ml-n5" id="email"></li>
+          <li class="list-group-item profileItem ml-n5" id="company"></li>
+        </ul>
+        <div class="col-0 col-lg-2"></div>
       </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item" id="firstname"></li>
-        <li class="list-group-item" id="lastname"></li>
-        <li class="list-group-item" id="email"></li>
-        <li class="list-group-item" id="company"></li>
-      </ul>
       <div class="card-body">
         <button type="button" class="btn btn-outline-dark" id="edit"><i class="fas fa-user-edit"></i> Edit Profile</button>
+        <button type="button" class="btn btn-outline-dark mr-2" id="save" style="display: none"><i class="fas fa-user-edit"></i> Save Profile</button>
         <button type="button" class="btn btn-outline-dark" id="leave"><i class="fas fa-user-minus"></i> Leave Company</button>
         <button type="button" class="btn btn-outline-dark" id="delete"><i class="far fa-trash-alt"></i> Delete Account</button>
       </div>
@@ -74,7 +107,6 @@
 
 </body>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="assets/js/profile.js"></script>
 
 </html>
