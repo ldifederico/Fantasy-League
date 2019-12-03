@@ -41,11 +41,11 @@
                     <a class="nav-link" href="login.html" id="signOut"><i class="fas fa-sign-out-alt"></i>Sign Out</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search for team" id="teamName">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit" id="searchSubmit"><i class="fas fa-search"></i></button>
+            <form class="form-inline my-2 my-sm-0">
+                <input class="form-control mr-sm" type="search" placeholder="Search for team" id="teamName">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit" id="searchSubmit" style="margin-left: 5px;"><i class="fas fa-search"></i></button>
             </form>
-            <span class="navbar-text" id="points"> Pts:</span>
+            <span class="navbar-text" id="points"></span>
         </div>
     </nav>
 
@@ -61,20 +61,20 @@
             <div class="mobile" style="margin: auto">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Roster</a>
+                        <a class="nav-link active" id="roster-tab" data-toggle="tab" role="tab" aria-controls="roster" href="#roster" aria-selected="true" style="color: white">Roster</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Fixtures</a>
+                        <a class="nav-link" id="fixtures-tab" data-toggle="tab" role="tab" aria-controls="fixtures" href="#fixtures" aria-selected="false" style="color: white">Fixtures</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Results</a>
+                        <a class="nav-link" id="results-tab" data-toggle="tab" role="tab" aria-controls="results" href="#results" aria-selected="false" style="color: white">Results</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Standings</a>
+                        <a class="nav-link" id="standings-tab" data-toggle="tab" role="tab" aria-controls="standings" href="#standings" aria-selected="false" style="color: white">Standing</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent" style="border-radius: 25px">
-                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="tab-pane fade show active" id="rosterTab" role="tabpanel" aria-labelledby="roster-tab">
                         <div id="card">
                             <div class="card-body">
                                 <table class="table table-hover">
@@ -90,27 +90,25 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="tab-pane fade" id="fixturesTab" role="tabpanel" aria-labelledby="fixtures-tab">
                         <div id="card">
                             <div class="card-body">
                                 <table class="table table-hover">
-                                    <tbody id="fixtureBody">
-                                    </tbody>
+                                    <tbody id="fixtureBody"></tbody>
                                 </table>            
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="tab-pane fade" id="resultsTab" role="tabpanel" aria-labelledby="results-tab">
                         <div id="card">
                             <div class="card-body">
                                 <table class="table table-hover">
-                                    <tbody id="resultsBody">
-                                    </tbody>
+                                    <tbody id="resultsBody"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                    <div class="tab-pane fade" id="standingsTab" role="tabpanel" aria-labelledby="standings-tab">
                         <div id="card">
                             <div class="card-body">
                                 <table class="table table-hover">
@@ -122,8 +120,7 @@
                                             <th scope="col">Pts</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="leagueBody">
-                                    </tbody>
+                                    <tbody id="leagueBody"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -132,7 +129,7 @@
             </div>
             <hr>
             <div class="fullscreen" style="width: 100%">
-                <div class="card col-12 col-md-3"  id="roster">
+                <div class="card col-12 col-md-3"  id="roster" style="margin: 1%;">
                     <div class="card-body" id="card">
                         <h5 class="card-title">Roster</h5>
                         <p class="card-text">
@@ -143,32 +140,29 @@
                                         <th scope="col">Position</th>
                                     </tr>
                                 </thead>
-                                <tbody id="rosterBody">
-                                </tbody>
+                                <tbody id="rosterBody"></tbody>
                             </table>
                         </p>
                     </div>
                 </div>
-                <div class="card col-12 col-md-2" id="games">
+                <div class="card col-12 col-md-2" id="games" style="margin: 1%;">
                     <div class="card-body" id="card">
                         <h5 class="card-title" id="fixtures">Fixtures</h5>
                         <table class="table table-hover">
-                            <tbody id="fixtureBody">
-                            </tbody>
+                            <tbody id="fixtureBody"></tbody>
                         </table>
                     </div>
                 </div>
-                <div class="card col-12 col-md-2" id="games">
+                <div class="card col-12 col-md-2" id="games" style="margin: 1%;">
                     <div class="card-body" id="card">
-                        <h5 class="card-title" id="fixtures">Results</h5>
+                        <h5 class="card-title" id="results">Results</h5>
                         <table class="table table-hover">
-                            <tbody id="resultsBody">
-                            </tbody>
+                            <tbody id="resultsBody"></tbody>
                         </table>
                         <hr>
                     </div>
                 </div>
-                <div class="card col-12 col-md-4" id="standing">
+                <div class="card col-12 col-md-4" id="standing" style="margin: 1%;">
                     <div class="card-body" id="card">
                         <h5 class="card-title">Standing</h5>
                         <p class="card-text">
@@ -181,8 +175,7 @@
                                         <th scope="col">Pts</th>
                                     </tr>
                                 </thead>
-                                <tbody id="leagueBody">
-                                </tbody>
+                                <tbody id="leagueBody"></tbody>
                             </table>
                         </p>
                     </div>
@@ -190,8 +183,8 @@
             </div>
         </div>
     </div>
-
-  <br>
+    
+    <br>
 
     <nav class="navbar fixed-bottom navbar-dark bg-dark">
         <a class="navbar-brand" id="footer">Copyright &copy;</a>

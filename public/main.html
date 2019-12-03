@@ -42,102 +42,95 @@
           <a class="nav-link" href="login.html"><i class="fas fa-sign-out-alt"></i>Sign Out</a>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
+      <form class="form-inline my-2 my-sm-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search for team" id="teamName">
-        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" id="searchSubmit"><i class="fas fa-search"></i></button>
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" id="searchSubmit" style="margin-left: 5px;"><i class="fas fa-search"></i></button>
       </form>
-      <span class="navbar-text" id="points" style="font-size: small;"> Pts:</span>
+      <span class="navbar-text" id="points" style="font-size: small;"></span>
     </div>
   </nav>
 
   <div class="row">
     <div class="mobile" style="width: 100%;">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Company Ranking</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Fixtures</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Standings</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-              <div id="card">
-                <div class="card-body">
-                    <p class="card-text">
-                        <div style="display: block" id = "companySelect">
-                          <form class="form-inline my-2 my-sm-0">
-                            <div class="row" >
-                              <input class="form-control mr-sm-2" id="joinGroup" type="input">
-                                <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
-                            </div>
-                            <table class="table table-hover">
-                              <tbody id="searchTable">
-                                <tr></tr>
-                              </tbody>
-                            </table>
-                          </form>
-                          <form class="form-inline my-2 my-sm-0" id="form">
-                            <div class="row">
-                              <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input">
-                              <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
-                            </div>
-                          </form>
-                        </div>            
-                          <table class="table table-hover" style="display: none" id="companyDisplay">
-                            <thead>
-                              <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Pts</th>
-                              </tr>
-                            </thead>
-                            <tbody id="companyTable">
-                            </tbody>
-                          </table>
-                    </p>
-                  </div>
-                </div>
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="ranking-tab" data-toggle="tab" href="#ranking" role="tab" aria-controls="ranking" aria-selected="true">Company Ranking</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="fixtures-tab" data-toggle="tab" href="#fixtures" role="tab" aria-controls="fixtures" aria-selected="false">Fixtures</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="standings-tab" data-toggle="tab" href="#standings" role="tab" aria-controls="standings" aria-selected="false">Standings</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="ranking" role="tabpanel" aria-labelledby="ranking-tab">
+          <div id="card">
+            <div class="card-body">
+              <p class="card-text">
+                <div style="display: block" id="companySelect">
+                  <form class="form-inline my-2 my-sm-0">
+                    <div class="row">
+                      <input class="form-control mr-sm-2" id="joinGroup" type="input"/>
+                      <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="submit">Join Group</button>
+                    </div>
+                    <table class="table table-hover">
+                      <tbody id="searchTable">
+                        <tr></tr>
+                      </tbody>
+                    </table>
+                  </form>
+                  <form class="form-inline my-2 my-sm-0" id="form">
+                    <div class="row">
+                      <input class="form-control mr-sm-2" id="nameCompanyGroup" type="input"/>
+                      <button class="btn btn-outline-dark btn-sm" id="createCompanyGroup" type="submit">Create Group</button>
+                    </div>
+                  </form>
+                </div>            
+                <table class="table table-hover" style="display: none" id="companyDisplay">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody id="companyTable"></tbody>
+                </table>
+              </p>
             </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-              <div id="card">
-                <div class="card-body">
-                  <p class="card-text">
-
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-              <div id="card">
-                <div class="card-body">
-                  <p class="card-text">
-                      <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th scope="col">Rank</th>
-                            <th scope="col">Club</th>
-                            <th scope="col">Played</th>
-                            <th scope="col">Won</th>
-                            <th scope="col">Drawn</th>
-                            <th scope="col">Lost</th>
-                            <th scope="col">GF</th>
-                            <th scope="col">GA</th>
-                            <th scope="col">GD</th>
-                            <th scope="col">Pts</th>
-                          </tr>
-                        </thead>
-                        <tbody id="leagueBody"></tbody>
-                      </table>
-                    </p>
-                  </div>
-                </div>
-            </div>
+          </div>
         </div>
-      
+        <div class="tab-pane fade" id="fixtures" role="tabpanel" aria-labelledby="fixtures-tab">
+          <div id="card">
+            <div class="card-body" id="fixtures">
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="standings" role="tabpanel" aria-labelledby="standings-tab">
+          <div id="card">
+            <div class="card-body">
+              <p class="card-text">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Rank</th>
+                      <th scope="col">Club</th>
+                      <th scope="col">Played</th>
+                      <th scope="col">W/D/L</th>
+                      <th scope="col">GF</th>
+                      <th scope="col">GA</th>
+                      <th scope="col">GD</th>
+                      <th scope="col">Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leagueBody"></tbody>
+                </table>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>     
     </div>
     <div class="fullscreen" style="width: 100%">
       <div class="card col-12 col-md-2" id="card">
@@ -170,8 +163,7 @@
                   <th scope="col">Pts</th>
                 </tr>
               </thead>
-              <tbody id="companyTable">
-              </tbody>
+              <tbody id="companyTable"></tbody>
             </table>
         </div>
       </div>
@@ -190,9 +182,7 @@
                   <th scope="col">Rank</th>
                   <th scope="col">Club</th>
                   <th scope="col">Played</th>
-                  <th scope="col">Won</th>
-                  <th scope="col">Drawn</th>
-                  <th scope="col">Lost</th>
+                  <th scope="col">W/D/L</th>
                   <th scope="col">GF</th>
                   <th scope="col">GA</th>
                   <th scope="col">GD</th>
@@ -216,8 +206,5 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="./assets/js/main.js"></script>
-
-
-
 
 </html>

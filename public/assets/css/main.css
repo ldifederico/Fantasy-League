@@ -69,6 +69,7 @@ span {
 
 h6 {
     padding: 5%;
+    text-align: center;
 }
 
 .container {
@@ -76,6 +77,10 @@ h6 {
     padding: 1%;
     justify-content: space-evenly;
     margin-bottom: 15%;
+}
+
+th {
+    font-weight: bolder;
 }
 
 #homeBet {
@@ -115,11 +120,6 @@ h6 {
     margin: 1%;
     font-size: 5%;
     width: 110px;
-}
-
-#homeBet {
-    margin: 1%;
-    font-size: 5%;
 }
 
 #visitorBet {

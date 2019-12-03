@@ -22,9 +22,7 @@ async function loadStandings() {
         }).text(i).appendTo("#standRow"+i)
         $("<td>").text(team.teamName).appendTo($("#standRow"+i));
         $("<td>").text(team.all.matchsPlayed).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.win).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.draw).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.lose).appendTo($("#standRow"+i));
+        $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($("#standRow"+i));
         $("<td>").text(team.all.goalsFor).appendTo($("#standRow"+i));
         $("<td>").text(team.all.goalsAgainst).appendTo($("#standRow"+i));
         $("<td>").text(team.goalsDiff).appendTo($("#standRow"+i));
