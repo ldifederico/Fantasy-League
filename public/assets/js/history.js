@@ -8,14 +8,20 @@ async function loadHistory() {
     });
     $("#company").text(` ${betHistory[0].name}`);
     $("#username").text(` ${betHistory[0].username}`);
+    
     for ([index,bet] of betHistory.entries()) {
         i = index + 1
         $("<tr>").attr("id","row"+i).appendTo("#betTable")
-        $("<td>").text(bet.fixture).appendTo("#row"+i)
-        $("<td>").text(bet.amountPlaced).appendTo("#row"+i)
+        if (bet.score !== null) {score = ` (${bet.score})`}
+        else {score = ""}
+        $("<td>").text(`${bet.fixture}${score}`).appendTo("#row"+i)
+        $("<td>").text(bet.fixture_date).appendTo("#row"+i)
         $("<td>").text(bet.team).appendTo("#row"+i)
+        $("<td>").text(bet.amountPlaced).appendTo("#row"+i)
         $("<td>").text(bet.odds).appendTo("#row"+i)
-        $("<td>").text(bet.amountwon).appendTo("#row"+i)
+        if (bet.amountwon > 0) {colour = "green"}
+        else {colour = "red"};
+        $("<td>").text(bet.amountwon).css("color",colour).appendTo("#row"+i)
     };
 };
 
