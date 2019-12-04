@@ -66,6 +66,7 @@
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="ranking" role="tabpanel" aria-labelledby="ranking-tab">
           <div id="card">
+            <div class="card-title" style="text-align: center; margin-top: 5%"><h4>Company Ranking</h4></div>
             <div class="card-body">
               <p class="card-text">
                 <div style="display: block" id="companySelect">
@@ -95,15 +96,16 @@
                       <th scope="col">Pts</th>
                     </tr>
                   </thead>
-                  <tbody id="companyTable"></tbody>
+                  <tbody id="companyTableMobile"></tbody>
                 </table>
               </p>
             </div>
           </div>
         </div>
-        <div class="tab-pane fade" id="fixtures" role="tabpanel" aria-labelledby="fixtures-tab">
+        <div class="tab-pane fade" id="fixturesMobile" role="tabpanel" aria-labelledby="fixtures-tab">
           <div id="card">
-            <div class="card-body" id="fixtures">
+            <div class="card-title" id="fixturesTitleMobile" style="text-align: center; margin-top: 5%"><h4>Fixtures</h4></div>
+            <div class="card-body">
             </div>
             <div class="col-2"></div>
             <div class="col-5">
@@ -131,6 +133,7 @@
         </div>
         <div class="tab-pane fade" id="standings" role="tabpanel" aria-labelledby="standings-tab">
           <div id="card">
+            <div class="card-title" style="text-align: center; margin-top: 5%"><h4>Standings</h4></div>
             <div class="card-body">
               <p class="card-text">
                 <table class="table table-hover">
@@ -139,14 +142,16 @@
                       <th scope="col">Rank</th>
                       <th scope="col">Club</th>
                       <th scope="col">Played</th>
-                      <th scope="col">W/D/L</th>
+                      <th scope="col">Wins</th>
+                      <th scope="col">Draws</th>
+                      <th scope="col">Losses</th>
                       <th scope="col">GF</th>
                       <th scope="col">GA</th>
                       <th scope="col">GD</th>
                       <th scope="col">Pts</th>
                     </tr>
                   </thead>
-                  <tbody id="leagueBody"></tbody>
+                  <tbody id="leagueBodyMobile"></tbody>
                 </table>
               </p>
             </div>
@@ -158,11 +163,11 @@
       <div class="card col-12 col-md-2" id="card">
         <div class="card-body">
           <h5 class="card-title" id="companyRanking">Company Ranking</h5>
-            <div style="display: block" id = "companySelec">
+            <div style="display: block" id="companySelect">
               <form class="form-inline my-2 my-sm-0">
                 <div class="row" >
                   <input class="form-control mr-sm-2" id="joinGroup" type="input">
-                  <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type='button'>Join Group</button>
+                  <button class="btn btn-outline-dark btn-sm" id="joinCompanyGroup" type="button">Join Group</button>
                 </div>
                 <table class="table table-hover">
                   <tbody id="searchTable">
@@ -190,8 +195,8 @@
         </div>
       </div>
       <div class="card col-12 col-md-3" id="card">
-        <div class="card-body">
-          <h5 class="card-title" id="fixtures">Fixtures</h5>
+        <div class="card-body" id="fixtures">
+          <h5 class="card-title" id="fixturesTitle">Fixtures</h5>
           <br>
         </div>
       </div>
