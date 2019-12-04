@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Prompt:300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/login.css">
+  <link rel="icon" href="./assets/media/favicon.ico" />
   <title>Sign In</title>
 </head>
 
@@ -20,11 +21,11 @@
                 <br>
             
                 <div class="input-container">
-                    <input class="form-control form-control-sm" type="text" placeholder="Username" name="username">
+                    <input class="form-control form-control-sm" type="text" placeholder="Username" name="username" id="username">
                 </div>
                                       
                 <div class="input-container">
-                    <input class="form-control form-control-sm" type="password" placeholder="Password" name="psw">
+                    <input class="form-control form-control-sm" type="password" placeholder="Password" name="psw" id="psw">
                 </div>
                                   
                 <div class="text-right p-t-8 p-b-31" id="forgot">
@@ -39,7 +40,7 @@
                     
                 <br>
                     
-                <div class="text-center">
+                <div class="text-center" id="buttonContainer">
                     <button type="submit" class="btn btn-outline-dark" id="registerbtn">Sign In</button> 
                 </div>
                     
@@ -53,7 +54,7 @@
 
         <div class="video-container">
             <video autoplay muted>
-                <source src="./assets/video/ball.mp4" type="video/mp4">
+                <source src="./assets/media/ball.mp4" type="video/mp4">
             </video>
         </div>
             
@@ -61,8 +62,6 @@
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-
-</script>
+<script src="./assets/js/login.js"></script>
 
 </html>

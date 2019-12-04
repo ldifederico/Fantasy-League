@@ -52,7 +52,7 @@
   <div class="row">
     <div class="card col-12 col-md-2" id="card">
       <div class="card-body">
-        <h5 class="card-title" id="companyRanking">Company Ranking</h5>
+        <h5 class="companyRanking">Company Ranking</h5>
         <p class="card-text">
           <div style="display: block">
             <form class="form-inline my-2 my-sm-0" id="form">
@@ -89,17 +89,17 @@
     </div>
     <div class="card col-12 col-md-3" id="card">
       <div class="card-body">
-        <h5 class="card-title" id="fixtures">Fixtures</h5>
+        <h5 class="fixtures">Fixtures</h5>
         <p class="card-text">
           <div class="row">
             <div class="col-4">
-              <h7 id="homeTeam"></h7>
+              <h7 class="homeTeam"></h7>
             </div>
             <div class="col-4">
               <p>vs.</p>
             </div>
             <div class="col-4">
-              <h7 id="AwayTeam"></h7>
+              <h7 class="AwayTeam"></h7>
             </div>
           </div>
           <div class="row">
@@ -112,18 +112,18 @@
             </div>
           </div>
           <div class="row">
-            <p id="date"></p>
-            <p id="time"></p>
+            <p class="date"></p>
+            <p class="time"></p>
           </div>
           <div class="row">
-            <h7 id="odds">Odds</h7>
-            <p id="winOdds"></p>
-            <p id="loseOdds"></p>
-            <p id="drawOdds"></p>
+            <h7 class="odds">Odds</h7>
+            <p class="winOdds"></p>
+            <p class="loseOdds"></p>
+            <p class="drawOdds"></p>
           </div>
           <div class="row">
             <form class="form my-2 my-sm-0" id="form">
-              <input class="form-control mr-sm-2" id="betAmount" type="input" placeholder="Bet amount">
+              <input class="form-control mr-sm-2 betAmount" type="input" placeholder="Bet amount">
               <button class="btn btn-outline-dark btn-sm" id="homeBet" type="button">Home</button>
               <button class="btn btn-outline-dark btn-sm" id="visitorBet" type="button">Away</button>
               <button class="btn btn-outline-dark btn-sm" id="draw" type="button">Draw</button>
@@ -135,7 +135,7 @@
 
     <div class="card" id="card">
       <div class="card-body">
-        <h5 class="card-title" id="standings">Standings</h5>
+        <h5 class="card-title standings">Standings</h5>
         <p class="card-text">
           <table class="table table-hover">
             <thead>
@@ -152,7 +152,7 @@
                 <th scope="col">Pts</th>
               </tr>
             </thead>
-            <tbody id="leagueBody"></tbody>
+            <tbody class="leagueBody"></tbody>
           </table>
         </p>
       </div>

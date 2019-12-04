@@ -6,6 +6,24 @@ nav {
     font-family: 'Prompt', sans-serif;
 }
 
+@media screen and (max-width: 1024px) {
+    .mobile {
+        display: block;
+    }
+    .fullscreen {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    .mobile {
+      display: none;
+    }
+    .fullscreen {
+        display: block;
+    }
+}
+
 #form {
     width: 100%;
 }
@@ -17,11 +35,24 @@ span {
 #card {
     font-family: 'Prompt', sans-serif;
     justify-content: flex-start;
-    width: 100%;
-    font-size: x-small;
+    font-size: small;
     text-align: center;
     overflow: scroll;
     margin: 1%;
+}
+
+.card {
+    font-family: 'Prompt', sans-serif;
+    justify-content: flex-start;
+    font-size: small;
+    text-align: center;
+    overflow: scroll;
+    margin: 1%;
+    float: left;  
+}
+
+.navbar-text {
+    color: rgb(255, 255, 255);
 }
 
 .card-title {
@@ -32,11 +63,36 @@ span {
     padding: 1%;
 }
 
+.card-text {
+    margin-bottom: 1%;
+}
+
+h6 {
+    padding: 5%;
+    text-align: center;
+}
+
+.container {
+    font-size: small;
+    padding: 1%;
+    justify-content: space-evenly;
+    margin-bottom: 15%;
+}
+
+th {
+    font-weight: bolder;
+}
+
+#homeBet {
+    margin: 1%;
+    font-size: x-small;
+}
+
 .row {
     padding-top: 60px;
     margin-left: 1%;
     margin-right: 1%;
-    font-size: x-small;
+    font-size: small;
     justify-content: space-evenly;
 }
 
@@ -64,11 +120,6 @@ span {
     margin: 1%;
     font-size: 5%;
     width: 110px;
-}
-
-#homeBet {
-    margin: 1%;
-    font-size: 5%;
 }
 
 #visitorBet {
