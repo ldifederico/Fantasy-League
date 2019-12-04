@@ -132,10 +132,10 @@ app.post("/forgotPassword", async function(req,res) {
         userID: userInfo[0].id,
         email: req.body.email
     };
-    var secret = userInfo[0].password
-    var token = jwt.encode(payload,secret)
-    var link = `http://localhost:8080/resetpassword/${payload.userID}/${token}`
-    console.log(link)
+    var secret = userInfo[0].password;
+    console.log(secret)
+    var token = jwt.encode(payload,secret);
+    var link = `http://localhost:8080/resetpassword/${payload.userID}/${token}`;
     mailOptions.to = req.body.email;
     mailOptions.subject = "Password reset";
     mailOptions.text = `Hello! You've requested to reset your password. To reset your password, please click this link: ${link}`;
@@ -144,18 +144,36 @@ app.post("/forgotPassword", async function(req,res) {
             console.log(error);
         } else {
             console.log('Email sent: ' + info.response);
-        }
+        };
     });
 });
 
-app.post("/resetpassword/:id/:token", async function (req, res) {
+app.get("/resetpassword/:id/:token", async function (req, res) {
+    console.log(req.params);
     var secret = await db.query(`SELECT password FROM user WHERE id = ${req.params.id}`);
-    var payload = jwt.decode(req.params.token, secret);
-    console.log(payload);
+    try {
+        console.log(secret[0].password)
+        var payload = jwt.decode(req.params.token, secret[0].password);
+        res.sendFile(path.join(__dirname, "/public/resetpassword.html"));
+        console.log(payload)
+    }
+    catch {
+        console.log("error with signature")
+        res.sendFile(path.join(__dirname, "/public/deadlink.html"));
+    };
+});
+
+app.post("/setnewpassword", async function (req, res) {
+    console.log(req.body)
+    let newHashedPassword = sha256(req.body.password)
+    console.log(newHashedPassword)
+    await db.query(`UPDATE user SET password = '${newHashedPassword}' WHERE id = ${req.body.userID}`)
+    console.log("password reset")
+    res.send("done")
 });
 
 app.get("/main", async function(req,res) {
-    res.sendFile(path.join(__dirname, "./public/main.html"));
+    res.sendFile(path.join(__dirname, "/public/main.html"));
 });
 
 app.post("/profile", async function(req,res) {
@@ -212,8 +230,30 @@ app.post("/createGroup", async function(req,res) {
     };
 });
 
+app.post("/bets", async function(req, res) {
+    let userBets = await db.query(`SELECT fixture_id, fixture, team, amountPlaced, amountwon, odds, amountwon, fixture_date, score FROM bet WHERE user_Id = ${req.body.userID}`);
+    res.send(userBets);
+});
+
 app.post("/betHistory", async function(req, res) {
-    let userBets = await db.query(`SELECT bet.fixture_id, bet.fixture, bet.team, bet.amountPlaced, bet.amountwon, bet.odds, bet.amountwon, bet.fixture_date, bet.score, user.username, company.name FROM bet LEFT JOIN user ON user.id = bet.user_Id LEFT JOIN company ON company.id = user.companyid WHERE user_Id = '${req.body.userID}' ORDER BY bet.fixture_date DESC`);
+    var history = {}
+    let userBets = await db.query(`SELECT fixture_id, fixture, team, amountPlaced, amountwon, odds, amountwon, fixture_date, score FROM bet WHERE user_Id = ${req.body.userID}`);
+    let companyName = await db.query(`SELECT name FROM company WHERE id = ${req.body.companyID}`);
+    let userName = await db.query(`SELECT username FROM user WHERE id = ${req.body.userID}`);
+    history.companyName = companyName[0].name;
+    history.userName = userName[0].username;
+    history.userBets = userBets
+    res.send(history);
+});
+
+app.post("/betHistoryUser", async function (req, res){
+    let userBets = await dbquery(`
+        SELECT user.username, company.name, bet.fixture_id, bet.fixture, bet.team, bet.amountPlaced, bet.amountwon, bet.odds, bet.amountwon, bet.fixture_date, bet.score
+        FROM user 
+        LEFT JOIN company on company.id = user.companyid 
+        LEFT JOIN bet on bet.user_Id = user.id
+        WHERE user.id = ${req.body.userID};`)
+    console.log(userBets);
     res.json(userBets);
 });
 
@@ -244,17 +284,16 @@ app.post("/updateUserProfile", async function(req,res) {
         if (existUser[0] !== undefined){
             res.send({text: "Username taken"});
             return;
-        }
-        else {
-            query = `UPDATE USER SET`;
-            for ([key, value] of Object.entries(req.body)) {
-                query += ` ${key} = '${value}',`;
-            };
-            query = query.slice(0, -1)
-            query += ` WHERE id = ${userID}`;
-            let newUserInfo = await db.query(query);
         };
     };
+    query = `UPDATE USER SET`;
+    for ([key, value] of Object.entries(req.body)) {
+        query += ` ${key} = '${value}',`;
+    };
+    query = query.slice(0, -1);
+    query += ` WHERE id = ${userID}`;
+    await db.query(query);
+    res.send("updated");
 });
 
 app.post("/deleteAccount", async function(req,res) {
@@ -279,13 +318,11 @@ app.post("/leaveCompany", async function (req, res) {
         res.send("correct password")
         await db.query(`UPDATE user SET companyId = NULL WHERE id = ${req.body.userID}`);
         bet_id =  await db.query(`SELECT id FROM bet WHERE user_id = ${req.body.userID}`);
-        console.log(bet_id);
         for (a = 0; a < bet_id.length; a++){
             await db.query(`DELETE FROM bet WHERE id = ${bet_id[a].id}`);
         };
     }
     else { res.send("incorrect password") };
-    console.log("back end done");
 });
 
 async function startingPoints() {
