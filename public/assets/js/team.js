@@ -157,8 +157,11 @@ async function getTeam() {
     i=1
     for (player of roster.api.players) {
         $("<tr>").attr("id","rosterRow"+i).appendTo("#rosterBody");
+        $("<tr>").attr("id","rosterRowMobile"+i).appendTo("#rosterBodyMobile");
         $("<td>").text(`${player.firstname} ${player.lastname}`).appendTo($("#rosterRow"+i));
+        $("<td>").text(`${player.firstname} ${player.lastname}`).appendTo($("#rosterRowMobile"+i));
         $("<td>").text(player.position).appendTo($("#rosterRow"+i));
+        $("<td>").text(player.position).appendTo($("#rosterRowMobile"+i));
         i++
     }
 
@@ -178,12 +181,16 @@ async function getTeam() {
     for (fixture of futureFixtures) {
         $("<tr>").attr("id","fixtureRow"+i).appendTo("#fixtureBody");
         $("<td>").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date.slice(0,10)})`).appendTo($("#fixtureRow"+i));
+        $("<tr>").attr("id","fixtureRowMobile"+i).appendTo("#fixtureBodyMobile");
+        $("<td>").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} (${fixture.event_date.slice(0,10)})`).appendTo($("#fixtureRowMobile"+i));
         i++
     }
     i = 1
     for (fixture of pastFixtures) {
         $("<tr>").attr("id","resultsRow"+i).appendTo("#resultsBody");
         $("<td>").text(`${fixture.homeTeam.team_name} (${fixture.goalsHomeTeam}) vs. ${fixture.awayTeam.team_name} (${fixture.goalsAwayTeam}) (${fixture.event_date.slice(0,10)})`).appendTo($("#resultsRow"+i));
+        $("<tr>").attr("id","resultsRowMobile"+i).appendTo("#resultsBodyMobile");
+        $("<td>").text(`${fixture.homeTeam.team_name} (${fixture.goalsHomeTeam}) vs. ${fixture.awayTeam.team_name} (${fixture.goalsAwayTeam}) (${fixture.event_date.slice(0,10)})`).appendTo($("#resultsRowMobile"+i));
         i++
     }
 
@@ -194,13 +201,23 @@ async function getTeam() {
     i=1
     for (team of standings.api.standings[0]){
         $("<tr>").attr("id","row"+i).appendTo("#leagueBody");
+        $("<tr>").attr("id","rowMobile"+i).appendTo("#leagueBodyMobile");
         $("<th>").attr({
             scope: "row",
             id: "header"+i,
-        }).text(i).appendTo("#row"+i)
+        }).text(i).appendTo("#row"+i);
+        $("<th>").attr({
+            scope: "row",
+            id: "header"+i,
+        }).text(i).appendTo("#rowMobile"+i);
         $("<td>").text(team.teamName).appendTo($("#row"+i));
+        $("<td>").text(team.teamName).appendTo($("#rowMobile"+i));
         $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($("#row"+i));
+        $("<td>").text(`${team.all.win}`).appendTo($("#rowMobile"+i));
+        $("<td>").text(`${team.all.draw}`).appendTo($("#rowMobile"+i));
+        $("<td>").text(`${team.all.lose}`).appendTo($("#rowMobile"+i));
         $("<td>").text(team.points).appendTo($("#row"+i));
+        $("<td>").text(team.points).appendTo($("#rowMobile"+i));
         i++
     }
 }

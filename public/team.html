@@ -70,12 +70,13 @@
                         <a class="nav-link" id="results-tab" data-toggle="tab" role="tab" aria-controls="results" href="#results" aria-selected="false" style="color: white">Results</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="standings-tab" data-toggle="tab" role="tab" aria-controls="standings" href="#standings" aria-selected="false" style="color: white">Standing</a>
+                        <a class="nav-link" id="standings-tab" data-toggle="tab" role="tab" aria-controls="standings" href="#standings" aria-selected="false" style="color: white">Standings</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent" style="border-radius: 25px">
-                    <div class="tab-pane fade show active" id="rosterTab" role="tabpanel" aria-labelledby="roster-tab">
+                    <div class="tab-pane fade show active" id="roster" role="tabpanel" aria-labelledby="roster-tab">
                         <div id="card">
+                            <div class="card-title" style="text-align: center; margin-top: 5%"><h4>Roster</h4></div>
                             <div class="card-body">
                                 <table class="table table-hover">
                                     <thead>
@@ -84,43 +85,47 @@
                                             <th scope="col">Position</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="rosterBody">
-                                    </tbody>
+                                    <tbody id="rosterBodyMobile"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="fixturesTab" role="tabpanel" aria-labelledby="fixtures-tab">
+                    <div class="tab-pane fade" id="fixtures" role="tabpanel" aria-labelledby="fixtures-tab">
                         <div id="card">
+                            <div class="card-title" style="text-align: center; margin-top: 5%"><h4>Fixtures</h4></div>
                             <div class="card-body">
                                 <table class="table table-hover">
-                                    <tbody id="fixtureBody"></tbody>
+                                    <tbody id="fixtureBodyMobile"></tbody>
                                 </table>            
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="resultsTab" role="tabpanel" aria-labelledby="results-tab">
+                    <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
                         <div id="card">
+                            <div class="card-title" style="text-align: center; margin-top: 5%"><h4>Results</h4></div>
                             <div class="card-body">
                                 <table class="table table-hover">
-                                    <tbody id="resultsBody"></tbody>
+                                    <tbody id="resultsBodyMobile"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="standingsTab" role="tabpanel" aria-labelledby="standings-tab">
+                    <div class="tab-pane fade" id="standings" role="tabpanel" aria-labelledby="standings-tab">
                         <div id="card">
+                            <div class="card-title" style="text-align: center; margin-top: 5%"><h4>Standings</h4></div>
                             <div class="card-body">
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
                                             <th scope="col">Rank</th>
                                             <th scope="col">Club</th>
-                                            <th scope="col">W/D/L</th>
+                                            <th scope="col">Wins</th>
+                                            <th scope="col">Draws</th>
+                                            <th scope="col">Losses</th>
                                             <th scope="col">Pts</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="leagueBody"></tbody>
+                                    <tbody id="leagueBodyMobile"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -164,7 +169,7 @@
                 </div>
                 <div class="card col-12 col-md-4" id="standing" style="margin: 1%;">
                     <div class="card-body" id="card">
-                        <h5 class="card-title">Standing</h5>
+                        <h5 class="card-title">Standings</h5>
                         <p class="card-text">
                             <table class="table table-hover">
                                 <thead>
