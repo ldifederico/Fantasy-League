@@ -97,13 +97,20 @@ async function createNewUser(event) {
 
     event.preventDefault();
     var data = {}
+
     data.firstName = $("#firstName").val();
     data.lastName = $("#lastName").val();
     data.email = $("#email").val();
     data.username = $("#username").val();
     data.password = $("#psw").val();
+    data.password1 = $("#psw1").val();
 
-    let response = await $.ajax({
+    console.log(data.password);
+    console.log(data.password1);
+
+    if (data.password != "" && data.password == data.password1) {
+
+      let response = await $.ajax({
         url: "/register",
         method: "POST",
         data: data,
@@ -118,6 +125,13 @@ async function createNewUser(event) {
       localStorage.setItem("userID",response.text);
       window.location.href = "/main";
     };
+    }
+    else{
+      $("<p>").attr("id","pass").text("Please enter matching passwords or check that input field meets specifications").appendTo("#registerdiv");
+    }
+    
+
+    
 };
 
 $("#registerbtn").click(createNewUser);
