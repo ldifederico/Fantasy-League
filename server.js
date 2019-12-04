@@ -47,7 +47,11 @@ if (process.env.JAWSDB_URL) {
     host: "localhost",
     port: 3306,
     user: "root",
+<<<<<<< HEAD
     password: "linda123",
+=======
+    password: "testtest",
+>>>>>>> 35a3685d87ee60c987b54978329672cd067e1097
     database: "FantasyDB"
   });
  }
