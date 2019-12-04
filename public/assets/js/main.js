@@ -22,9 +22,7 @@ async function loadStandings() {
         }).text(i).appendTo("#standRow"+i)
         $("<td>").text(team.teamName).appendTo($("#standRow"+i));
         $("<td>").text(team.all.matchsPlayed).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.win).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.draw).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.lose).appendTo($("#standRow"+i));
+        $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($("#standRow"+i));
         $("<td>").text(team.all.goalsFor).appendTo($("#standRow"+i));
         $("<td>").text(team.all.goalsAgainst).appendTo($("#standRow"+i));
         $("<td>").text(team.goalsDiff).appendTo($("#standRow"+i));
@@ -169,8 +167,8 @@ async function loadCompany() {
             url: "/group",
             data: companyID
         });
-        $("#companySelect").attr("style","display: none");
-        $("#companyDisplay").attr("style","display: block");
+        $("#companySelect").attr("style","display: none")
+        $("#companyDisplay").attr("style","display: block")
         for ([index,user] of company.entries()) {
             i = index + 1
             $("<tr>").attr("id","row"+i).appendTo("#companyTable")
@@ -178,10 +176,6 @@ async function loadCompany() {
             $("<td>").text(user.username).appendTo("#row"+i)
             $("<td>").text(user.points).appendTo("#row"+i)
         };
-    }
-    else {
-        $("#companySelect").attr("style","display: block");
-        $("#companyDisplay").attr("style","display: none");
     };
 };
 
@@ -238,64 +232,15 @@ async function updatePoints() {
     $("#points").text(`Pts: ${points[0].points}`);
 };
 
-async function joinCompanyGroup() {
-    event.preventDefault();
-    data = $(`#joinGroup`).val();
-    data = ({groupName: data});
-    let groupSearch = await $.ajax({
-        url: "/searchGroup",
-        data: data,
-        method: "POST"
-    });
-    //build group list
-    for ([index,group] of groupSearch.entries()) {
-        i = index + 1;
-        $("<tr>").attr({
-            id: "searchRow"+i,
-            class: "result"
-        }).appendTo("#searchTable");
-        $("<td>").text(group.name).appendTo("#searchRow"+i);
-    };
-    //Select which group to join
-    $(".result").on("click", async function () {
-        data = this.id.replace(/[^0-9]/g,'');
-        data = ({companyID: data, userID: localStorage.getItem("userID")});
-        await $.ajax({
-            url: "/joinGroup",
-            data: data,
-            method: "POST"
-        });
-        localStorage.setItem("companyID", data.companyID);
-        $(".result").remove();
-        loadCompany();
-        updatePoints();
-    });
-};
-
-async function createCompanyGroup() {
-    data = $(`#nameCompanyGroup`).val();
-    data = ({groupName: data, userID: localStorage.getItem("userID")});
-    var companyID = response = await $.ajax({
-        url: "/createGroup",
-        data: data,
-        method: "POST"
-    });
-    if (response == "") {
-        $("<p>").attr("id","exists").text("Company already exists. Choose another name.").appendTo("#companySelect");
-    }
-    else {
-        localStorage.setItem("companyID",companyID);
-        loadCompany();
-        updatePoints();
-    };
-};
-
 async function mainLoad() {
     loadFixtures(Date.now());
     loadStandings();
     loadCompany();
     updatePoints();
 };
+
+mainLoad();
+
 
 $("#searchSubmit").click( function() {
     window.location.href = "/team.html";
@@ -304,12 +249,60 @@ $("#searchSubmit").click( function() {
     document.cookie = `teamName=${$("#teamName").val()}`;
 });
 
+$("#createCompanyGroup").click( async function() {
+    data = $("#nameCompanyGroup").val()
+    data = ({groupName: data})
+    response = await $.ajax({
+        url: "/createGroup",
+        data: data,
+        method: "POST"
+    })
+    if (response == "") {
+        $("<p>").attr("id","exists").text("Company already exists. Choose another name.").appendTo("#companySelect")
+    }
+    else {
+        loadCompany();
+        updatePoints();
+    };
+});
+
+$("#joinCompanyGroup").click( async function() {
+    event.preventDefault();
+    data = $("#joinGroup").val();
+    data = ({groupName: data});
+    let groupSearch = await $.ajax({
+        url: "/searchGroup",
+        data: data,
+        method: "POST"
+    });
+    for ([index,group] of groupSearch.entries()) {
+        i = index + 1
+        $("<tr>").attr({
+            id: "searchRow"+i,
+            class: "result"
+        }).appendTo("#searchTable")
+        $("<td>").addClass("result").text(group.name).appendTo("#searchRow"+i)
+    };
+    $(".result").on("click", async function() {
+        data = this.id.replace(/[^0-9]/g,'');
+        data = ({companyID: data});
+        let company = await $.ajax({
+            url: "/joinGroup",
+            data: data,
+            method: "POST"
+        });
+        localStorage.setItem("companyID", data.companyID)
+        $(".result").remove();
+        loadCompany();
+        updatePoints();
+    });
+});
+
 $("#joinCompanyGroup").on("click", joinCompanyGroup);
 $("#createCompanyGroup").on("click", createCompanyGroup);
 
 $("#signOut").click(function() {
     localStorage.removeItem("companyID");
     localStorage.removeItem("userID");
+    $.post("/signout");
 });
-
-mainLoad();
