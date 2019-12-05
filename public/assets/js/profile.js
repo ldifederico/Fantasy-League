@@ -29,7 +29,7 @@ async function updatePoints() {
         url: "/getPoints",
         data: data
     });
-    $("#points").text(`Points: ${points[0].points}`);
+    $("#points").text(`Pts: ${points[0].points}`);
 };
 
 async function editProfile() {

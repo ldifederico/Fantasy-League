@@ -13,6 +13,10 @@ nav {
     .fullscreen {
         display: none;
     }
+    .card {
+        border: none;
+        border-radius: .25rem;
+    }
 }
 
 @media screen and (min-width: 1025px) {
@@ -21,6 +25,10 @@ nav {
     }
     .fullscreen {
         display: block;
+    }
+    .card {
+        border: 1px solid rgba(0,0,0,.125);
+        border-radius: .25rem;
     }
 }
 
@@ -32,7 +40,7 @@ span {
     padding: 1%;
 }
 
-#card {
+.card {
     font-family: 'Prompt', sans-serif;
     justify-content: flex-start;
     font-size: small;
@@ -48,7 +56,8 @@ span {
     text-align: center;
     overflow: scroll;
     margin: 1%;
-    float: left;  
+    float: left;
+    width: 100%;  
 }
 
 .navbar-text {
