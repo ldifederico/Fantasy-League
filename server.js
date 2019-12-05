@@ -98,7 +98,9 @@ app.post("/", async function(req, res) {
         var companyidObj = await db.query(`SELECT companyId FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
         var useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
         var companyid = companyidObj[0].companyId;
+        console.log(companyid);
         var userid = useridObj[0].id;
+        console.log(userid);
         if (companyid == null) 
             { res.send({userID: userid}) } 
         else { res.send({userID: userid, companyID: companyid}) ;}
