@@ -47,7 +47,7 @@ if (process.env.JAWSDB_URL) {
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "testtest",
+    password: "password",
     database: "FantasyDB"
   });
  }
@@ -94,12 +94,12 @@ app.get("/", function(req, res) {
 
 app.post("/", async function(req, res) {
     try {
-        var response
-        var userInfo = await db.query(`SELECT id, companyId, deduction_notification FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
+        var response = {}
+        var userInfo = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
         response.userID = userInfo[0].id;
-        if (userInfo[0].companyId !== null) { response.companyID = userInfo[0].companyId } 
-        if (userInfo[0].deduction_notification !== null) { response.deductions = userInfo[0].deduction_notification}
-        else { res.send({userID: userid, companyID: companyid}) ;}
+        if (userInfo[0].companyId !== null) { response.companyID = userInfo[0].companyId };
+        if (userInfo[0].deduction_notification !== null) { response.deductions = userInfo[0].deduction_notification};
+        res.send({response});
     } catch(error) {
         res.send({text: "incorrect login"});
     }

@@ -15,18 +15,15 @@ async function loadStandings() {
     let standings = await $.get(settings);
     for ([index,team] of standings.api.standings[0].entries()){
         i = index + 1
-        $("<tr>").attr("id","standRow"+i).appendTo("#leagueBody");
-        $("<th>").attr({
-            scope: "row",
-            id: "header"+i,
-        }).text(i).appendTo("#standRow"+i)
-        $("<td>").text(team.teamName).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.matchsPlayed).appendTo($("#standRow"+i));
-        $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.goalsFor).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.goalsAgainst).appendTo($("#standRow"+i));
-        $("<td>").text(team.goalsDiff).appendTo($("#standRow"+i));
-        $("<td>").text(team.points).appendTo($("#standRow"+i));
+        $("<tr>").addClass("standRow"+i).appendTo(".leagueBody");
+        $("<th>").attr("scope", "row").text(i).appendTo(".standRow"+i)
+        $("<td>").text(team.teamName).appendTo($(".standRow"+i));
+        $("<td>").text(team.all.matchsPlayed).appendTo($(".standRow"+i));
+        $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($(".standRow"+i));
+        $("<td>").text(team.all.goalsFor).appendTo($(".standRow"+i));
+        $("<td>").text(team.all.goalsAgainst).appendTo($(".standRow"+i));
+        $("<td>").text(team.goalsDiff).appendTo($(".standRow"+i));
+        $("<td>").text(team.points).appendTo($(".standRow"+i));
     };
 };
 
@@ -189,19 +186,19 @@ async function placeBet() {
         var bet = {}
         bet.fixtureID = fixture.attr("fixtureid");
         bet.fixture = `${fixture.attr("hometeam")} vs. ${fixture.attr("awayteam")}`;
-        bet.date = fixture.siblings().text()
-        team = $(this).text().substring(0,4)
+        bet.date = fixture.siblings().text();
+        team = $(this).text().substring(0,4);
         switch(team) {
-            case "Home": bet.team = fixture.attr("hometeam") 
+            case "Home": bet.team = fixture.attr("hometeam");
             break;
-            case "Away": bet.team = fixture.attr("awayteam") 
+            case "Away": bet.team = fixture.attr("awayteam");
             break;
             case "Draw": bet.team = "Draw"
             break;
             default: console.log("default");
         };
         bet.amount = $("#placeBet" + number).val();
-        bet.odds = `${$(this).text().replace(/[^0-9]/g,'').slice(0,1)}.${$(this).text().replace(/[^0-9]/g,'').slice(1,3)}`
+        bet.odds = `${$(this).text().replace(/[^0-9]/g,'').slice(0,1)}.${$(this).text().replace(/[^0-9]/g,'').slice(1,3)}`;
         bet.userID = localStorage.getItem("userID");
         status = await $.ajax({
             method: "POST",
@@ -275,12 +272,12 @@ $("#joinCompanyGroup").click( async function() {
         method: "POST"
     });
     for ([index,group] of groupSearch.entries()) {
-        i = index + 1
+        i = index + 1;
         $("<tr>").attr({
             id: "searchRow"+i,
             class: "result"
-        }).appendTo("#searchTable")
-        $("<td>").addClass("result").text(group.name).appendTo("#searchRow"+i)
+        }).appendTo("#searchTable");
+        $("<td>").addClass("result").text(group.name).appendTo("#searchRow"+i);
     };
     $(".result").on("click", async function() {
         data = this.id.replace(/[^0-9]/g,'');
