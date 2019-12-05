@@ -134,7 +134,9 @@ app.post("/forgotPassword", async function(req,res) {
     var secret = userInfo[0].password;
     console.log(secret)
     var token = jwt.encode(payload,secret);
-    var link = `http://localhost:8080/resetpassword/${payload.userID}/${token}`;
+    if (process.env.JAWSDB_URL) { prefix = 'https://polar-fortress-89854.herokuapp.com/'}
+    else { prefix = "http://localhost:8080/resetpassword/"}
+    var link = `${prefix}${payload.userID}/${token}`;
     mailOptions.to = req.body.email;
     mailOptions.subject = "Password reset";
     mailOptions.text = `Hello! You've requested to reset your password. To reset your password, please click this link: ${link}`;
@@ -252,7 +254,6 @@ app.post("/betHistoryUser", async function (req, res){
         LEFT JOIN company on company.id = user.companyid 
         LEFT JOIN bet on bet.user_Id = user.id
         WHERE user.id = ${req.body.userID};`)
-    console.log(userBets);
     res.json(userBets);
 });
 
