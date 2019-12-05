@@ -15,7 +15,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-  
+
 class Database {
     constructor( config ) {
         this.connection = mysql.createConnection( config );
@@ -51,7 +51,6 @@ if (process.env.JAWSDB_URL) {
     database: "FantasyDB"
   });
  }
-
 
 var settings = {
     "method":"GET",
@@ -95,12 +94,11 @@ app.get("/", function(req, res) {
 
 app.post("/", async function(req, res) {
     try {
-        var companyidObj = await db.query(`SELECT companyId FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
-        var useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
-        var companyid = companyidObj[0].companyId;
-        var userid = useridObj[0].id;
-        if (companyid == null) 
-            { res.send({userID: userid}) } 
+        var response
+        var userInfo = await db.query(`SELECT id, companyId, deduction_notification FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
+        response.userID = userInfo[0].id;
+        if (userInfo[0].companyId !== null) { response.companyID = userInfo[0].companyId } 
+        if (userInfo[0].deduction_notification !== null) { response.deductions = userInfo[0].deduction_notification}
         else { res.send({userID: userid, companyID: companyid}) ;}
     } catch(error) {
         res.send({text: "incorrect login"});
@@ -380,13 +378,74 @@ async function checkGames() {
                 };
                 tempo = await db.query(`SELECT user_id, SUM(amountwon) FROM bet WHERE fixture_id = ${game.fixtureID} GROUP BY user_id;`);
                 for(b = 0; b < tempo.length; b++){
-                    await db.query(`UPDATE user SET points = points + ${tempo[b]['SUM(amountwon)']} WHERE id = ${tempo[b].user_id}`)
+                    await db.query(`UPDATE user SET points = points + ${tempo[b]['SUM(amountwon)']} WHERE id = ${tempo[b].user_id}`);
                 };
             };
         };
     };
 };
 
+async function dailyUpdate() {
+    var lastUpdateStamp = 1575002329;
+    var nowStamp = Date.now().toString();
+    nowStamp = nowStamp.slice(0,-3);
+    let storedGameWeek = await db.query(`SELECT game_week FROM info WHERE id = 1`);
+    storedGameWeek = storedGameWeek[0].game_week;
+    if (nowStamp - 86400 > lastUpdateStamp) {
+        settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
+        let data = await axios(settings);
+        fixtures = data.data.api.fixtures;
+        for (fixture of fixtures) {
+            if (fixture.event_timestamp > nowStamp) {
+                currentGameWeek = fixture.round.replace(/[^0-9]/g,'');
+                break;
+            };
+        };
+        console.log(currentGameWeek)
+        console.log(storedGameWeek)
+        if (currentGameWeek > storedGameWeek) {
+            console.log(`New game week: number ${currentGameWeek}`);
+            pointPenalty(storedGameWeek);
+            db.query(`UPDATE info SET game_week = ${currentGameWeek}`);
+        }
+        console.log("it's been 24 hours, check for new game week");
+    }
+    else {
+        console.log("already checked for new game week in the last 24 hours");
+    };
+};
+
+async function pointPenalty(pastGameWeek) {
+    let userBase = await db.query(`SELECT id FROM user`);
+    console.log(userBase);
+    let bettingUsers = await db.query(`SELECT user_Id FROM bet WHERE game_week = '${pastGameWeek}'`);
+    bettingUserArray = [];
+    for (user of bettingUsers) {
+        bettingUserArray.push(user.user_Id);
+    };
+    var nonBettingUsers = [];
+    uniqueBettingUserArray = [...new Set(bettingUserArray)];
+    console.log(uniqueBettingUserArray);
+    for (user of userBase) {
+        console.log(user);
+        var match = false;
+        for (bettingUser of uniqueBettingUserArray) {
+            if (bettingUser == user.id) {
+                match = true;
+            };
+        };
+        if (match == false){
+            nonBettingUsers.push(user.id);
+        };
+    };
+    await db.query(`UPDATE user SET points = points - 5 WHERE id in (${nonBettingUsers})`);
+    await db.query(`UPDATE user SET deduction_notification = deduction_notification + 5 WHERE id in (${nonBettingUsers})`);
+    console.log(nonBettingUsers);
+    console.log("point penalties");
+};
+
 //Initial and 5-min interval database update for final game scores
+dailyUpdate();
+setInterval(dailyUpdate, 86400000);
 checkGames();
-setInterval(function () {checkGames()}, 300000);
+setInterval(checkGames, 300000)
