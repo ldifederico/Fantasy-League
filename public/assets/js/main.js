@@ -14,7 +14,7 @@ async function loadStandings() {
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
     let standings = await $.get(settings);
     for ([index,team] of standings.api.standings[0].entries()){
-        i = index+1
+        i = index + 1
         $("<tr>").attr("id","standRow"+i).appendTo("#leagueBody");
         $("<th>").attr({
             scope: "row",
@@ -138,7 +138,6 @@ async function loadFixtures(gameWeek) {
                 $("<span>").css("color","green").text(betInfo.amountPlaced).appendTo("#fixRow"+i);
                 $("<span>").text("points for").appendTo("#fixRow"+i);
                 $("<span>").css("color","green").text(betInfo.team).appendTo("#fixRow"+i)
-                // $("<div>").text(`${betInfo.amountPlaced} points for ${betInfo.team}`).appendTo("#fixture"+i);
             };
         }
         else {

@@ -2,14 +2,20 @@ async function sendLogin(event){
     event.preventDefault();
     login = {};
     login.username = $("#username").val();
+    console.log(login.username);
+    
     login.password = $("#psw").val();
+    console.log(login.password);
+
     let result = await $.ajax({
         method: "POST",
         url: "/",
         data: login
     });
+    
     if (result.text == "incorrect login") {
         $("#incorrect").remove();
+        console.log(result);
         $("<div>").attr("id","incorrect").text(`Incorrect username and/or password`).appendTo("#buttonContainer");
     }
     else {
