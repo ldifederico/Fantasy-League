@@ -108,7 +108,7 @@ async function createNewUser(event) {
     console.log(data.password);
     console.log(data.password1);
 
-    if (data.password != "" && data.password == data.password1) {
+    if (data.password != "" && data.firstName != "" && data.email != "" && data.username != "" && data.password == data.password1) {
 
       let response = await $.ajax({
         url: "/register",
@@ -128,10 +128,7 @@ async function createNewUser(event) {
     }
     else{
       $("<p>").attr("id","pass").text("Please enter matching passwords or check that input field meets specifications").appendTo("#registerdiv");
-    }
-    
-
-    
+    } 
 };
 
 $("#registerbtn").click(createNewUser);
