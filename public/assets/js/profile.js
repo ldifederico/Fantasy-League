@@ -135,34 +135,3 @@ $("#leave").on("click", showLeaveModal);
 
 loadProfile();
 updatePoints();
-<<<<<<< HEAD
-
-
-var settings = {
-	"async": true,
-	"crossDomain": true,
-	"method": "GET",
-	"headers": {
-		"x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-		"x-rapidapi-key": "f01f638c42msh4d70f52d10f6b45p1a4b54jsnc4117f6c2a19"
-	}
-}
-async function test() {
-    settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
-    let allFixtures = await $.get(settings)
-    var allFixturesCount = allFixtures.api.fixtures.length
-    var futureFixturesCount = 0
-    date_timestamp = Date.now().toString();
-    date_timestamp = date_timestamp.slice(0,-3)
-    for (fixture of Object.entries(allFixtures.api.fixtures)) {
-        if (fixture[1].event_timestamp > date_timestamp) {
-            futureFixturesCount++
-        };
-    };
-    points = 1900 * (futureFixturesCount / allFixturesCount)
-    console.log(points)
-}
-
-test();
-=======
->>>>>>> a71163cc95c060b0f14b2d6bfa4379167be0cc3b
