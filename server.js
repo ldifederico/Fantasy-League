@@ -95,7 +95,7 @@ app.get("/", function(req, res) {
 app.post("/", async function(req, res) {
     try {
         var response = {};
-        var userInfo = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`);
+        var userInfo = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
         console.log(`UserInfo: ${userInfo}`);
         response.userID = userInfo[0].id;
         if (userInfo[0].companyId !== null) { response.companyID = userInfo[0].companyId } 
