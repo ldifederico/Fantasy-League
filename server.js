@@ -47,7 +47,7 @@ if (process.env.JAWSDB_URL) {
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "linda123",
+    password: "password",
     database: "FantasyDB"
   });
  }
@@ -94,13 +94,14 @@ app.get("/", function(req, res) {
 
 app.post("/", async function(req, res) {
     try {
-        var response
-        // var userInfo = await db.query(`SELECT id, companyId, deduction_notification FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
-        var userInfo = await db.query(`SELECT id, companyId, deduction_notification FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`);
+        var response = {};
+        var userInfo = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
+        console.log(`UserInfo: ${userInfo}`);
         response.userID = userInfo[0].id;
         if (userInfo[0].companyId !== null) { response.companyID = userInfo[0].companyId } 
-        if (userInfo[0].deduction_notification !== null) { response.deductions = userInfo[0].deduction_notification}
-        else { res.send({userID: userid, companyID: companyid}) ;}
+        //if (userInfo[0].deduction_notification !== null) { response.deductions = userInfo[0].deduction_notification}
+        //else { res.send({userID: userid, companyID: companyid}) ;}
+        res.send(response);
     } catch(error) {
         res.send({text: "incorrect login"});
     }
@@ -133,7 +134,9 @@ app.post("/forgotPassword", async function(req,res) {
     var secret = userInfo[0].password;
     console.log(secret)
     var token = jwt.encode(payload,secret);
-    var link = `http://localhost:8080/resetpassword/${payload.userID}/${token}`;
+    if (process.env.JAWSDB_URL) { prefix = 'https://polar-fortress-89854.herokuapp.com/'}
+    else { prefix = "http://localhost:8080/"}
+    var link = `${prefix}resetpassword/${payload.userID}/${token}`;
     mailOptions.to = req.body.email;
     mailOptions.subject = "Password reset";
     mailOptions.text = `Hello! You've requested to reset your password. To reset your password, please click this link: ${link}`;
@@ -251,7 +254,6 @@ app.post("/betHistoryUser", async function (req, res){
         LEFT JOIN company on company.id = user.companyid 
         LEFT JOIN bet on bet.user_Id = user.id
         WHERE user.id = ${req.body.userID};`)
-    console.log(userBets);
     res.json(userBets);
 });
 
@@ -284,7 +286,7 @@ app.post("/updateUserProfile", async function(req,res) {
             return;
         };
     };
-    query = `UPDATE USER SET`;
+    query = `UPDATE user SET`;
     for ([key, value] of Object.entries(req.body)) {
         query += ` ${key} = '${value}',`;
     };
