@@ -4,7 +4,7 @@ CoLEAGUE is a football application that promotes teambuilding among colleagues. 
 
 **Methodology**
 
-On application deploymeny, the user is prompted to sign into an existing account or register for a new account. 
+On application deployment, the user is prompted to sign into an existing account or register for a new account. 
 
 ![Working Giphy](/public/assets/media/registration.gif)
 
