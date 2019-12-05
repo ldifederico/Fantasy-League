@@ -18,7 +18,7 @@ async function loadProfile () {
         $("#company").text(userInfo[0].companyName);
     }
     else {
-        $("#leave").hide()
+        $("#leave").hide();
     };
 };
 

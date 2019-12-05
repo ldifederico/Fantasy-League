@@ -14,7 +14,7 @@ async function loadStandings() {
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
     let standings = await $.get(settings);
     for ([index,team] of standings.api.standings[0].entries()){
-        i = index+1
+        i = index + 1
         $("<tr>").attr("id","standRow"+i).appendTo("#leagueBody");
         $("<th>").attr({
             scope: "row",
@@ -30,33 +30,9 @@ async function loadStandings() {
     };
 };
 
-async function loadStandingsMobile() {
-    settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
-    let standings = await $.get(settings);
-    for ([index,team] of standings.api.standings[0].entries()){
-        i = index+1
-        $("<tr>").attr("id","standRow"+i).appendTo("#leagueBodyMobile");
-        $("<th>").attr({
-            scope: "row",
-            id: "header"+i,
-        }).text(i).appendTo("#standRow"+i)
-        $("<td>").text(team.teamName).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.matchsPlayed).appendTo($("#standRow"+i));
-        $("<td>").text(`${team.all.win}`).appendTo($("#standRow"+i));
-        $("<td>").text(`${team.all.draw}`).appendTo($("#standRow"+i));
-        $("<td>").text(`${team.all.lose}`).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.goalsFor).appendTo($("#standRow"+i));
-        $("<td>").text(team.all.goalsAgainst).appendTo($("#standRow"+i));
-        $("<td>").text(team.goalsDiff).appendTo($("#standRow"+i));
-        $("<td>").text(team.points).appendTo($("#standRow"+i));
-    };
-};
-
 async function loadFixtures(gameWeek) {
-    $("<div>").addClass("spinner-border").attr("role","status").insertAfter("#fixturesTitle");
-    $("<p>").text("Loading fixtures...").insertAfter("#fixturesTitle");
-    $("<div>").addClass("spinner-border").attr("role","status").insertAfter("#fixturesTitleMobile");
-    $("<p>").text("Loading fixtures...").insertAfter("#fixturesTitleMobile");
+    $("<div>").addClass("spinner-border").attr("role","status").insertAfter("#fixtures");
+    $("<p>").text("Loading fixtures...").insertAfter("#fixtures");
     settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
     data = await $.get(settings);
     fixtures = data.api.fixtures;
@@ -102,8 +78,6 @@ async function loadFixtures(gameWeek) {
 
     $("#fixtures").siblings().remove();
     $("<h6>").text("Game Week " + gameWeek.replace(/[^0-9]/g,'')).appendTo("#fixtures");
-    $("#fixturesMobile").siblings().remove();
-    $("<h6>").text("Game Week " + gameWeek.replace(/[^0-9]/g,'')).appendTo("#fixturesMobile");
 
     for ([index, fixture] of weekFixtures.entries()) {
         i = index+1
@@ -122,11 +96,9 @@ async function loadFixtures(gameWeek) {
         };
 
         $("<div>").attr("id","fixRow"+i).addClass("container").appendTo("#fixtures")
-        $("<div>").attr("id","fixRow"+i).addClass("container").appendTo("#fixturesMobile")
-
+        
         var betPlaced
         if (fixture.status == "Not Started") {
-            $("<div>").attr("id","fixRow"+i).addClass("container").appendTo("#fixturesMobile")
             $("<p>").addClass("card-text").text(`${fixture.event_date.substring(0,10)}`).appendTo("#fixRow"+i)
             $("<p>").attr({
                 id: "fixture"+i,
@@ -199,7 +171,6 @@ async function loadFixtures(gameWeek) {
                 $("<span>").css("color","green").text(betInfo.amountPlaced).appendTo("#fixRow"+i);
                 $("<span>").text("points for").appendTo("#fixRow"+i);
                 $("<span>").css("color","green").text(betInfo.team).appendTo("#fixRow"+i)
-                // $("<div>").text(`${betInfo.amountPlaced} points for ${betInfo.team}`).appendTo("#fixture"+i);
             };
         }
         else {
@@ -233,15 +204,6 @@ async function loadCompany() {
         for ([index,user] of company.entries()) {
             i = index + 1
             $("<tr>").attr("id","row"+i).appendTo("#companyTable")
-            $("<th>").attr("scope","row").text(i).appendTo("#row"+i)
-            $("<td>").text(user.username).appendTo("#row"+i)
-            $("<td>").text(user.points).appendTo("#row"+i)
-        };
-        $("#companySelectMobile").attr("style","display: none")
-        $("#companyDisplayMobile").attr("style","display: block")
-        for ([index,user] of company.entries()) {
-            i = index + 1
-            $("<tr>").attr("id","row"+i).appendTo("#companyTableMobile")
             $("<th>").attr("scope","row").text(i).appendTo("#row"+i)
             $("<td>").text(user.username).appendTo("#row"+i)
             $("<td>").text(user.points).appendTo("#row"+i)
@@ -282,10 +244,7 @@ async function placeBet() {
         if (status == "placed") {
             $("#funds"+number).remove()
             $(`#placeBet${number}, #homeBet${number}, #visitorBet${number}, #draw${number}`).hide()
-            // $("<div>").text(`${bet.amount} points for ${bet.team}`).appendTo("#fixture"+number)
-            $("<div>").text(`${bet.amount}`).appendTo("#fixture"+number)
-            $("<div>").text(`points for`).appendTo("#fixture"+number)
-            $("<div>").text(`${bet.team}`).appendTo("#fixture"+number)
+            $("<div>").text(`${bet.amount} points for ${bet.team}`).appendTo("#fixture"+number)
             updatePoints()
         }
         else if (status == "no funds") {
@@ -308,7 +267,6 @@ async function updatePoints() {
 async function mainLoad() {
     loadFixtures(Date.now());
     loadStandings();
-    loadStandingsMobile();
     loadCompany();
     updatePoints();
 };
