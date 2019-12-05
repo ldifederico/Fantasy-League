@@ -95,13 +95,8 @@ app.get("/", function(req, res) {
 app.post("/", async function(req, res) {
     try {
         var response = {};
-<<<<<<< HEAD
         var userInfo = await db.query(`SELECT id, companyId, deduction_notification FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
         console.log(userInfo)
-=======
-        var userInfo = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
-        console.log(`UserInfo: ${userInfo}`);
->>>>>>> 992266045dfeb309eeb747b5c11c83ca5cdac265
         response.userID = userInfo[0].id;
         if (userInfo[0].companyId !== null) { response.companyID = userInfo[0].companyId } 
         if (userInfo[0].deduction_notification !== null && userInfo[0].deduction_notification !== 0) { response.deductions = userInfo[0].deduction_notification }
