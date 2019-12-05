@@ -56,6 +56,7 @@ async function saveProfile() {
     });
     if (Object.keys(updatedUserData).length > 0) {
         updatedUserData.userID = localStorage.getItem("userID");
+        console.log(`userdata: ${updatedUserData}`);
         let response = await $.ajax({
             method: "POST",
             url: "/updateUserProfile",
