@@ -2,20 +2,14 @@ async function sendLogin(event){
     event.preventDefault();
     login = {};
     login.username = $("#username").val();
-    console.log(login.username);
-    
     login.password = $("#psw").val();
-    console.log(login.password);
-
     let result = await $.ajax({
         method: "POST",
         url: "/",
         data: login
     });
-    
     if (result.text == "incorrect login") {
         $("#incorrect").remove();
-        console.log(result);
         $("<div>").attr("id","incorrect").text(`Incorrect username and/or password`).appendTo("#buttonContainer");
     }
     else {
@@ -26,19 +20,6 @@ async function sendLogin(event){
     };
 };
 
-// async function forgotPassword() {
-//     $("#contentContainer").empty()
-//     $("<input>").attr({
-//         id: "emailInput",
-//         placeholder: "example@gmail.com",
-//     }).appendTo("#contentContainer");
-//     $("<button>").attr({
-//         id: "resetButton",
-//         class: "btn btn-outline-dark mt-3 ",
-//         type: "button"
-//     }).text("Reset password").insertAfter("#contentContainer")
-//     $("#resetButton").click(sendPasswordEmail);
-// };
 
 async function forgot(info) {
     $("#contentContainer").empty()
