@@ -95,8 +95,8 @@ app.get("/", function(req, res) {
 app.post("/", async function(req, res) {
     try {
         var response = {};
-        var userInfo = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
-        console.log(userInfo);
+        var userInfo = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`);
+        console.log(`UserInfo: ${userInfo}`);
         response.userID = userInfo[0].id;
         if (userInfo[0].companyId !== null) { response.companyID = userInfo[0].companyId } 
         //if (userInfo[0].deduction_notification !== null) { response.deductions = userInfo[0].deduction_notification}
@@ -285,7 +285,7 @@ app.post("/updateUserProfile", async function(req,res) {
             return;
         };
     };
-    query = `UPDATE USER SET`;
+    query = `UPDATE user SET`;
     for ([key, value] of Object.entries(req.body)) {
         query += ` ${key} = '${value}',`;
     };
