@@ -47,7 +47,7 @@ if (process.env.JAWSDB_URL) {
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "password",
+    password: "linda123",
     database: "FantasyDB"
   });
  }
@@ -448,7 +448,7 @@ async function pointPenalty(pastGameWeek) {
 };
 
 //Initial and 5-min interval database update for final game scores
-dailyUpdate();
-setInterval(dailyUpdate, 86400000);
+// dailyUpdate();
+// setInterval(dailyUpdate, 86400000);
 checkGames();
 setInterval(checkGames, 300000)

@@ -176,21 +176,21 @@ async function getTeam() {
     }
     i = 1
     for (fixture of futureFixtures) {
-        $("<tr>").addClass("fixtureRow"+i).appendTo(".fixtureBody");
-        $("<tr>").text(`${fixture.homeTeam.team_name} (H)`).appendTo($(".fixtureRow"+i));
-        $("<tr>").text(` vs. `).appendTo($(".fixtureRow"+i));
-        $("<tr>").text(`${fixture.awayTeam.team_name} (A)`).appendTo($(".fixtureRow"+i));
-        $("<tr>").text(`${fixture.event_date.slice(0,10)}`).appendTo($(".fixtureRow"+i));
+        $("<tr>").addClass("fixtureRow"+i).appendTo(".fixtureBody").css("text-align", "center");
+        $("<tr>").text(`${fixture.homeTeam.team_name} (H)`).appendTo($(".fixtureRow"+i)).css("font-weight", "800");
+        $("<tr>").text(` vs. `).appendTo($(".fixtureRow"+i)).css("font-size", "smaller");
+        $("<tr>").text(`${fixture.awayTeam.team_name} (A)`).appendTo($(".fixtureRow"+i)).css("font-weight", "800");
+        $("<tr>").text(`${fixture.event_date.slice(0,10)}`).appendTo($(".fixtureRow"+i)).css("font-size", "smaller");
         $("<br>").appendTo($(".fixtureRow"+i));
         i++
     }
     i = 1
     for (fixture of pastFixtures) {
-        $("<tr>").addClass("resultsRow"+i).appendTo(".resultsBody");
-        $("<tr>").text(`${fixture.homeTeam.team_name} (${fixture.goalsHomeTeam})`).appendTo($(".resultsRow"+i));
-        $("<tr>").text(` vs. `).appendTo($(".resultsRow"+i));
-        $("<tr>").text(`${fixture.awayTeam.team_name} (${fixture.goalsAwayTeam}) `).appendTo($(".resultsRow"+i));
-        $("<tr>").text(`${fixture.event_date.slice(0,10)}`).appendTo($(".resultsRow"+i));
+        $("<tr>").addClass("resultsRow"+i).appendTo(".resultsBody").css("text-align", "center");
+        $("<tr>").text(`${fixture.homeTeam.team_name} (${fixture.goalsHomeTeam})`).appendTo($(".resultsRow"+i)).css("font-weight", "800");
+        $("<tr>").text(` vs. `).appendTo($(".resultsRow"+i)).css("font-size", "smaller");
+        $("<tr>").text(`${fixture.awayTeam.team_name} (${fixture.goalsAwayTeam}) `).appendTo($(".resultsRow"+i)).css("font-weight", "800");
+        $("<tr>").text(`${fixture.event_date.slice(0,10)}`).appendTo($(".resultsRow"+i)).css("font-size", "smaller");
         $("<br>").appendTo($(".resultsRow"+i));
         i++
     }
