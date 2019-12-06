@@ -123,7 +123,7 @@ async function loadFixtures(gameWeek) {
                     type: "text",
                     placeholder: "Bet Amount",
                     style: "width: 100%"
-                }).appendTo(".fixture"+i);
+                }).appendTo(".fixRow"+i);
         //         $("<button>").attr({
         //             class: "btn btn-outline-dark btn-sm betButton",
         //             id: "homeBet"+i,
