@@ -122,7 +122,7 @@ async function loadFixtures(gameWeek) {
                     class: "placeBet"+i,
                     type: "text",
                     placeholder: "Bet Amount",
-                    style: "width: 100%"
+                    style: "width: 40%; border-radius: 5px;"
                 }).appendTo(".fixRow"+i);
         //         $("<button>").attr({
         //             class: "btn btn-outline-dark btn-sm betButton",

@@ -77,7 +77,8 @@ h6 {
     font-size: small;
     padding: 1%;
     justify-content: space-evenly;
-    margin-bottom: 15%;
+    margin-bottom: 5%;
+    text-align: center;
 }
 
 th {
