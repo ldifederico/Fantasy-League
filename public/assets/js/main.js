@@ -124,39 +124,6 @@ async function loadFixtures(gameWeek) {
                     placeholder: "Bet Amount",
                     style: "width: 40%; border-radius: 5px;"
                 }).appendTo(".fixRow"+i);
-        //         $("<button>").attr({
-        //             class: "btn btn-outline-dark btn-sm betButton",
-        //             id: "homeBet"+i,
-        //             type: "button",
-        //             style: "font-size: x-small; margin: 1%"
-        //         }).appendTo("#fixture"+i);
-        //         $("<button>").attr({
-        //             class: "btn btn-outline-dark btn-sm betButton",
-        //             id: "visitorBet"+i,
-        //             type: "button",
-        //             style: "font-size: x-small; margin: 1%"
-        //         }).appendTo("#fixture"+i);
-        //         $("<button>").attr({
-        //             class: "btn btn-outline-dark btn-sm betButton",
-        //             id: "draw"+i,
-        //             type: "button",
-        //             style: "font-size: x-small; margin: 1%"
-        //         }).appendTo("#fixture"+i);
-
-        //         document.getElementById("homeBet"+i).innerHTML = `Home: ${fixtureOdds[0].odd}`;
-        //         document.getElementById("visitorBet"+i).innerHTML = `Away: ${fixtureOdds[2].odd}`;
-        //         document.getElementById("draw"+i).innerHTML = `Draw: ${fixtureOdds[1].odd}`;
-                
-        //     }
-        //     else {
-        //         $("<div>").text(`${betInfo.amountPlaced} points for ${betInfo.team}`).appendTo("#fixture"+i);
-        //     };
-        // }
-        // else {
-        //     // $("<div>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.status} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#fixtures");
-        //     $("<div>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#fixtures");
-        //     $("<div>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#fixturesMobile");
-
                 for ([a, bet] of ["Home", "Away", "Draw"].entries()){
                     $("<button>").attr({
                         class: "btn btn-outline-dark btn-sm betButton",
@@ -379,8 +346,8 @@ $(".joinCompanyGroup").click( async function() {
     });
 });
 
-$(".joinCompanyGroup").on("click", joinCompanyGroup);
-$(".createCompanyGroup").on("click", createCompanyGroup);
+// $(".joinCompanyGroup").on("click", joinCompanyGroup);
+// $(".createCompanyGroup").on("click", createCompanyGroup);
 
 $("#signOut").click(function() {
     localStorage.removeItem("companyID");
