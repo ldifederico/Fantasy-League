@@ -185,6 +185,8 @@ async function loadFixtures(gameWeek) {
             $("<div>").addClass("card-text").text(`${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo(".fixRow"+i);
             if (betPlaced == true) {
                 $("<div>").text(`${betInfo.amountPlaced} points for ${betInfo.team}`).appendTo(".fixRow"+i);
+                $("<div>").text(` points for `).appendTo(".fixRow"+i);
+                $("<div>").text(`${betInfo.team}`).appendTo(".fixRow"+i);
             };
         };
     };

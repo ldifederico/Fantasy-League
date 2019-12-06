@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+a {
+    color: #212529;
+}
+
 nav, .container {
     font-family: 'Prompt', sans-serif;
 }
@@ -15,7 +19,7 @@ nav, .container {
         display: none;
     }
     .card {
-        border: 1px solid rgba(0,0,0,.125);
+        border: none;
         border-radius: .25rem;
         background-color: white;
     }
@@ -34,6 +38,11 @@ nav, .container {
     }
 }
 
+.card-title {
+    margin-top: 10%;
+    text-align: center;
+}
+
 th {
     font-weight: bolder;
     font-size: larger;
@@ -42,14 +51,6 @@ th {
 .nav-link.active {
     background-color: white;
     color: black;
-}
-
-a {
-    color: white;
-}
-
-.nav-link {
-    color: white;
 }
 
 span {
@@ -70,6 +71,14 @@ h5 {
     color: black;
     float: left;
     width: 100%;
+    padding-left: 10px;
+}
+
+.mobile {
+    border-radius: .25rem;
+    margin: auto; 
+    background-color: white; 
+    color: black; 
 }
 
 .header {
