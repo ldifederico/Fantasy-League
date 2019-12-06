@@ -1,15 +1,16 @@
 
 async function loadHistory() {
-    let userID = {userID: localStorage.getItem("userID")}
+    let userData = {userID: localStorage.getItem("userID"), companyID: localStorage.getItem("companyID")};
     let betHistory = await $.ajax({
         method: "POST",
         url: "/betHistory",
-        data: userID
+        data: userData
     });
-    $("#company").text(` ${betHistory[0].name}`);
-    $("#username").text(` ${betHistory[0].username}`);
+    console.log(betHistory)
+    $("#company").text(` ${betHistory.companyName}`);
+    $("#username").text(` ${betHistory.userName}`);
     
-    for ([index,bet] of betHistory.entries()) {
+    for ([index,bet] of betHistory.userBets.entries()) {
         i = index + 1
         $("<tr>").attr("id","row"+i).appendTo("#betTable")
         if (bet.score !== null) {score = ` (${bet.score})`}

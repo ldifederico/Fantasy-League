@@ -20,4 +20,41 @@ async function sendLogin(event){
     };
 };
 
+
+async function forgot(info) {
+    $("#contentContainer").empty()
+    $("<p>").text("Please enter your email below").appendTo("#contentContainer");
+    $("<input>").attr({
+        id: "emailInput",
+        placeholder: "example@gmail.com",
+    }).appendTo("#contentContainer");
+    $("<button>").attr({
+        id: "resetButton",
+        class: "btn btn-outline-dark mt-3 ",
+        type: "button"
+    }).text("Send email").insertAfter("#contentContainer")
+    $("#resetButton").click(() => sendEmail(info));
+};
+
+async function sendEmail(info) {
+    var data = {email: $("#emailInput").val()};
+    $.ajax({
+        method: "POST",
+        url: `/forgot${info}`,
+        data: data
+    });
+    $("#contentContainer").empty();
+    $("#resetButton").hide();
+    $("<p>").addClass("text-center").text(`Email sent to ${data.email}`).appendTo("#contentContainer");
+    $("<button>").attr({
+        id: "logIn",
+        class: "btn btn-outline-dark mt-3 ",
+        type: "button"
+    }).text("Log In").insertAfter("#contentContainer");
+    $("#logIn").click(()=> {location.reload()});
+};
+
+
 $("#registerbtn").click(sendLogin);
+$("#forgotUsername").click(() => forgot("Username"));
+$("#forgotPassword").click(() => forgot("Password"));
