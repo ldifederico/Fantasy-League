@@ -77,7 +77,7 @@ async function saveProfile() {
 
 async function showDeleteModal() {
     $("#modalTitle").text("Confirm account delete");
-    $("#modalBody").text("Are you sure you want to delete your account? Please type in your password below and click Delete.");
+    $("#modalBody").text("Are you sure you want to delete your account? There is no going back. Please type in your password below and click Delete.");
     $("#confirmButton").text("Delete");
     $('#myModal').modal('toggle');
     // $("#confirmButton").on("click", deleteAccount);
@@ -95,7 +95,7 @@ async function deleteAccount() {
 
 async function showLeaveModal() {
     $("#modalTitle").text("Confirm leave company");
-    $("#modalBody").text("Are you sure you want to leave your company? Please type in your password below and click Leave.");
+    $("#modalBody").text("Are you sure you want to leave your company? You will lose your all you points and previous bets associated with your company. Please type in your password below and click Leave.");
     $("#confirmButton").text("Leave");
     $('#myModal').modal('toggle');
     $("#confirmButton").on("click", leaveCompany);

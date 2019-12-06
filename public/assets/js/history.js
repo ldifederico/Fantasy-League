@@ -1,4 +1,3 @@
-
 async function loadHistory() {
     let userData = {userID: localStorage.getItem("userID"), companyID: localStorage.getItem("companyID")};
     let betHistory = await $.ajax({
@@ -6,23 +5,22 @@ async function loadHistory() {
         url: "/betHistory",
         data: userData
     });
-    console.log(betHistory)
     $("#company").text(` ${betHistory.companyName}`);
     $("#username").text(` ${betHistory.userName}`);
     
     for ([index,bet] of betHistory.userBets.entries()) {
-        i = index + 1
-        $("<tr>").attr("id","row"+i).appendTo("#betTable")
+        i = index + 1;
+        $("<tr>").attr("id","row"+i).appendTo("#betTable");
         if (bet.score !== null) {score = ` (${bet.score})`}
-        else {score = ""}
-        $("<td>").text(`${bet.fixture}${score}`).appendTo("#row"+i)
-        $("<td>").text(bet.fixture_date).appendTo("#row"+i)
-        $("<td>").text(bet.team).appendTo("#row"+i)
-        $("<td>").text(bet.amountPlaced).appendTo("#row"+i)
-        $("<td>").text(bet.odds).appendTo("#row"+i)
+        else {score = ""};
+        $("<td>").text(`${bet.fixture}${score}`).appendTo("#row"+i);
+        $("<td>").text(bet.fixture_date).appendTo("#row"+i);
+        $("<td>").text(bet.team).appendTo("#row"+i);
+        $("<td>").text(bet.amountPlaced).appendTo("#row"+i);
+        $("<td>").text(bet.odds).appendTo("#row"+i);
         if (bet.amountwon > 0) {colour = "green"}
         else {colour = "red"};
-        $("<td>").text(bet.amountwon).css("color",colour).appendTo("#row"+i)
+        $("<td>").text(bet.amountwon).css("color",colour).appendTo("#row"+i);
     };
 };
 

@@ -50,7 +50,7 @@ if (process.env.JAWSDB_URL) {
     password: "linda123",
     database: "FantasyDB"
   });
- }
+}
 
 var settings = {
     "method":"GET",
@@ -83,6 +83,8 @@ companyList = [];
 userList = [];
 incompleteGames = [];
 uniqueGames = [];
+
+console.log(sha256("middleman"))
 
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
@@ -240,7 +242,7 @@ app.post("/bets", async function(req, res) {
 
 app.post("/betHistory", async function(req, res) {
     var history = {}
-    let userBets = await db.query(`SELECT fixture_id, fixture, team, amountPlaced, amountwon, odds, amountwon, fixture_date, score FROM bet WHERE user_Id = ${req.body.userID}`);
+    let userBets = await db.query(`SELECT fixture_id, fixture, team, amountPlaced, amountwon, odds, amountwon, fixture_date, score FROM bet WHERE user_Id = ${req.body.userID} ORDER BY fixture_date DESC`);
     let companyName = await db.query(`SELECT name FROM company WHERE id = ${req.body.companyID}`);
     let userName = await db.query(`SELECT username FROM user WHERE id = ${req.body.userID}`);
     history.companyName = companyName[0].name;
@@ -304,7 +306,7 @@ app.post("/deleteAccount", async function(req,res) {
     if (inputPassword == dbPassword[0].password) {
         res.send("correct password")
         await db.query(`DELETE FROM user WHERE id = '${req.body.userID}'`);
-        await db.query(`DELETE FROM bet WHERE user_id = '${req.body.userID}'`);
+        // await db.query(`DELETE FROM bet WHERE user_id = '${req.body.userID}'`);
         bet_id =  await db.query(`SELECT id FROM bet WHERE user_id = ${req.body.userID}`);
         for (a = 0; a < bet_id.length; a++){
             await db.query(`DELETE FROM bet WHERE id = ${bet_id[a].id}`);
@@ -364,19 +366,18 @@ async function checkGames() {
         seasonFixtures = data.data.api.fixtures;
         for (game of uniqueGames) {
             for (fixture of seasonFixtures) {
-                if (game.fixtureID == fixture.fixture_id) {
-                    if (fixture.goalsHomeTeam > fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.homeTeam.team_name})}
-                    else if (fixture.goalsHomeTeam < fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.awayTeam.team_name})}
-                    else if (fixture.goalsHomeTeam = fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: "Draw"})}
+                if (game.fixtureID == fixture.fixture_id && fixture.status == "Match Finsihed") {
+                    if (fixture.goalsHomeTeam > fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.homeTeam.team_name, score: `${goalsHomeTeam} - ${goalsAwayTeam}`})}
+                    else if (fixture.goalsHomeTeam < fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.awayTeam.team_name, score: `${goalsHomeTeam} - ${goalsAwayTeam}`})}
+                    else if (fixture.goalsHomeTeam = fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: "Draw", score: `${goalsHomeTeam} - ${goalsAwayTeam}`})};
                 };
             };
         };
-
         if (completedGames !== []) {
             for (game of completedGames) {
                 bet_id =  await db.query(`SELECT id FROM bet WHERE fixture_id = ${game.fixtureID};`);
                 for (a = 0; a < bet_id.length; a++){
-                    await db.query(`UPDATE bet SET winningTeam = '${game.result}' WHERE id = ${bet_id[a].id};`);
+                    await db.query(`UPDATE bet SET winningTeam = '${game.result}', score = '${game.score}' WHERE id = ${bet_id[a].id};`);
                     await db.query(`UPDATE bet SET amountwon = amountPlaced * odds WHERE id = ${bet_id[a].id} AND winningTeam = team`);
                     await db.query(`UPDATE bet SET amountwon = 0 WHERE id = ${bet_id[a].id} AND winningTeam != team`);
                 };
@@ -396,7 +397,11 @@ async function dailyUpdate() {
     storedGameWeek = storedGameWeek[0].game_week;
     var lastUpdateStamp = await db.query(`SELECT last_update_stamp FROM info WHERE id = 1`);
     //Test if it's been 24 hours since last check to see if game week changed
-    if (nowStamp - 86400 > lastUpdateStamp) {
+    console.log(nowStamp)
+    console.log(nowStamp - 86400)
+    console.log(lastUpdateStamp)
+    if (nowStamp - 86400 > lastUpdateStamp[0].last_update_stamp) {
+        console.log("time to update")
         // Has been 24 hours, set new last_update_stamp
         db.query(`UPDATE info SET last_update_stamp = ${nowStamp} WHERE id = 1`)
         //pull new game week data from API
@@ -424,6 +429,7 @@ async function dailyUpdate() {
 };
 
 async function pointPenalty(pastGameWeek) {
+    console.log("penalty function")
     let userBase = await db.query(`SELECT id FROM user`);
     let bettingUsers = await db.query(`SELECT user_Id FROM bet WHERE game_week = '${pastGameWeek}'`);
     bettingUserArray = [];
@@ -443,8 +449,9 @@ async function pointPenalty(pastGameWeek) {
             nonBettingUsers.push(user.id);
         };
     };
-    await db.query(`UPDATE user SET points = points - 5 WHERE id in (${nonBettingUsers})`);
-    await db.query(`UPDATE user SET deduction_notification = deduction_notification + 5 WHERE id in (${nonBettingUsers})`);
+    deduction = 25
+    await db.query(`UPDATE user SET points = points - ${deduction} WHERE id in (${nonBettingUsers})`);
+    await db.query(`UPDATE user SET deduction_notification = deduction_notification + ${deduction} WHERE id in (${nonBettingUsers})`);
 };
 
 //Initial and 5-min interval database update for final game scores
