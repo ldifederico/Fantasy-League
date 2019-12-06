@@ -229,7 +229,7 @@ async function placeBet() {
             break;
             case "Away": bet.team = fixture.attr("awayteam");
             break;
-            case "Draw": bet.team = "Draw"
+            case "Draw": bet.team = "Draw";
             break;
             default: console.log("default");
         };
@@ -264,11 +264,31 @@ async function updatePoints() {
     $("#points").text(`Pts: ${points[0].points}`);
 };
 
+async function pointDeductions() {
+    var pointPenalty = localStorage.getItem("deductions");
+    console.log(pointPenalty);
+    if (pointPenalty !== null) {
+        console.log("penalizing")
+        localStorage.removeItem("deductions");
+        $("#myModal").modal("toggle");
+        $("#modalTitle").text("Point penalties");
+        $("#modalMessage").text(`Due to your recent inactivity, you have been deducted ${pointPenalty} points as a penalty.`);
+        var userInfo = {userID: localStorage.getItem("userID")};
+        $.ajax({
+            method: "POST",
+            url: "/pointpenalty",
+            data: userInfo
+        });
+        console.log("finished")
+    };
+};
+
 async function mainLoad() {
-    loadFixtures(Date.now());
+    pointDeductions();
+    updatePoints();
     loadStandings();
     loadCompany();
-    updatePoints();
+    loadFixtures(Date.now());
 };
 
 mainLoad();

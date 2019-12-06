@@ -95,16 +95,21 @@ app.get("/", function(req, res) {
 app.post("/", async function(req, res) {
     try {
         var response = {};
-        var userInfo = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
-        console.log(`UserInfo: ${userInfo}`);
+        var userInfo = await db.query(`SELECT id, companyId, deduction_notification FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
+        console.log(userInfo)
         response.userID = userInfo[0].id;
         if (userInfo[0].companyId !== null) { response.companyID = userInfo[0].companyId } 
-        //if (userInfo[0].deduction_notification !== null) { response.deductions = userInfo[0].deduction_notification}
-        //else { res.send({userID: userid, companyID: companyid}) ;}
+        if (userInfo[0].deduction_notification !== null && userInfo[0].deduction_notification !== 0) { response.deductions = userInfo[0].deduction_notification }
         res.send(response);
     } catch(error) {
         res.send({text: "incorrect login"});
-    }
+    };
+});
+
+app.post("/pointpenalty", async function (req, res) {
+    console.log(req.body);
+    db.query(`UPDATE user SET deduction_notification = 0 WHERE id = ${req.body.userID} `);
+    res.send("cleared");
 });
 
 app.get("/register", async function(req,res) {
@@ -165,11 +170,8 @@ app.get("/resetpassword/:id/:token", async function (req, res) {
 });
 
 app.post("/setnewpassword", async function (req, res) {
-    console.log(req.body)
     let newHashedPassword = sha256(req.body.password)
-    console.log(newHashedPassword)
     await db.query(`UPDATE user SET password = '${newHashedPassword}' WHERE id = ${req.body.userID}`)
-    console.log("password reset")
     res.send("done")
 });
 
@@ -328,7 +330,6 @@ app.post("/leaveCompany", async function (req, res) {
 async function startingPoints() {
     settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
     let allFixtures = await axios(settings);
-    var allFixturesCount = allFixtures.data.api.fixtures.length;
     var futureFixturesCount = 0;
     date_timestamp = Date.now().toString();
     date_timestamp = date_timestamp.slice(0,-3);
@@ -388,67 +389,66 @@ async function checkGames() {
     };
 };
 
-// async function dailyUpdate() {
-//     var lastUpdateStamp = 1575002329;
-//     var nowStamp = Date.now().toString();
-//     nowStamp = nowStamp.slice(0,-3);
-//     let storedGameWeek = await db.query(`SELECT game_week FROM info WHERE id = 1`);
-//     storedGameWeek = storedGameWeek[0].game_week;
-//     if (nowStamp - 86400 > lastUpdateStamp) {
-//         settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
-//         let data = await axios(settings);
-//         fixtures = data.data.api.fixtures;
-//         for (fixture of fixtures) {
-//             if (fixture.event_timestamp > nowStamp) {
-//                 currentGameWeek = fixture.round.replace(/[^0-9]/g,'');
-//                 break;
-//             };
-//         };
-//         console.log(currentGameWeek)
-//         console.log(storedGameWeek)
-//         if (currentGameWeek > storedGameWeek) {
-//             console.log(`New game week: number ${currentGameWeek}`);
-//             pointPenalty(storedGameWeek);
-//             db.query(`UPDATE info SET game_week = ${currentGameWeek}`);
-//         }
-//         console.log("it's been 24 hours, check for new game week");
-//     }
-//     else {
-//         console.log("already checked for new game week in the last 24 hours");
-//     };
-// };
+async function dailyUpdate() {
+    var nowStamp = Date.now().toString();
+    nowStamp = nowStamp.slice(0,-3);
+    var storedGameWeek = await db.query(`SELECT game_week FROM info WHERE id = 1`);
+    storedGameWeek = storedGameWeek[0].game_week;
+    var lastUpdateStamp = await db.query(`SELECT last_update_stamp FROM info WHERE id = 1`);
+    //Test if it's been 24 hours since last check to see if game week changed
+    if (nowStamp - 86400 > lastUpdateStamp) {
+        // Has been 24 hours, set new last_update_stamp
+        db.query(`UPDATE info SET last_update_stamp = ${nowStamp} WHERE id = 1`)
+        //pull new game week data from API
+        settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
+        let data = await axios(settings);
+        fixtures = data.data.api.fixtures;
+        //loop to find current game week
+        for (fixture of fixtures) {
+            if (fixture.event_timestamp > nowStamp) {
+                currentGameWeek = fixture.round.replace(/[^0-9]/g,'');
+                break;
+            };
+        };
+        // Check if current game week is newer than stored game week
+        if (currentGameWeek > storedGameWeek) {
+            //execute points function for previous game week
+            pointPenalty(storedGameWeek);
+            //update game week in database
+            db.query(`UPDATE info SET game_week = ${currentGameWeek}`);
+        }
+    }
+    else {
+        console.log("already checked for new game week in the last 24 hours");
+    };
+};
 
-// async function pointPenalty(pastGameWeek) {
-//     let userBase = await db.query(`SELECT id FROM user`);
-//     console.log(userBase);
-//     let bettingUsers = await db.query(`SELECT user_Id FROM bet WHERE game_week = '${pastGameWeek}'`);
-//     bettingUserArray = [];
-//     for (user of bettingUsers) {
-//         bettingUserArray.push(user.user_Id);
-//     };
-//     var nonBettingUsers = [];
-//     uniqueBettingUserArray = [...new Set(bettingUserArray)];
-//     console.log(uniqueBettingUserArray);
-//     for (user of userBase) {
-//         console.log(user);
-//         var match = false;
-//         for (bettingUser of uniqueBettingUserArray) {
-//             if (bettingUser == user.id) {
-//                 match = true;
-//             };
-//         };
-//         if (match == false){
-//             nonBettingUsers.push(user.id);
-//         };
-//     };
-//     await db.query(`UPDATE user SET points = points - 5 WHERE id in (${nonBettingUsers})`);
-//     await db.query(`UPDATE user SET deduction_notification = deduction_notification + 5 WHERE id in (${nonBettingUsers})`);
-//     console.log(nonBettingUsers);
-//     console.log("point penalties");
-// };
+async function pointPenalty(pastGameWeek) {
+    let userBase = await db.query(`SELECT id FROM user`);
+    let bettingUsers = await db.query(`SELECT user_Id FROM bet WHERE game_week = '${pastGameWeek}'`);
+    bettingUserArray = [];
+    for (user of bettingUsers) {
+        bettingUserArray.push(user.user_Id);
+    };
+    var nonBettingUsers = [];
+    uniqueBettingUserArray = [...new Set(bettingUserArray)];
+    for (user of userBase) {
+        var match = false;
+        for (bettingUser of uniqueBettingUserArray) {
+            if (bettingUser == user.id) {
+                match = true;
+            };
+        };
+        if (match == false){
+            nonBettingUsers.push(user.id);
+        };
+    };
+    await db.query(`UPDATE user SET points = points - 5 WHERE id in (${nonBettingUsers})`);
+    await db.query(`UPDATE user SET deduction_notification = deduction_notification + 5 WHERE id in (${nonBettingUsers})`);
+};
 
-// //Initial and 5-min interval database update for final game scores
-// dailyUpdate();
-// setInterval(dailyUpdate, 86400000);
+//Initial and 5-min interval database update for final game scores
+dailyUpdate();
+setInterval(dailyUpdate, 86400000);
 checkGames();
 setInterval(checkGames, 300000)
