@@ -45,38 +45,38 @@
                 <input class="form-control mr-sm" type="search" placeholder="Search for team" id="teamName">
                 <button class="btn btn-outline-light my-2 my-sm-0" type="submit" id="searchSubmit" style="margin-left: 5px;"><i class="fas fa-search"></i></button>
             </form>
-            <span class="navbar-text" id="points"></span>
+            <span class="navbar-text" id="points" style="font-size: small;"></span>
         </div>
     </nav>
 
     <div class="container">
         <div class="header">
-          <div class="row" style="justify-content:center">
-            <img id="teamLogo">
-            <h2 id="club" style="padding-left: 1%"></h2>
+          <div class="row" style="justify-content:center; padding: 2%;">
+            <img class="teamLogo">
+            <h2 class="club" style="padding-left: 1%"></h2>
             <hr>
           </div>
         </div>
         <div class="row">
-            <div class="mobile" style="margin: auto">
+            <div class="mobile">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="roster-tab" data-toggle="tab" role="tab" aria-controls="roster" href="#roster" aria-selected="true" style="color: white">Roster</a>
+                        <a class="nav-link active" id="roster-tab" data-toggle="tab" role="tab" aria-controls="roster" href="#roster" aria-selected="true">Roster</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="fixtures-tab" data-toggle="tab" role="tab" aria-controls="fixtures" href="#fixtures" aria-selected="false" style="color: white">Fixtures</a>
+                        <a class="nav-link" id="fixtures-tab" data-toggle="tab" role="tab" aria-controls="fixtures" href="#fixtures" aria-selected="false">Fixtures</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="results-tab" data-toggle="tab" role="tab" aria-controls="results" href="#results" aria-selected="false" style="color: white">Results</a>
+                        <a class="nav-link" id="results-tab" data-toggle="tab" role="tab" aria-controls="results" href="#results" aria-selected="false">Results</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="standings-tab" data-toggle="tab" role="tab" aria-controls="standings" href="#standings" aria-selected="false" style="color: white">Standings</a>
+                        <a class="nav-link" id="standings-tab" data-toggle="tab" role="tab" aria-controls="standings" href="#standings" aria-selected="false">Standings</a>
                     </li>
                 </ul>
-                <div class="tab-content" id="myTabContent" style="border-radius: 25px">
+                <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="roster" role="tabpanel" aria-labelledby="roster-tab">
-                        <div id="card">
-                            <div class="card-title" style="text-align: center; margin-top: 5%"><h4>Roster</h4></div>
+                        <div class="card">
+                            <div class="card-title"><h4>Roster</h4></div>
                             <div class="card-body">
                                 <table class="table table-hover">
                                     <thead>
@@ -85,47 +85,45 @@
                                             <th scope="col">Position</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="rosterBodyMobile"></tbody>
+                                    <tbody class="rosterBody"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="fixtures" role="tabpanel" aria-labelledby="fixtures-tab">
-                        <div id="card">
-                            <div class="card-title" style="text-align: center; margin-top: 5%"><h4>Fixtures</h4></div>
+                        <div class="card">
+                            <div class="card-title"><h4>Fixtures</h4></div>
                             <div class="card-body">
                                 <table class="table table-hover">
-                                    <tbody id="fixtureBodyMobile"></tbody>
+                                    <tbody class="fixtureBody"></tbody>
                                 </table>            
                             </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
-                        <div id="card">
-                            <div class="card-title" style="text-align: center; margin-top: 5%"><h4>Results</h4></div>
+                        <div class="card">
+                            <div class="card-title"><h4>Results</h4></div>
                             <div class="card-body">
                                 <table class="table table-hover">
-                                    <tbody id="resultsBodyMobile"></tbody>
+                                    <tbody class="resultsBody"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="standings" role="tabpanel" aria-labelledby="standings-tab">
-                        <div id="card">
-                            <div class="card-title" style="text-align: center; margin-top: 5%"><h4>Standings</h4></div>
+                        <div class="card">
+                            <div class="card-title"><h4>Standings</h4></div>
                             <div class="card-body">
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
                                             <th scope="col">Rank</th>
                                             <th scope="col">Club</th>
-                                            <th scope="col">Wins</th>
-                                            <th scope="col">Draws</th>
-                                            <th scope="col">Losses</th>
+                                            <th scope="col">W/D/L</th>
                                             <th scope="col">Pts</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="leagueBodyMobile"></tbody>
+                                    <tbody class="leagueBody"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -134,8 +132,8 @@
             </div>
             <hr>
             <div class="fullscreen" style="width: 100%">
-                <div class="card col-12 col-md-3"  id="roster" style="margin: 1%;">
-                    <div class="card-body" id="card">
+                <div class="card col-12 col-md-3 roster" style="margin: 1%;">
+                    <div class="card-body card">
                         <h5 class="card-title">Roster</h5>
                         <p class="card-text">
                             <table class="table table-hover">
@@ -145,30 +143,30 @@
                                         <th scope="col">Position</th>
                                     </tr>
                                 </thead>
-                                <tbody id="rosterBody"></tbody>
+                                <tbody class="rosterBody"></tbody>
                             </table>
                         </p>
                     </div>
                 </div>
-                <div class="card col-12 col-md-2" id="games" style="margin: 1%;">
-                    <div class="card-body" id="card">
-                        <h5 class="card-title" id="fixtures">Fixtures</h5>
+                <div class="card col-12 col-md-2 games" style="margin: 1%;">
+                    <div class="card-body card">
+                        <h5 class="card-title fixtures">Fixtures</h5>
                         <table class="table table-hover">
-                            <tbody id="fixtureBody"></tbody>
+                            <tbody class="fixtureBody"></tbody>
                         </table>
                     </div>
                 </div>
-                <div class="card col-12 col-md-2" id="games" style="margin: 1%;">
-                    <div class="card-body" id="card">
-                        <h5 class="card-title" id="results">Results</h5>
+                <div class="card col-12 col-md-2 games" style="margin: 1%;">
+                    <div class="card-body card">
+                        <h5 class="card-title results">Results</h5>
                         <table class="table table-hover">
-                            <tbody id="resultsBody"></tbody>
+                            <tbody class="resultsBody"></tbody>
                         </table>
                         <hr>
                     </div>
                 </div>
-                <div class="card col-12 col-md-4" id="standing" style="margin: 1%;">
-                    <div class="card-body" id="card">
+                <div class="card col-12 col-md-4 standing" style="margin: 1%;">
+                    <div class="card-body card">
                         <h5 class="card-title">Standings</h5>
                         <p class="card-text">
                             <table class="table table-hover">
@@ -180,7 +178,7 @@
                                         <th scope="col">Pts</th>
                                     </tr>
                                 </thead>
-                                <tbody id="leagueBody"></tbody>
+                                <tbody class="leagueBody"></tbody>
                             </table>
                         </p>
                     </div>

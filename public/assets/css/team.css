@@ -3,16 +3,25 @@
     padding: 0;
 }
 
+a {
+    color: #212529;
+}
+
 nav, .container {
     font-family: 'Prompt', sans-serif;
 }
 
 @media screen and (max-width: 1024px) {
     .mobile {
-        display: block;
+        display: block;        
     }
     .fullscreen {
         display: none;
+    }
+    .card {
+        border: none;
+        border-radius: .25rem;
+        background-color: white;
     }
 }
 
@@ -23,6 +32,15 @@ nav, .container {
     .fullscreen {
         display: block;
     }
+    .card {
+        border: none;
+        border-radius: .25rem;
+    }
+}
+
+.card-title {
+    margin-top: 10%;
+    text-align: center;
 }
 
 th {
@@ -33,14 +51,6 @@ th {
 .nav-link.active {
     background-color: white;
     color: black;
-}
-
-a {
-    color: white;
-}
-
-.nav-link {
-    color: white;
 }
 
 span {
@@ -55,11 +65,20 @@ h5 {
     text-align: center;
 }
 
-#card {
+.card {
     overflow: scroll;
     background-color: white;
     color: black;
     float: left;
+    width: 100%;
+    padding-left: 10px;
+}
+
+.mobile {
+    border-radius: .25rem;
+    margin: auto; 
+    background-color: white; 
+    color: black; 
 }
 
 .header {
@@ -68,17 +87,17 @@ h5 {
     font-size: small;
 }
 
-#roster, #games, #standing {
+.roster, .games, .standing {
     width: fit-content;
     float: left;
 }
 
-#placeBet {
+.placeBet {
     width: 10%;
     font-size: 0.3;
 }
 
-#homeBet, #visitorBet {
+.homeBet, .visitorBet {
     font-size: 0.4%;
     padding: 0px;
 }
@@ -95,6 +114,6 @@ h5 {
     justify-content: space-between;
 }
 
-#standing {
+.standing {
     width: fit-content;
 }

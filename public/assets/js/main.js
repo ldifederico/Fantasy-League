@@ -16,7 +16,10 @@ async function loadStandings() {
     for ([index,team] of standings.api.standings[0].entries()){
         i = index + 1
         $("<tr>").addClass("standRow"+i).appendTo(".leagueBody");
-        $("<th>").attr("scope", "row").text(i).appendTo(".standRow"+i)
+        $("<th>").attr({
+            scope: "row",
+            class: "header"+i,
+        }).text(i).appendTo(".standRow"+i)
         $("<td>").text(team.teamName).appendTo($(".standRow"+i));
         $("<td>").text(team.all.matchsPlayed).appendTo($(".standRow"+i));
         $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($(".standRow"+i));
@@ -28,8 +31,8 @@ async function loadStandings() {
 };
 
 async function loadFixtures(gameWeek) {
-    $("<div>").addClass("spinner-border").attr("role","status").insertAfter("#fixtures");
-    $("<p>").text("Loading fixtures...").insertAfter("#fixtures");
+    $("<div>").addClass("spinner-border").attr("role","status").insertAfter(".fixturesTitle");
+    $("<p>").text("Loading fixtures...").insertAfter(".fixturesTitle");
     settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
     data = await $.get(settings);
     fixtures = data.api.fixtures;
@@ -73,8 +76,8 @@ async function loadFixtures(gameWeek) {
         $.get(url)
     ));
 
-    $("#fixtures").siblings().remove();
-    $("<h6>").text("Game Week " + gameWeek.replace(/[^0-9]/g,'')).appendTo("#fixtures");
+    $(".fixtures").siblings().remove();
+    $("<h6>").text("Game Week " + gameWeek.replace(/[^0-9]/g,'')).appendTo(".fixtures");
 
     for ([index, fixture] of weekFixtures.entries()) {
         i = index+1
@@ -92,19 +95,19 @@ async function loadFixtures(gameWeek) {
             fixtureOdds[2].odd = 1.20
         };
 
-        $("<div>").attr("id","fixRow"+i).addClass("container").appendTo("#fixtures");
+        $("<div>").addClass("fixRow"+i).addClass("container").appendTo(".fixtures")
         
         var betPlaced
         if (fixture.status == "Not Started") {
-            $("<p>").addClass("card-text").attr("id","date"+i).text(`${fixture.event_date.substring(0,10)}`).appendTo("#fixRow"+i);
+            $("<p>").addClass("card-text").text(`${fixture.event_date.substring(0,10)}`).appendTo(".fixRow"+i)
             $("<p>").attr({
-                id: "fixture"+i,
+                class: "fixture"+i,
                 fixtureID: fixture.fixture_id,
                 homeTeam: fixture.homeTeam.team_name,
                 awayTeam: fixture.awayTeam.team_name,
                 odds: 2,
                 class: "card-text"
-            }).text(`${fixture.homeTeam.team_name} (H) vs. ${fixture.awayTeam.team_name} (A)`).appendTo("#fixRow"+i);
+            }).text(`${fixture.homeTeam.team_name} (H) vs. ${fixture.awayTeam.team_name} (A)`).appendTo(".fixRow"+i)
             betPlaced = false;
             for (bet of betHistory) {
                 if (fixture.fixture_id == bet.fixture_id) {
@@ -116,40 +119,74 @@ async function loadFixtures(gameWeek) {
             if (betPlaced == false) {
                 $("<input>").attr({
                     class: "form-control form-control-sm my-1",
-                    id: "placeBet"+i,
+                    class: "placeBet"+i,
                     type: "text",
                     placeholder: "Bet Amount",
-                    style: "width: 100%"
-                }).appendTo("#fixture"+i);
+                    style: "width: 40%; border-radius: 5px;"
+                }).appendTo(".fixRow"+i);
+        //         $("<button>").attr({
+        //             class: "btn btn-outline-dark btn-sm betButton",
+        //             id: "homeBet"+i,
+        //             type: "button",
+        //             style: "font-size: x-small; margin: 1%"
+        //         }).appendTo("#fixture"+i);
+        //         $("<button>").attr({
+        //             class: "btn btn-outline-dark btn-sm betButton",
+        //             id: "visitorBet"+i,
+        //             type: "button",
+        //             style: "font-size: x-small; margin: 1%"
+        //         }).appendTo("#fixture"+i);
+        //         $("<button>").attr({
+        //             class: "btn btn-outline-dark btn-sm betButton",
+        //             id: "draw"+i,
+        //             type: "button",
+        //             style: "font-size: x-small; margin: 1%"
+        //         }).appendTo("#fixture"+i);
+
+        //         document.getElementById("homeBet"+i).innerHTML = `Home: ${fixtureOdds[0].odd}`;
+        //         document.getElementById("visitorBet"+i).innerHTML = `Away: ${fixtureOdds[2].odd}`;
+        //         document.getElementById("draw"+i).innerHTML = `Draw: ${fixtureOdds[1].odd}`;
+                
+        //     }
+        //     else {
+        //         $("<div>").text(`${betInfo.amountPlaced} points for ${betInfo.team}`).appendTo("#fixture"+i);
+        //     };
+        // }
+        // else {
+        //     // $("<div>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.status} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#fixtures");
+        //     $("<div>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#fixtures");
+        //     $("<div>").css("font-size", "15px").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name} ${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#fixturesMobile");
 
                 for ([a, bet] of ["Home", "Away", "Draw"].entries()){
                     $("<button>").attr({
                         class: "btn btn-outline-dark btn-sm betButton",
-                        id: bet+i,
+                        class: bet+i,
                         type: "button",
                         style: "font-size: x-small; margin: 1%"
-                    }).text(`${bet}: ${fixtureOdds[a].odd}`).appendTo("#fixRow"+i);
+                    }).text(`${bet}: ${fixtureOdds[a].odd}`).appendTo(".fixRow"+i);
                 };
             }
             else {
                 //show bet, if placed
-                $("<span>").css("color","green").text(betInfo.amountPlaced).appendTo("#fixRow"+i);
-                $("<span>").text("points for").appendTo("#fixRow"+i);
-                $("<span>").css("color","green").text(betInfo.team).appendTo("#fixRow"+i)
+                $("<span>").css("color","green").text(betInfo.amountPlaced).appendTo(".fixRow"+i);
+                $("<span>").text("points for").appendTo(".fixRow"+i);
+                $("<span>").css("color","green").text(betInfo.team).appendTo(".fixRow"+i)
             };
         }
         else {
             if (fixture.status == "Match Finished") {
-                $("<div>").addClass("card-text").text(`Match Finished`).appendTo("#fixRow"+i);
+                $("<div>").addClass("card-text").text(`Match Finished`).appendTo(".fixRow"+i);
             }
             else {
-                $("<div>").addClass("card-text").attr("id","status"+i).text(`Match Live`).appendTo("#fixRow"+i);
-                $("<div>").addClass("spinner-grow spinner-grow-sm text-success").attr("role","status").appendTo("#status"+i);                
+                $("<div>").addClass("card-text").addClass("status"+i).text(`Match Live`).appendTo(".fixRow"+i);
+                $("<div>").addClass("spinner-grow spinner-grow-sm text-success").attr("role","status").appendTo(".status"+i);                
             };
-            $("<div>").addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name}`).appendTo("#fixRow"+i);
-            $("<div>").addClass("card-text").text(`${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo("#fixRow"+i);
+            $("<div>").addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name}`).appendTo(".fixRow"+i);
+            $("<div>").addClass("card-text").text(`${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo(".fixRow"+i);
             if (betPlaced == true) {
-                $("<div>").text(`${betInfo.amountPlaced} points for ${betInfo.team}`).appendTo("#fixRow"+i);
+                $("<div>").text(`${betInfo.amountPlaced} points for ${betInfo.team}`).appendTo(".fixRow"+i);
+                $("<div>").text(` points for `).appendTo(".fixRow"+i);
+                $("<div>").text(`${betInfo.team}`).appendTo(".fixRow"+i);
             };
         };
     };
@@ -164,31 +201,31 @@ async function loadCompany() {
             url: "/group",
             data: companyID
         });
-        $("#companySelect").attr("style","display: none");
-        $("#companyDisplay").attr("style","display: block");
+        $(".companySelect").attr("style","display: none")
+        $(".companyDisplay").attr("style","display: block")
         for ([index,user] of company.entries()) {
-            i = index + 1;
-            $("<tr>").attr("id","row"+i).appendTo("#companyTable");
-            $("<th>").attr("scope","row").text(i).appendTo("#row"+i);
-            $("<td>").text(user.username).appendTo("#row"+i);
-            $("<td>").text(user.points).appendTo("#row"+i);
+            i = index + 1
+            $("<tr>").addClass("row"+i).appendTo(".companyTable")
+            $("<th>").attr("scope","row").text(i).appendTo(".row"+i)
+            $("<td>").text(user.username).appendTo(".row"+i)
+            $("<td>").text(user.points).appendTo(".row"+i)
         };
     };
 };
 
 async function placeBet() {
     number = this.id.replace(/[^0-9]/g,'')
-    if ($("#placeBet" + number).val() < 5) {
-        $("#funds"+number).remove();
-        $("<div>").attr("id","funds"+number).text(`Bet minimum of 5 points.`).appendTo("#fixture"+number);
+    if ($(".placeBet" + number).val() < 5) {
+        $(".funds"+number).remove()
+        $("<div>").addClass("funds"+number).text(`Bet minimum of 5 points.`).appendTo(".fixture"+number)
     }
     else {
-        fixture = $("#fixture" + number);
-        var bet = {};
+        fixture = $(".fixture" + number);
+        var bet = {}
         bet.fixtureID = fixture.attr("fixtureid");
         bet.fixture = `${fixture.attr("hometeam")} vs. ${fixture.attr("awayteam")}`;
-        bet.date = $(`#date${number}`).text();
-        team = $(this).text().substring(0,4);
+        bet.date = fixture.siblings().text()
+        team = $(this).text().substring(0,4)
         switch(team) {
             case "Home": bet.team = fixture.attr("hometeam");
             break;
@@ -198,8 +235,8 @@ async function placeBet() {
             break;
             default: console.log("default");
         };
-        bet.amount = $("#placeBet" + number).val();
-        bet.odds = `${$(this).text().replace(/[^0-9]/g,'').slice(0,1)}.${$(this).text().replace(/[^0-9]/g,'').slice(1,3)}`;
+        bet.amount = $(".placeBet" + number).val();
+        bet.odds = `${$(this).text().replace(/[^0-9]/g,'').slice(0,1)}.${$(this).text().replace(/[^0-9]/g,'').slice(1,3)}`
         bet.userID = localStorage.getItem("userID");
         status = await $.ajax({
             method: "POST",
@@ -207,14 +244,14 @@ async function placeBet() {
             data: bet
         });
         if (status == "placed") {
-            $("#funds"+number).remove()
-            $(`#placeBet${number}, #homeBet${number}, #visitorBet${number}, #draw${number}`).hide();
-            $("<div>").text(`${bet.amount} points for ${bet.team}`).appendTo("#fixture"+number);
-            updatePoints();
+            $(".funds"+number).remove()
+            $(`.placeBet${number}, .homeBet${number}, .visitorBet${number}, .draw${number}`).hide()
+            $("<div>").text(`${bet.amount} points for ${bet.team}`).appendTo(".fixture"+number)
+            updatePoints()
         }
         else if (status == "no funds") {
-            $("#funds"+number).remove();
-            $("<div>").attr("id","funds"+number).text(`Insufficient points to place bet`).appendTo("#fixture"+number);
+            $(".funds"+number).remove()
+            $("<div>").addClass("funds"+number).text(`Insufficient points to place bet`).appendTo(".fixture"+number)
         };
     };
 };
@@ -293,8 +330,8 @@ $("#searchSubmit").click( function() {
     document.cookie = `teamName=${$("#teamName").val()}`;
 });
 
-$("#createCompanyGroup").click( async function() {
-    data = $("#nameCompanyGroup").val()
+$(".createCompanyGroup").click( async function() {
+    data = $(".nameCompanyGroup").val()
     data = ({groupName: data})
     response = await $.ajax({
         url: "/createGroup",
@@ -302,7 +339,7 @@ $("#createCompanyGroup").click( async function() {
         method: "POST"
     })
     if (response == "") {
-        $("<p>").attr("id","exists").text("Company already exists. Choose another name.").appendTo("#companySelect")
+        $("<p>").addClass("exists").text("Company already exists. Choose another name.").appendTo(".companySelect")
     }
     else {
         loadCompany();
@@ -310,9 +347,9 @@ $("#createCompanyGroup").click( async function() {
     };
 });
 
-$("#joinCompanyGroup").click( async function() {
+$(".joinCompanyGroup").click( async function() {
     event.preventDefault();
-    data = $("#joinGroup").val();
+    data = $(".joinGroup").val();
     data = ({groupName: data});
     let groupSearch = await $.ajax({
         url: "/searchGroup",
@@ -322,10 +359,10 @@ $("#joinCompanyGroup").click( async function() {
     for ([index,group] of groupSearch.entries()) {
         i = index + 1;
         $("<tr>").attr({
-            id: "searchRow"+i,
+            class: "searchRow"+i,
             class: "result"
-        }).appendTo("#searchTable");
-        $("<td>").addClass("result").text(group.name).appendTo("#searchRow"+i);
+        }).appendTo(".searchTable")
+        $("<td>").addClass("result").text(group.name).appendTo(".searchRow"+i)
     };
     $(".result").on("click", async function() {
         data = this.id.replace(/[^0-9]/g,'');
@@ -342,8 +379,8 @@ $("#joinCompanyGroup").click( async function() {
     });
 });
 
-$("#joinCompanyGroup").on("click", joinCompanyGroup);
-$("#createCompanyGroup").on("click", createCompanyGroup);
+$(".joinCompanyGroup").on("click", joinCompanyGroup);
+$(".createCompanyGroup").on("click", createCompanyGroup);
 
 $("#signOut").click(function() {
     localStorage.removeItem("companyID");
