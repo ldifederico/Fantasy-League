@@ -39,8 +39,11 @@ nav, .container {
 }
 
 .card-title {
-    margin-top: 10%;
     text-align: center;
+}
+
+.card-body {
+    margin: auto;
 }
 
 th {
@@ -71,6 +74,9 @@ h5 {
     color: black;
     float: left;
     width: 100%;
+}
+
+tbody {
     padding-left: 10px;
 }
 
