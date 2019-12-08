@@ -171,8 +171,8 @@ async function loadCompany() {
             url: "/group",
             data: companyID
         });
-        $(".companySelect").attr("style","display: none");
-        $(".companyDisplay").attr("style","display: block")
+        $(".companySelect").attr("style", "display: none");
+        $(".companyDisplay").attr("style", "display: block")
         for ([index,user] of company.entries()) {
             i = index + 1;
             $("<tr>").addClass(`row${i} useritem`).attr("username", user.username).appendTo(".companyTable");
@@ -185,7 +185,6 @@ async function loadCompany() {
 };
 
 async function loadUserProfile() {
-    console.log("check out user");
     document.cookie = "userSearch= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
     document.cookie = `userSearch=${$(this).attr("username")}`;
     window.location.href = "/colleagueHistory.html";
@@ -287,6 +286,74 @@ async function pointDeductions() {
 //     };
 // };
 
+async function searchCompany() {
+    if ($(".joinGroup")[0].value !== "") {
+        groupName = $(".joinGroup")[0].value
+    }
+    else {
+        groupName = $(".joinGroup")[1].value
+    }
+    data = {groupName: groupName};
+    let groupSearch = await $.ajax({
+        url: "/searchGroup",
+        data: data,
+        method: "POST"
+    });
+    $(".searchTable").empty();
+    for ([index,group] of groupSearch.entries()) {
+        i = index + 1;
+        $("<tr>").addClass(`searchRow${i} result`).attr({
+            companyID: group.id,
+            companyName: group.name
+        }).appendTo(".searchTable")
+        $("<td>").text(group.name).appendTo(".searchRow"+i)
+    };
+    $(".result").on("click", async function() {
+        data = {userID: localStorage.getItem("userID"), companyID: $(this).attr("companyID")};
+        let response = await $.ajax({
+            url: "/joinGroup",
+            data: data,
+            method: "POST"
+        });
+        $(".companyText2").remove();
+        localStorage.setItem("companyID", data.companyID)
+        $(".result").remove();
+        loadCompany();
+        updatePoints();
+        $("#myModal").modal("toggle");
+        $("#modalTitle").text(`Successfully joined ${$(this).attr("companyName")}`);
+        $("#modalMessage").text(`You haved joined ${$(this).attr("companyName")} and have ${response.points} points. Spend them wisely!`);
+    });
+};
+
+async function createCompany() {
+    if ($(".nameCompanyGroup")[0].value !== "") {
+        groupName = $(".nameCompanyGroup")[0].value
+    }
+    else {
+        groupName = $(".nameCompanyGroup")[1].value
+    };
+    data = ({groupName: groupName, userID: localStorage.getItem("userID")});
+    response = await $.ajax({
+        url: "/createGroup",
+        data: data,
+        method: "POST"
+    })
+    if (response == "") {
+        $(".exists").remove();
+        $("<p>").addClass("exists").text("Company already exists. Choose another name.").appendTo(".companySelect")
+    }
+    else {
+        $(".companyText2").remove();
+        localStorage.setItem("companyID", response.companyID);
+        loadCompany();
+        updatePoints();
+        $("#myModal").modal("toggle");
+        $("#modalTitle").text(`Successfully created ${response.companyName}`);
+        $("#modalMessage").text(`You haved created and joined ${response.companyName} and have ${response.points} points. Spend them wisely!`);
+    };
+};
+
 async function mainLoad() {
     pointDeductions();
     updatePoints();
@@ -306,52 +373,23 @@ $("#searchSubmit").click( function() {
 });
 
 $(".createCompanyGroup").click( async function() {
-    data = $(".nameCompanyGroup").val()
-    data = ({groupName: data})
-    response = await $.ajax({
-        url: "/createGroup",
-        data: data,
-        method: "POST"
-    })
-    if (response == "") {
-        $("<p>").addClass("exists").text("Company already exists. Choose another name.").appendTo(".companySelect")
-    }
-    else {
-        loadCompany();
-        updatePoints();
-    };
+    $(".companyText1").hide();
+    $(".companyText2").text("Enter your company name and click create");
+    $(".joinCompanyGroup").hide();
+    $(".nameCompanyGroup").show();
+    $(".createCompanyGroup").unbind("click");
+    $(".createCompanyGroup").click(createCompany);
 });
 
 $(".joinCompanyGroup").click( async function() {
-    event.preventDefault();
-    data = $(".joinGroup").val();
-    data = ({groupName: data});
-    let groupSearch = await $.ajax({
-        url: "/searchGroup",
-        data: data,
-        method: "POST"
-    });
-    for ([index,group] of groupSearch.entries()) {
-        i = index + 1;
-        $("<tr>").attr({
-            class: "searchRow"+i,
-            class: "result"
-        }).appendTo(".searchTable")
-        $("<td>").addClass("result").text(group.name).appendTo(".searchRow"+i)
-    };
-    $(".result").on("click", async function() {
-        data = this.id.replace(/[^0-9]/g,'');
-        data = ({companyID: data});
-        let company = await $.ajax({
-            url: "/joinGroup",
-            data: data,
-            method: "POST"
-        });
-        localStorage.setItem("companyID", data.companyID)
-        $(".result").remove();
-        loadCompany();
-        updatePoints();
-    });
+    $(".companyText1").hide();
+    $(".companyText2").text("Enter your company name and click it to join.");
+    $(".createCompanyGroup").hide();
+    $(".joinCompanyGroup").hide();
+    $(".searchCompanyGroup").show();
+    $(".joinGroup").show()
+    $(".searchCompanyGroup").click(searchCompany)
+
 });
 
 // $(".joinCompanyGroup").on("click", joinCompanyGroup);

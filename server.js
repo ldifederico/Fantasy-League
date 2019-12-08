@@ -212,10 +212,12 @@ app.post("/searchGroup", async function(req,res) {
 });
 
 app.post("/joinGroup", async function(req,res) {
+    response = {}
     var points = await startingPoints();
     await db.query(`UPDATE user SET user.companyId = ${req.body.companyID}, points = ${points} WHERE id = ${req.body.userID}`);
-    let table = await db.query(`SELECT * FROM user WHERE companyid = ${req.body.companyID}`);
-    res.json(table);
+    await db.query(`SELECT * FROM user WHERE companyid = ${req.body.companyID}`);
+    response.points = points
+    res.json(response);
 });
 
 app.post("/createGroup", async function(req,res) {
@@ -229,7 +231,11 @@ app.post("/createGroup", async function(req,res) {
         var companyID = companyidObj[0].id;
         var points = await startingPoints();
         await db.query(`UPDATE user SET user.companyId = ${companyID}, points = ${points} WHERE id = ${req.body.userID}`);
-        res.json(companyID);
+        var response = {};
+        response.points = points;
+        response.companyName = req.body.groupName;
+        response.companyID = companyID;
+        res.json(response);
     };
 });
 
@@ -465,7 +471,7 @@ async function pointPenalty(pastGameWeek) {
 };
 
 //Initial and 5-min interval database update for final game scores
-// dailyUpdate();
-// setInterval(dailyUpdate, 86400000);
+dailyUpdate();
+setInterval(dailyUpdate, 86400000);
 checkGames();
 setInterval(checkGames, 300000)
