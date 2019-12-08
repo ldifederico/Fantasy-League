@@ -67,14 +67,14 @@ p {
     text-align: left;
 }
 
-@media only screen and (max-width: 1136px) {
+@media only screen and (max-width: 1235px) {
     .ballbackground {
         width: auto;
         height: 100vh
     };
 };
 
-@media only screen and (min-width: 1136px) {
+@media only screen and (min-width: 1235px) {
     .ballbackground {
         width: 100vw;
         height: auto
