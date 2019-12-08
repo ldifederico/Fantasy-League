@@ -47,7 +47,7 @@ if (process.env.JAWSDB_URL) {
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "linda123",
+    password: "password",
     database: "FantasyDB"
   });
 }
@@ -83,8 +83,6 @@ companyList = [];
 userList = [];
 incompleteGames = [];
 uniqueGames = [];
-
-console.log(sha256("middleman"))
 
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
@@ -250,6 +248,18 @@ app.post("/betHistory", async function(req, res) {
     history.userBets = userBets
     res.send(history);
 });
+
+app.post("/colleagueHistory", async function(req, res) {
+    var response = {};
+    var IDs = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}'`);
+    var companyName = await db.query(`SELECT name FROM company WHERE id = ${IDs[0].companyId}`);
+    response.companyName = companyName[0].name;
+    response.username = req.body.username;
+    let userBets = await db.query(`SELECT fixture_id, fixture, team, amountPlaced, amountwon, odds, amountwon, fixture_date, score FROM bet WHERE user_Id = ${IDs[0].id}`);
+    response.bets = userBets;
+    res.send(response);
+});
+
 
 app.post("/betHistoryUser", async function (req, res){
     let userBets = await dbquery(`

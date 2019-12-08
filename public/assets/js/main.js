@@ -31,8 +31,11 @@ async function loadStandings() {
 };
 
 async function loadFixtures(gameWeek) {
-    $("<div>").addClass("spinner-border").attr("role","status").insertAfter(".fixturesTitle");
-    $("<p>").text("Loading fixtures...").insertAfter(".fixturesTitle");
+    $("<div>").addClass("spinner-border").attr({
+        role: "status",
+        flag: "loadingStatus"
+    }).insertAfter(".fixturesTitle");
+    $("<p>").attr("flag","loadingStatus").text("Loading fixtures...").insertAfter(".fixturesTitle");
     settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
     data = await $.get(settings);
     fixtures = data.api.fixtures;
@@ -76,7 +79,7 @@ async function loadFixtures(gameWeek) {
         $.get(url)
     ));
 
-    $(".fixtures").siblings().remove();
+    $("[flag=loadingStatus]").remove();
     $("<h6>").text("Game Week " + gameWeek.replace(/[^0-9]/g,'')).appendTo(".fixtures");
 
     for ([index, fixture] of weekFixtures.entries()) {
@@ -168,31 +171,39 @@ async function loadCompany() {
             url: "/group",
             data: companyID
         });
-        $(".companySelect").attr("style","display: none")
+        $(".companySelect").attr("style","display: none");
         $(".companyDisplay").attr("style","display: block")
         for ([index,user] of company.entries()) {
-            i = index + 1
-            $("<tr>").addClass("row"+i).appendTo(".companyTable")
-            $("<th>").attr("scope","row").text(i).appendTo(".row"+i)
-            $("<td>").text(user.username).appendTo(".row"+i)
-            $("<td>").text(user.points).appendTo(".row"+i)
+            i = index + 1;
+            $("<tr>").addClass(`row${i} useritem`).attr("username", user.username).appendTo(".companyTable");
+            $("<th>").attr("scope","row").text(i).appendTo(".row"+i);
+            $("<td>").text(user.username).appendTo(".row"+i);
+            $("<td>").text(user.points).appendTo(".row"+i);
         };
+        $(".useritem").click(loadUserProfile);
     };
 };
 
+async function loadUserProfile() {
+    console.log("check out user");
+    document.cookie = "userSearch= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie = `userSearch=${$(this).attr("username")}`;
+    window.location.href = "/colleagueHistory.html";
+}
+
 async function placeBet() {
-    number = this.id.replace(/[^0-9]/g,'')
+    number = this.id.replace(/[^0-9]/g,'');
     if ($(".placeBet" + number).val() < 5) {
-        $(".funds"+number).remove()
-        $("<div>").addClass("funds"+number).text(`Bet minimum of 5 points.`).appendTo(".fixture"+number)
+        $(".funds"+number).remove();
+        $("<div>").addClass("funds"+number).text(`Bet minimum of 5 points.`).appendTo(".fixture"+number);
     }
     else {
         fixture = $(".fixture" + number);
-        var bet = {}
+        var bet = {};
         bet.fixtureID = fixture.attr("fixtureid");
         bet.fixture = `${fixture.attr("hometeam")} vs. ${fixture.attr("awayteam")}`;
-        bet.date = fixture.siblings().text()
-        team = $(this).text().substring(0,4)
+        bet.date = fixture.siblings().text();
+        team = $(this).text().substring(0,4);
         switch(team) {
             case "Home": bet.team = fixture.attr("hometeam");
             break;
@@ -235,9 +246,7 @@ async function updatePoints() {
 
 async function pointDeductions() {
     var pointPenalty = localStorage.getItem("deductions");
-    console.log(pointPenalty);
     if (pointPenalty !== null) {
-        console.log("penalizing")
         localStorage.removeItem("deductions");
         $("#myModal").modal("toggle");
         $("#modalTitle").text("Point penalties");
@@ -248,36 +257,35 @@ async function pointDeductions() {
             url: "/pointpenalty",
             data: userInfo
         });
-        console.log("finished")
     };
 };
 
-async function loadColleagueHistory() {
+// async function loadColleagueHistory() {
     
-    let userData = {userID: localStorage.getItem("userID"), companyID: localStorage.getItem("companyID")};
-    let betHistory = await $.ajax({
-        method: "POST",
-        url: "/betHistory",
-        data: userData
-    });
-    $("#company").text(` ${betHistory.companyName}`);
-    $("#username").text(` ${betHistory.userName}`);
+//     let userData = {userID: localStorage.getItem("userID"), companyID: localStorage.getItem("companyID")};
+//     let betHistory = await $.ajax({
+//         method: "POST",
+//         url: "/betHistory",
+//         data: userData
+//     });
+//     $("#company").text(` ${betHistory.companyName}`);
+//     $("#username").text(` ${betHistory.userName}`);
     
-    for ([index,bet] of betHistory.userBets.entries()) {
-        i = index + 1;
-        $("<tr>").attr("id","row"+i).appendTo("#betTable");
-        if (bet.score !== null) {score = ` (${bet.score})`}
-        else {score = ""};
-        $("<td>").text(`${bet.fixture}${score}`).appendTo("#row"+i);
-        $("<td>").text(bet.fixture_date).appendTo("#row"+i);
-        $("<td>").text(bet.team).appendTo("#row"+i);
-        $("<td>").text(bet.amountPlaced).appendTo("#row"+i);
-        $("<td>").text(bet.odds).appendTo("#row"+i);
-        if (bet.amountwon > 0) {colour = "green"}
-        else {colour = "red"};
-        $("<td>").text(bet.amountwon).css("color",colour).appendTo("#row"+i);
-    };
-};
+//     for ([index,bet] of betHistory.userBets.entries()) {
+//         i = index + 1;
+//         $("<tr>").attr("id","row"+i).appendTo("#betTable");
+//         if (bet.score !== null) {score = ` (${bet.score})`}
+//         else {score = ""};
+//         $("<td>").text(`${bet.fixture}${score}`).appendTo("#row"+i);
+//         $("<td>").text(bet.fixture_date).appendTo("#row"+i);
+//         $("<td>").text(bet.team).appendTo("#row"+i);
+//         $("<td>").text(bet.amountPlaced).appendTo("#row"+i);
+//         $("<td>").text(bet.odds).appendTo("#row"+i);
+//         if (bet.amountwon > 0) {colour = "green"}
+//         else {colour = "red"};
+//         $("<td>").text(bet.amountwon).css("color",colour).appendTo("#row"+i);
+//     };
+// };
 
 async function mainLoad() {
     pointDeductions();
