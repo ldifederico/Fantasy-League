@@ -148,7 +148,7 @@ async function loadFixtures(gameWeek) {
                 $("<div>").addClass("card-text").addClass("status"+i).text(`Match Live`).appendTo(".fixRow"+i);
                 $("<div>").addClass("spinner-grow spinner-grow-sm text-success").attr("role","status").appendTo(".status"+i);                
             };
-            $("<div>").addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name}`).appendTo(".fixRow"+i).css("font-weight", "900");
+            $("<div>").addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name}`).appendTo(".fixRow"+i).css("font-weight", "900").css("font-size", "larger");
             $("<div>").addClass("card-text").text(`${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo(".fixRow"+i);
             if (betPlaced == true) {
                 $("<div>").text(`${betInfo.amountPlaced} points for ${betInfo.team}`).appendTo(".fixRow"+i).css("color", "blue").css("font-weight", "900");
