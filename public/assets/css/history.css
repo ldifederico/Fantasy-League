@@ -11,6 +11,11 @@ span {
     padding: 1%;
 }
 
+th {
+    font-weight: bolder;
+    font-size: larger;
+}
+
 h4, h5 {
     text-align: center;
     font-family: 'Prompt', sans-serif;

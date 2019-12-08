@@ -176,7 +176,7 @@ async function getTeam() {
     }
     i = 1
     for (fixture of futureFixtures) {
-        $("<tr>").addClass("fixtureRow"+i).appendTo(".fixtureBody").css("text-align", "center");
+        $("<tr>").addClass("fixtureRow"+i).appendTo(".fixtureBody");
         $("<tr>").text(`${fixture.homeTeam.team_name} (H)`).appendTo($(".fixtureRow"+i)).css("font-weight", "900");
         $("<tr>").text(` vs. `).appendTo($(".fixtureRow"+i)).css("font-size", "smaller");
         $("<tr>").text(`${fixture.awayTeam.team_name} (A)`).appendTo($(".fixtureRow"+i)).css("font-weight", "900");
