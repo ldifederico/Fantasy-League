@@ -186,7 +186,7 @@ async function getTeam() {
     }
     i = 1
     for (fixture of pastFixtures) {
-        $("<tr>").addClass("resultsRow"+i).appendTo(".resultsBody").css("text-align", "center");
+        $("<tr>").addClass("resultsRow"+i).appendTo(".resultsBody");
         $("<tr>").text(`${fixture.homeTeam.team_name} (${fixture.goalsHomeTeam})`).appendTo($(".resultsRow"+i)).css("font-weight", "900");
         $("<tr>").text(` vs. `).appendTo($(".resultsRow"+i)).css("font-size", "smaller");
         $("<tr>").text(`${fixture.awayTeam.team_name} (${fixture.goalsAwayTeam}) `).appendTo($(".resultsRow"+i)).css("font-weight", "900");
