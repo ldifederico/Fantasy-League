@@ -176,7 +176,8 @@ async function loadCompany() {
             data: companyID
         });
         $(".companySelect").attr("style", "display: none");
-        $(".companyDisplay").attr("style", "display: block")
+        // $(".companyDisplay").attr("style", "display: block")
+        $(".companyDisplay");
         for ([index,user] of company.entries()) {
             i = index + 1;
             $("<tr>").addClass(`row${i} useritem`).attr("username", user.username).appendTo(".companyTable");
