@@ -183,8 +183,8 @@ async function getTeam() {
         $("<tr>").text(`${fixture.event_date.slice(0,10)}`).appendTo($(".fixtureRow"+i)).css("font-size", "smaller");
         $("<br>").appendTo($(".fixtureRow"+i));
         i++
-    }
-    i = 1
+    };
+    i = 1;
     for (fixture of pastFixtures) {
         $("<tr>").addClass("resultsRow"+i).appendTo(".resultsBody");
         $("<tr>").text(`${fixture.homeTeam.team_name} (${fixture.goalsHomeTeam})`).appendTo($(".resultsRow"+i)).css("font-weight", "900");
@@ -199,8 +199,8 @@ async function getTeam() {
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
     let standings = await $.get(settings);
     console.log(standings)
-    i=1
-    for (team of standings.api.standings[0]){
+    i = 1;
+    for (team of standings.api.standings[0]) {
         $("<tr>").addClass("row"+i).appendTo(".leagueBody");
         $("<th>").attr({
             scope: "row",
@@ -210,8 +210,8 @@ async function getTeam() {
         $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($(".row"+i));
         $("<td>").text(team.points).appendTo($(".row"+i));
         i++
-    }
-}
+    };
+};
 
 async function updatePoints() {
     let data = ({userID: localStorage.getItem("userID")})

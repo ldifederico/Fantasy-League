@@ -47,7 +47,7 @@ if (process.env.JAWSDB_URL) {
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "linda123",
+    password: "password",
     database: "FantasyDB"
   });
 }
@@ -83,8 +83,6 @@ companyList = [];
 userList = [];
 incompleteGames = [];
 uniqueGames = [];
-
-console.log(sha256("middleman"))
 
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
@@ -214,10 +212,12 @@ app.post("/searchGroup", async function(req,res) {
 });
 
 app.post("/joinGroup", async function(req,res) {
+    response = {}
     var points = await startingPoints();
     await db.query(`UPDATE user SET user.companyId = ${req.body.companyID}, points = ${points} WHERE id = ${req.body.userID}`);
-    let table = await db.query(`SELECT * FROM user WHERE companyid = ${req.body.companyID}`);
-    res.json(table);
+    await db.query(`SELECT * FROM user WHERE companyid = ${req.body.companyID}`);
+    response.points = points
+    res.json(response);
 });
 
 app.post("/createGroup", async function(req,res) {
@@ -231,7 +231,11 @@ app.post("/createGroup", async function(req,res) {
         var companyID = companyidObj[0].id;
         var points = await startingPoints();
         await db.query(`UPDATE user SET user.companyId = ${companyID}, points = ${points} WHERE id = ${req.body.userID}`);
-        res.json(companyID);
+        var response = {};
+        response.points = points;
+        response.companyName = req.body.groupName;
+        response.companyID = companyID;
+        res.json(response);
     };
 });
 
@@ -250,6 +254,20 @@ app.post("/betHistory", async function(req, res) {
     history.userBets = userBets
     res.send(history);
 });
+
+app.post("/colleagueHistory", async function(req, res) {
+    console.log(req.body)
+    var response = {};
+    var IDs = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}'`);
+    console.log(IDs)
+    var companyName = await db.query(`SELECT name FROM company WHERE id = ${IDs[0].companyId}`);
+    response.companyName = companyName[0].name;
+    response.username = req.body.username;
+    let userBets = await db.query(`SELECT fixture_id, fixture, team, amountPlaced, amountwon, odds, amountwon, fixture_date, score FROM bet WHERE user_Id = ${IDs[0].id}`);
+    response.bets = userBets;
+    res.send(response);
+});
+
 
 app.post("/betHistoryUser", async function (req, res){
     let userBets = await dbquery(`
@@ -455,7 +473,7 @@ async function pointPenalty(pastGameWeek) {
 };
 
 //Initial and 5-min interval database update for final game scores
-// dailyUpdate();
-// setInterval(dailyUpdate, 86400000);
+dailyUpdate();
+setInterval(dailyUpdate, 86400000);
 checkGames();
 setInterval(checkGames, 300000)
