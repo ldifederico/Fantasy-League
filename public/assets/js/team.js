@@ -199,8 +199,8 @@ async function getTeam() {
     settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
     let standings = await $.get(settings);
     console.log(standings)
-    i=1
-    for (team of standings.api.standings[0]){
+    i = 1;
+    for (team of standings.api.standings[0]) {
         $("<tr>").addClass("row"+i).appendTo(".leagueBody");
         $("<th>").attr({
             scope: "row",
@@ -210,8 +210,8 @@ async function getTeam() {
         $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($(".row"+i));
         $("<td>").text(team.points).appendTo($(".row"+i));
         i++
-    }
-}
+    };
+};
 
 async function updatePoints() {
     let data = ({userID: localStorage.getItem("userID")})
