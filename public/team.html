@@ -64,10 +64,7 @@
                         <a class="nav-link active" id="roster-tab" data-toggle="tab" role="tab" aria-controls="roster" href="#roster" aria-selected="true">Roster</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="fixtures-tab" data-toggle="tab" role="tab" aria-controls="fixtures" href="#fixtures" aria-selected="false">Fixtures</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="results-tab" data-toggle="tab" role="tab" aria-controls="results" href="#results" aria-selected="false">Results</a>
+                        <a class="nav-link" id="fixtures-tab" data-toggle="tab" role="tab" aria-controls="fixtures" href="#fixtures" aria-selected="false">Matches</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="standings-tab" data-toggle="tab" role="tab" aria-controls="standings" href="#standings" aria-selected="false">Standings</a>
@@ -92,21 +89,20 @@
                     </div>
                     <div class="tab-pane fade" id="fixtures" role="tabpanel" aria-labelledby="fixtures-tab">
                         <div class="card" style="padding: 0px;">
-                            <div class="card-title"><h4>Fixtures</h4></div>
+                            <div class="card-title"><h4>Matches</h4></div>
                             <div class="card-body">
-                                <table class="table table-hover">
-                                    <tbody class="fixtureBody"></tbody>
-                                </table>            
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
-                        <div class="card" style="padding: 0px;">
-                            <div class="card-title"><h4>Results</h4></div>
-                            <div class="card-body">
-                                <table class="table table-hover">
-                                    <tbody class="resultsBody"></tbody>
-                                </table>
+                                <div class="col-6">
+                                    <h6>Fixtures</h6>
+                                    <table class="table table-hover">
+                                        <tbody class="fixtureBody"></tbody>
+                                    </table>
+                                </div>
+                                <div class="col-6">
+                                    <h6>Results</h6>
+                                    <table class="table table-hover">
+                                        <tbody class="resultsBody"></tbody>
+                                    </table>  
+                                </div>    
                             </div>
                         </div>
                     </div>
