@@ -98,7 +98,7 @@ async function loadFixtures(gameWeek) {
             fixtureOdds[2].odd = 1.20;
         };
 
-        $("<div>").addClass("fixRow"+i).addClass("container").appendTo(".fixtures")
+        $("<div>").addClass(`fixRow${i}`).addClass("container").appendTo(".fixtures")
         
         var betPlaced
         if (fixture.status == "Not Started") {
@@ -121,11 +121,10 @@ async function loadFixtures(gameWeek) {
             //Betting input and buttons (show if not bet yet)
             if (betPlaced == false) {
                 $("<input>").attr({
-                    class: "form-control form-control-sm my-1",
-                    class: "placeBet"+i,
+                    class: `form-control form-control-sm my-1 placeBet${i}`,
                     type: "text",
                     placeholder: "Bet Amount",
-                    style: "width: 100%; border-radius: 5px;"
+                    style: "width: 100px; border-radius: 5px;"
                 }).appendTo(".fixRow"+i);
                 for ([a, bet] of ["Home", "Away", "Draw"].entries()){
                     $("<button>").attr({

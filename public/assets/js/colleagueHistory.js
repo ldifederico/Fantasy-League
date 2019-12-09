@@ -3,7 +3,8 @@ async function loadHistory() {
     allCookies = document.cookie.split(';');
     for (cookie of allCookies) {
         if (cookie.includes("userSearch=")) {
-            username = cookie.substring(12);
+            username = cookie.replace("userSearch=","");
+            username = username.replace(" ","")
         };
     };
     var data = {username: username};
