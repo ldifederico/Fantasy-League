@@ -124,12 +124,12 @@ async function loadFixtures(gameWeek) {
                     class: `form-control form-control-sm my-1 placeBet${i}`,
                     type: "text",
                     placeholder: "Bet Amount",
-                    style: "width: 100px; border-radius: 5px;"
+                    style: "width: 100px; border-radius: 5px; margin-left: auto; margin-right: auto"
                 }).appendTo(".fixRow"+i);
                 for ([a, bet] of ["Home", "Away", "Draw"].entries()){
                     $("<button>").attr({
-                        class: "btn btn-outline-dark btn-sm betButton",
-                        class: bet+i,
+                        class: `btn btn-outline-dark btn-sm betButton`,
+                        betID: i,
                         type: "button",
                         style: "font-size: x-small; margin: 1%"
                     }).text(`${bet}: ${fixtureOdds[a].odd}`).appendTo(".fixRow"+i);
@@ -190,13 +190,17 @@ async function loadUserProfile() {
 }
 
 async function placeBet() {
-    number = this.id.replace(/[^0-9]/g,'');
+    number = $(this).attr("betID");
+    console.log(number)
+    // if ()
     if ($(".placeBet" + number).val() < 5) {
+        console.log($(".placeBet" + number))
         $(".funds"+number).remove();
         $("<div>").addClass("funds"+number).text(`Bet minimum of 5 points.`).appendTo(".fixture"+number);
     }
     else {
         fixture = $(".fixture" + number);
+        console.log(fixture);
         var bet = {};
         bet.fixtureID = fixture.attr("fixtureid");
         bet.fixture = `${fixture.attr("hometeam")} vs. ${fixture.attr("awayteam")}`;
@@ -214,6 +218,7 @@ async function placeBet() {
         bet.amount = $(".placeBet" + number).val();
         bet.odds = `${$(this).text().replace(/[^0-9]/g,'').slice(0,1)}.${$(this).text().replace(/[^0-9]/g,'').slice(1,3)}`
         bet.userID = localStorage.getItem("userID");
+        console.log(bet)
         status = await $.ajax({
             method: "POST",
             url: "/placeBet",
