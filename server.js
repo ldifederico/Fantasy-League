@@ -47,7 +47,7 @@ if (process.env.JAWSDB_URL) {
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "testtest",
+    password: "password",
     database: "FantasyDB"
     
   });
@@ -217,8 +217,8 @@ app.post("/group", async function (req, res) {
     response = {}
     group = await db.query(`SELECT * FROM user WHERE companyid = ${req.body.companyID} ORDER BY points DESC`);
     response.group = group
-    user = await db.query(`SELECT username FROM user WHERE id = ${req.body.userID}`);
-    response.user = user
+    username = await db.query(`SELECT username FROM user WHERE id = ${req.body.userID}`);
+    response.username = username
     res.json(response);
 });
 

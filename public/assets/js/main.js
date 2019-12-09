@@ -148,9 +148,9 @@ async function loadFixtures(gameWeek) {
                 }
                 else {
                     //show bet, if placed
-                    $("<span>").css({"color": "blue", "font-weight": "1000"}).text(betInfo.amountPlaced).appendTo(".fixRow"+i);
+                    $("<span>").addClass("rounded-circle").css({"color": "blue", "font-weight": "1000"}).text(betInfo.amountPlaced).appendTo(".fixRow"+i);
                     $("<span>").text("points for").appendTo(".fixRow"+i);
-                    $("<span>").css({"color": "blue", "font-weight": "1000"}).text(betInfo.team).appendTo(".fixRow"+i);
+                    $("<span>").addClass("rounded-circle").css({"color": "blue", "font-weight": "1000"}).text(betInfo.team).appendTo(".fixRow"+i);
                 };
             }
             else {
@@ -190,16 +190,15 @@ async function loadCompany() {
             url: "/group",
             data: companyID
         });
-        myUsername = company.user[0].username
         $(".companySelect").attr("style", "display: none");
         $(".companyDisplay").attr("style", "display: block");
         for ([index, user] of company.group.entries()) {
             i = index + 1;
-            if (user.username == company.user[0].username) {
-                $("<tr>").addClass(`row${i} useritem`).attr("username", user.user).css("color", "blue").appendTo(".companyTable");
+            if (user.username == company.username[0].username) {
+                $("<tr>").addClass(`row${i} useritemm`).attr("username", user.username).css({"color": "white", "background-color": "#333a40"}).appendTo(".companyTable");
             } 
             else {
-                $("<tr>").addClass(`row${i} useritem`).attr("username", user.user).appendTo(".companyTable");
+                $("<tr>").addClass(`row${i} useritem`).attr("username", user.username).appendTo(".companyTable");
             }
             $("<th>").attr("scope","row").text(i).appendTo(".row"+i);
             $("<td>").text(user.username).appendTo(".row"+i);
@@ -256,7 +255,7 @@ async function placeBet() {
             $(".funds"+number).remove();
             $(`.placeBet${number}`).hide()
             $(`.placeBet${number}, .Home${number}, .Away${number}, .Draw${number}`).hide();
-            $("<span>").css({"color":"blue", "font-weight": "1000"}).text(bet.amount).appendTo(".fixRow"+number);
+            $("<span>").addClass("rounded-circle").css({"color":"blue", "font-weight": "1000"}).text(bet.amount).appendTo(".fixRow"+number);
             $("<span>").text("points for").appendTo(".fixRow"+number);
             $("<span>").css({"color": "blue", "font-weight": "1000"}).text(bet.team).appendTo(".fixRow"+number);
             updatePoints();
