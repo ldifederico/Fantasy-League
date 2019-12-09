@@ -126,13 +126,30 @@ $("#searchSubmit").click(function() {
 });
 
 $("#signOut").click(function() {
+    localStorage.removeItem("companyID");
+    localStorage.removeItem("userID");
     $.post("/signout");
 });
-
 $("#edit").on("click", editProfile);
 $("#delete").on("click", showDeleteModal);
 $("#leave").on("click", showLeaveModal);
 
+async function verify() {
+    let response =  await $.ajax({
+        method: "POST",
+        url: "/verification",
+        data: {userID: localStorage.getItem("userID")}
+    });
+    if (response == "verified") {
+        loadProfile();
+        updatePoints();    
+    }
+    else {
+        window.location.href = "/login.html";
+    };
+};
 
-loadProfile();
-updatePoints();
+verify();
+
+
+

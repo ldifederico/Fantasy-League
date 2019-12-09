@@ -231,6 +231,8 @@ $("#searchSubmit").click(function() {
 });
 
 $("#signOut").click(function() {
+    localStorage.removeItem("companyID");
+    localStorage.removeItem("userID");
     $.post("/signout");
 });
 

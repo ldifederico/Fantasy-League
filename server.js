@@ -70,7 +70,7 @@ var transporter = nodemailer.createTransport({
       user: 'coleageassistance@gmail.com',
       pass: 'middleman'
     }
-  });
+});
   
 var mailOptions = {
     from: 'coleageassistance@gmail.com',
@@ -86,6 +86,17 @@ uniqueGames = [];
 
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
+});
+
+app.post("/verification", async function(req,res) {
+    console.log(req.body);
+    try {
+        await db.query(`SELECT id FROM user WHERE id = ${req.body.userID}`)
+        res.send("verified")
+    }
+    catch {
+        res.send("not verfied")
+    }
 });
 
 app.get("/", function(req, res) {
@@ -263,7 +274,7 @@ app.post("/colleagueHistory", async function(req, res) {
     var companyName = await db.query(`SELECT name FROM company WHERE id = ${IDs[0].companyId}`);
     response.companyName = companyName[0].name;
     response.username = req.body.username;
-    let userBets = await db.query(`SELECT fixture_id, fixture, team, amountPlaced, amountwon, odds, amountwon, fixture_date, score FROM bet WHERE user_Id = ${IDs[0].id}`);
+    let userBets = await db.query(`SELECT fixture_id, fixture, team, amountPlaced, amountwon, odds, amountwon, fixture_date, score FROM bet WHERE user_Id = ${IDs[0].id} ORDER BY fixture_date DESC`);
     response.bets = userBets;
     res.send(response);
 });
@@ -275,7 +286,8 @@ app.post("/betHistoryUser", async function (req, res){
         FROM user 
         LEFT JOIN company on company.id = user.companyid 
         LEFT JOIN bet on bet.user_Id = user.id
-        WHERE user.id = ${req.body.userID};`)
+        WHERE user.id = ${req.body.userID}
+        ORDER BY fixture_date DESC`)
     res.json(userBets);
 });
 
