@@ -176,7 +176,7 @@ async function getTeam() {
     }
     i = 1
     for (fixture of futureFixtures) {
-        $("<tr>").addClass("fixtureRow"+i).appendTo(".fixtureBody");
+        $("<tr>").addClass("fixtureRow"+i).appendTo(".fixtureBody").css("text-align", "center").css("display", "flex").css("flex-direction", "column");
         $("<tr>").text(`${fixture.homeTeam.team_name} (H)`).appendTo($(".fixtureRow"+i)).css("font-weight", "900");
         $("<tr>").text(` vs. `).appendTo($(".fixtureRow"+i)).css("font-size", "smaller");
         $("<tr>").text(`${fixture.awayTeam.team_name} (A)`).appendTo($(".fixtureRow"+i)).css("font-weight", "900");
@@ -186,7 +186,7 @@ async function getTeam() {
     };
     i = 1;
     for (fixture of pastFixtures) {
-        $("<tr>").addClass("resultsRow"+i).appendTo(".resultsBody");
+        $("<tr>").addClass("resultsRow"+i).appendTo(".resultsBody").css("text-align", "center").css("display", "flex").css("flex-direction", "column");
         $("<tr>").text(`${fixture.homeTeam.team_name} (${fixture.goalsHomeTeam})`).appendTo($(".resultsRow"+i)).css("font-weight", "900");
         $("<tr>").text(` vs. `).appendTo($(".resultsRow"+i)).css("font-size", "smaller");
         $("<tr>").text(`${fixture.awayTeam.team_name} (${fixture.goalsAwayTeam}) `).appendTo($(".resultsRow"+i)).css("font-weight", "900");

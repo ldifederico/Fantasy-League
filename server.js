@@ -294,8 +294,8 @@ app.post("/betHistoryUser", async function (req, res){
 
 app.post("/placeBet", async function(req,res) {
     let userpoint = await db.query(`SELECT points FROM user WHERE id = '${req.body.userID}'`);
-    if(userpoint[0].points >= req.body.amount){
-        await db.query(`INSERT INTO bet (fixture, fixture_id, team, amountPlaced, odds, user_Id, fixture_date) VALUES( '${req.body.fixture}', ${req.body.fixtureID}, '${req.body.team}', ${req.body.amount}, ${req.body.odds}, ${req.body.userID}, '${req.body.date}')` );
+    if(userpoint[0].points >= req.body.amount) {
+        await db.query(`INSERT INTO bet (fixture, fixture_id, team, amountPlaced, odds, user_Id, fixture_date, game_week) VALUES ('${req.body.fixture}', ${req.body.fixtureID}, '${req.body.team}', ${req.body.amount}, ${req.body.odds}, ${req.body.userID}, '${req.body.date}', '${req.body.gameWeek}')` );
         await db.query(`UPDATE user SET points = points - ${req.body.amount} WHERE id = ${req.body.userID}; `);
         status = "placed";
     }
