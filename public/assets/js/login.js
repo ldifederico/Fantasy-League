@@ -10,7 +10,7 @@ async function sendLogin(event){
     });
     if (result.text == "incorrect login") {
         $("#incorrect").remove();
-        $("<div>").attr("id","incorrect").text(`Incorrect username and/or password`).appendTo("#buttonContainer");
+        $("<div>").attr("id","incorrect").css('color', 'red').addClass("mt-3").text(`Incorrect username and/or password`).appendTo("#buttonContainer");
     }
     else {
         for (data of Object.entries(result)) {
