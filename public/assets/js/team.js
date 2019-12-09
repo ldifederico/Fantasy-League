@@ -242,7 +242,23 @@ $("#signOut").click(function() {
     $.post("/signout");
 });
 
-getTeam()
-updatePoints()
+
+
+async function verify() {
+    let response =  await $.ajax({
+        method: "POST",
+        url: "/verification",
+        data: {userID: localStorage.getItem("userID")}
+    });
+    if (response == "verified") {
+        getTeam();
+        updatePoints() ;
+    }
+    else {
+        window.location.href = "/login.html";
+    };
+};
+
+verify();
 
     

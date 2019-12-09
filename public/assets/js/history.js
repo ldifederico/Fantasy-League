@@ -57,5 +57,19 @@ $("#signOut").click(function() {
     $.post("/signout");
 });
 
-loadHistory();
-updatePoints();
+async function verify() {
+    let response =  await $.ajax({
+        method: "POST",
+        url: "/verification",
+        data: {userID: localStorage.getItem("userID")}
+    });
+    if (response == "verified") {
+        loadHistory();
+        updatePoints();    
+    }
+    else {
+        window.location.href = "/login.html";
+    };
+};
+
+verify();

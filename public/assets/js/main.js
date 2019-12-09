@@ -370,7 +370,22 @@ async function mainLoad() {
     loadFixtures(Date.now());
 };
 
-mainLoad();
+async function verify() {
+    let response =  await $.ajax({
+        method: "POST",
+        url: "/verification",
+        data: {userID: localStorage.getItem("userID")}
+    });
+    if (response == "verified") {
+        mainLoad();  
+    }
+    else {
+        window.location.href = "/login.html";
+    };
+};
+
+verify();
+
 
 
 $("#searchSubmit").click( function() {
