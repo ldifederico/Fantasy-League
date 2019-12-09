@@ -205,7 +205,7 @@ app.post("/register", async function(req,res) {
         res.send({text: "User exists"})
     }
     else {
-        await db.query(`INSERT INTO user (firstName, lastName, email, username, password, points) VALUES ('${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.username}', '${sha256(req.body.password)}', 0)`);
+        await db.query(`INSERT INTO user (firstName, lastName, email, username, password, points, deduction_notification) VALUES ('${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.username}', '${sha256(req.body.password)}', 0, 0)`);
         let useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}'`);
         userid = useridObj[0].id;
         res.send({text: userid});
@@ -213,8 +213,12 @@ app.post("/register", async function(req,res) {
 });
 
 app.post("/group", async function (req, res) {
+    response = {}
     group = await db.query(`SELECT * FROM user WHERE companyid = ${req.body.companyID} ORDER BY points DESC`);
-    res.json(group);
+    response.group = group
+    user = await db.query(`SELECT username FROM user WHERE id = ${req.body.userID}`);
+    response.user = user
+    res.json(response);
 });
 
 app.post("/searchGroup", async function(req,res) {
@@ -256,13 +260,16 @@ app.post("/bets", async function(req, res) {
 });
 
 app.post("/betHistory", async function(req, res) {
-    var history = {}
+    console.log(req.body)
+    var history = {};
     let userBets = await db.query(`SELECT fixture_id, fixture, team, amountPlaced, amountwon, odds, amountwon, fixture_date, score FROM bet WHERE user_Id = ${req.body.userID} ORDER BY fixture_date DESC`);
-    let companyName = await db.query(`SELECT name FROM company WHERE id = ${req.body.companyID}`);
+    history.userBets = userBets;
+    if (req.body.companyID !== "") {
+        let companyName = await db.query(`SELECT name FROM company WHERE id = ${req.body.companyID}`);
+        history.companyName = companyName[0].name;
+    };
     let userName = await db.query(`SELECT username FROM user WHERE id = ${req.body.userID}`);
-    history.companyName = companyName[0].name;
     history.userName = userName[0].username;
-    history.userBets = userBets
     res.send(history);
 });
 
@@ -350,7 +357,7 @@ app.post("/leaveCompany", async function (req, res) {
     dbPassword = await db.query(`SELECT password FROM user WHERE id = ${req.body.userID}`);
     if (inputPassword == dbPassword[0].password) {
         res.send("correct password")
-        await db.query(`UPDATE user SET companyId = NULL WHERE id = ${req.body.userID}`);
+        await db.query(`UPDATE user SET companyId = NULL, points = 0 WHERE id = ${req.body.userID}`);
         bet_id =  await db.query(`SELECT id FROM bet WHERE user_id = ${req.body.userID}`);
         for (a = 0; a < bet_id.length; a++){
             await db.query(`DELETE FROM bet WHERE id = ${bet_id[a].id}`);
@@ -460,7 +467,7 @@ async function dailyUpdate() {
 
 async function pointPenalty(pastGameWeek) {
     console.log("penalty function")
-    let userBase = await db.query(`SELECT id FROM user`);
+    let userBaseInCompanies = await db.query(`SELECT id FROM user WHERE companyId IS NOT NULL`);
     let bettingUsers = await db.query(`SELECT user_Id FROM bet WHERE game_week = '${pastGameWeek}'`);
     bettingUserArray = [];
     for (user of bettingUsers) {
@@ -468,7 +475,7 @@ async function pointPenalty(pastGameWeek) {
     };
     var nonBettingUsers = [];
     uniqueBettingUserArray = [...new Set(bettingUserArray)];
-    for (user of userBase) {
+    for (user of userBaseInCompanies) {
         var match = false;
         for (bettingUser of uniqueBettingUserArray) {
             if (bettingUser == user.id) {
@@ -479,9 +486,14 @@ async function pointPenalty(pastGameWeek) {
             nonBettingUsers.push(user.id);
         };
     };
-    deduction = 25
-    await db.query(`UPDATE user SET points = points - ${deduction} WHERE id in (${nonBettingUsers})`);
-    await db.query(`UPDATE user SET deduction_notification = deduction_notification + ${deduction} WHERE id in (${nonBettingUsers})`);
+    var deduction = 25;
+    console.log(userBaseInCompanies)
+    console.log(bettingUsers)
+    console.log(nonBettingUsers)
+    let result = await db.query(`UPDATE user SET points = points - ${deduction} WHERE id in (${nonBettingUsers})`);
+    console.log(result)
+    let result2 = await db.query(`UPDATE user SET deduction_notification = deduction_notification + ${deduction} WHERE id in (${nonBettingUsers})`);
+    console.log(result2)
 };
 
 //Initial and 5-min interval database update for final game scores
