@@ -76,7 +76,7 @@ async function loadFixtures(gameWeek) {
     );
 
     let allFixtureOdds = await Promise.all(apiCalls.map(url =>
-        $.get(url);
+        $.get(url)
     ));
 
     $("[flag=loadingStatus]").remove();
@@ -391,9 +391,6 @@ $(".joinCompanyGroup").click( async function() {
     $(".searchCompanyGroup").click(searchCompany)
 
 });
-
-// $(".joinCompanyGroup").on("click", joinCompanyGroup);
-// $(".createCompanyGroup").on("click", createCompanyGroup);
 
 $("#signOut").click(function() {
     localStorage.removeItem("companyID");
