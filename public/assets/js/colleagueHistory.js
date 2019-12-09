@@ -6,7 +6,7 @@ async function loadHistory() {
             username = cookie.substring(12);
         };
     };
-    var data = {username: username}
+    var data = {username: username};
     let betHistory = await $.ajax({
         method: "POST",
         url: "/colleagueHistory",

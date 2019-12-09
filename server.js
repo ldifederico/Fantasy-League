@@ -256,6 +256,7 @@ app.post("/betHistory", async function(req, res) {
 });
 
 app.post("/colleagueHistory", async function(req, res) {
+    console.log(req.body)
     var response = {};
     var IDs = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}'`);
     console.log(IDs)

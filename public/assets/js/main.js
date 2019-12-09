@@ -76,26 +76,26 @@ async function loadFixtures(gameWeek) {
     );
 
     let allFixtureOdds = await Promise.all(apiCalls.map(url =>
-        $.get(url)
+        $.get(url);
     ));
 
     $("[flag=loadingStatus]").remove();
     $("<h6>").text("Game Week " + gameWeek.replace(/[^0-9]/g,'')).appendTo(".fixtures");
 
     for ([index, fixture] of weekFixtures.entries()) {
-        i = index+1
+        i = index + 1;
         //odds
         try {
             for (odds of allFixtureOdds) {
                 if (odds.api.odds[0].fixture.fixture_id == fixture.fixture_id) 
-                {fixtureOdds = odds.api.odds[0].bookmakers[0].bets[0].values};
+                    {fixtureOdds = odds.api.odds[0].bookmakers[0].bets[0].values};
             };
         }
         catch {
             //Solution when odds not received from API
-            fixtureOdds[0].odd = 2.55
-            fixtureOdds[1].odd = 5.10
-            fixtureOdds[2].odd = 1.20
+            fixtureOdds[0].odd = 2.55;
+            fixtureOdds[1].odd = 5.10;
+            fixtureOdds[2].odd = 1.20;
         };
 
         $("<div>").addClass("fixRow"+i).addClass("container").appendTo(".fixtures")

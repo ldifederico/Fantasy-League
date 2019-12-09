@@ -183,8 +183,8 @@ async function getTeam() {
         $("<tr>").text(`${fixture.event_date.slice(0,10)}`).appendTo($(".fixtureRow"+i)).css("font-size", "smaller");
         $("<br>").appendTo($(".fixtureRow"+i));
         i++
-    }
-    i = 1
+    };
+    i = 1;
     for (fixture of pastFixtures) {
         $("<tr>").addClass("resultsRow"+i).appendTo(".resultsBody");
         $("<tr>").text(`${fixture.homeTeam.team_name} (${fixture.goalsHomeTeam})`).appendTo($(".resultsRow"+i)).css("font-weight", "900");
