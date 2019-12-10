@@ -17,6 +17,18 @@ form {
   margin-bottom: 3%;
 }
 
+#warning {
+  color: red;
+  font-size: x-small;
+  display: none;
+}
+
+#warning1 {
+  color: red;
+  font-size: x-small;
+  display: none;
+}
+
 h1 {
   text-align: center;
 }

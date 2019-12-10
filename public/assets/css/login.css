@@ -38,6 +38,12 @@ form {
     z-index: 1;
 }
 
+#warning {
+    color: red;
+    font-size: x-small;
+    display: none;
+}
+
 .color-overlay {
     position: absolute;
     top: 0;
