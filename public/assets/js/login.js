@@ -20,7 +20,6 @@ async function sendLogin(event){
     };
 };
 
-
 async function forgot(info) {
     $("#contentContainer").empty()
     $("<p>").text("Please enter your email below").appendTo("#contentContainer");
@@ -54,7 +53,27 @@ async function sendEmail(info) {
     $("#logIn").click(()=> {location.reload()});
 };
 
-
 $("#registerbtn").click(sendLogin);
 $("#forgotUsername").click(() => forgot("Username"));
 $("#forgotPassword").click(() => forgot("Password"));
+
+// Detect Caps Lock
+var psw = document.getElementById("psw");
+var text = document.getElementById("warning");
+
+psw.addEventListener("keyup", function(event) {
+  if (event.getModifierState("CapsLock")) {
+    text.style.display = "block";
+  } else {
+    text.style.display = "none"
+  }
+});
+
+function showPassword() {
+    var x = document.getElementById("psw");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+}

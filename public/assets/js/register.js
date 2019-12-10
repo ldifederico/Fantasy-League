@@ -1,24 +1,28 @@
 // Detect Caps Lock
-// Get the input field
-// var input = document.getElementById("myInput");
+var psw = document.getElementById("psw");
+var psw1 = document.getElementById("psw1");
+var text = document.getElementById("warning");
+var text1 = document.getElementById("warning1");
 
-// Get the warning text
-var text = document.getElementById("text");
+psw.addEventListener("keyup", function(event) {
+  if (event.getModifierState("CapsLock")) {
+    text.style.display = "block";
+  } else {
+    text.style.display = "none"
+  }
+});
 
-// // When the user presses any key on the keyboard, run the function
-// input.addEventListener("keyup", function(event) {
-
-//   // If "caps lock" is pressed, display the warning text
-//   if (event.getModifierState("CapsLock")) {
-//     text.style.display = "block";
-//   } else {
-//     text.style.display = "none"
-//   }
-// });
+psw1.addEventListener("keyup", function(event) {
+  if (event.getModifierState("CapsLock")) {
+    text1.style.display = "block";
+  } else {
+    text1.style.display = "none"
+  }
+});
 
 // Toggle password visibility
-function checkPassword() {
-  var x = document.getElementById("myInput");
+function showPassword() {
+  var x = document.getElementById("psw");
   if (x.type === "password") {
     x.type = "text";
   } else {
@@ -89,7 +93,7 @@ myInput.onkeyup = function() {
 function validateForm() {
   var x = document.forms["myForm"]["fname"].value;
   if (x == "") {
-    alert("Name must be filled out");
+    alert("Form must be filled out");
     return false;
   }
 }
