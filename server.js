@@ -90,13 +90,12 @@ app.listen(PORT, function() {
 });
 
 app.post("/verification", async function(req,res) {
-    console.log(req.body);
     try {
-        await db.query(`SELECT id FROM user WHERE id = ${req.body.userID}`)
-        res.send("verified")
+        await db.query(`SELECT id FROM user WHERE id = ${req.body.userID}`);
+        res.send("verified");
     }
     catch {
-        res.send("not verfied")
+        res.send("not verfied");
     }
 });
 
@@ -108,10 +107,9 @@ app.post("/", async function(req, res) {
     try {
         var response = {};
         var userInfo = await db.query(`SELECT id, companyId, deduction_notification FROM user WHERE username = '${req.body.username}' AND password = '${sha256(req.body.password)}'`);
-        console.log(userInfo)
         response.userID = userInfo[0].id;
-        if (userInfo[0].companyId !== null) { response.companyID = userInfo[0].companyId } 
-        if (userInfo[0].deduction_notification !== null && userInfo[0].deduction_notification !== 0) { response.deductions = userInfo[0].deduction_notification }
+        if (userInfo[0].companyId !== null) { response.companyID = userInfo[0].companyId };
+        if (userInfo[0].deduction_notification !== null && userInfo[0].deduction_notification !== 0) { response.deductions = userInfo[0].deduction_notification };
         res.send(response);
     } catch(error) {
         res.send({text: "incorrect login"});
@@ -119,7 +117,6 @@ app.post("/", async function(req, res) {
 });
 
 app.post("/pointpenalty", async function (req, res) {
-    console.log(req.body);
     db.query(`UPDATE user SET deduction_notification = 0 WHERE id = ${req.body.userID} `);
     res.send("cleared");
 });
@@ -149,7 +146,6 @@ app.post("/forgotPassword", async function(req,res) {
         email: req.body.email
     };
     var secret = userInfo[0].password;
-    console.log(secret)
     var token = jwt.encode(payload,secret);
     if (process.env.JAWSDB_URL) { prefix = 'https://polar-fortress-89854.herokuapp.com/'}
     else { prefix = "http://localhost:8080/"}
@@ -167,24 +163,20 @@ app.post("/forgotPassword", async function(req,res) {
 });
 
 app.get("/resetpassword/:id/:token", async function (req, res) {
-    console.log(req.params);
     var secret = await db.query(`SELECT password FROM user WHERE id = ${req.params.id}`);
     try {
-        console.log(secret[0].password)
         var payload = jwt.decode(req.params.token, secret[0].password);
         res.sendFile(path.join(__dirname, "/public/resetpassword.html"));
-        console.log(payload)
     }
     catch {
-        console.log("error with signature")
         res.sendFile(path.join(__dirname, "/public/deadlink.html"));
     };
 });
 
 app.post("/setnewpassword", async function (req, res) {
-    let newHashedPassword = sha256(req.body.password)
-    await db.query(`UPDATE user SET password = '${newHashedPassword}' WHERE id = ${req.body.userID}`)
-    res.send("done")
+    let newHashedPassword = sha256(req.body.password);
+    await db.query(`UPDATE user SET password = '${newHashedPassword}' WHERE id = ${req.body.userID}`);
+    res.send("done");
 });
 
 app.get("/main", async function(req,res) {
@@ -195,9 +187,9 @@ app.post("/profile", async function(req,res) {
     userInfo = await db.query(`SELECT * FROM user WHERE id = ${req.body.userID}`);
     companyInfo = await db.query(`SELECT * FROM company WHERE id = ${userInfo[0].companyId}`);
     if (companyInfo[0] !== undefined) {
-        userInfo[0].companyName = companyInfo[0].name
+        userInfo[0].companyName = companyInfo[0].name;
     }
-    res.json(userInfo)
+    res.json(userInfo);
 });
 
 app.post("/register", async function(req,res) {
@@ -205,30 +197,27 @@ app.post("/register", async function(req,res) {
     let existUser = await db.query(`SELECT * FROM user WHERE username = '${req.body.username}'`);
     let existEmail = await db.query(`SELECT email FROM user WHERE email = '${req.body.email}'`);
     if (existUser[0] !== undefined){
-        response.user = "User exists"
+        response.user = "User exists";
     };
     if (existEmail[0] !== undefined) {
-        response.email = "Email exists"
+        response.email = "Email exists";
     };
-    console.log(Object.keys(response).length);
     if (Object.keys(response).length == 0 && req.body.errorCount == 0) {
-        console.log("here")
         await db.query(`INSERT INTO user (firstName, lastName, email, username, password, points, deduction_notification) VALUES ('${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.username}', '${sha256(req.body.password)}', 0, 0)`);
         let useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}'`);
         userid = useridObj[0].id;
-        response.success = "Success"
-        response.userID = userid
+        response.success = "Success";
+        response.userID = userid;
     };
-    console.log(response);
     res.send(response);
 });
 
 app.post("/group", async function (req, res) {
-    response = {}
+    response = {};
     group = await db.query(`SELECT * FROM user WHERE companyid = ${req.body.companyID} ORDER BY points DESC`);
-    response.group = group
+    response.group = group;
     username = await db.query(`SELECT username FROM user WHERE id = ${req.body.userID}`);
-    response.username = username
+    response.username = username;
     res.json(response);
 });
 
@@ -238,11 +227,11 @@ app.post("/searchGroup", async function(req,res) {
 });
 
 app.post("/joinGroup", async function(req,res) {
-    response = {}
+    response = {};
     var points = await startingPoints();
     await db.query(`UPDATE user SET user.companyId = ${req.body.companyID}, points = ${points} WHERE id = ${req.body.userID}`);
     await db.query(`SELECT * FROM user WHERE companyid = ${req.body.companyID}`);
-    response.points = points
+    response.points = points;
     res.json(response);
 });
 
@@ -271,7 +260,6 @@ app.post("/bets", async function(req, res) {
 });
 
 app.post("/betHistory", async function(req, res) {
-    console.log(req.body)
     var history = {};
     let userBets = await db.query(`SELECT fixture_id, fixture, team, amountPlaced, amountwon, odds, amountwon, fixture_date, score FROM bet WHERE user_Id = ${req.body.userID} ORDER BY fixture_date DESC`);
     history.userBets = userBets;
@@ -285,10 +273,8 @@ app.post("/betHistory", async function(req, res) {
 });
 
 app.post("/colleagueHistory", async function(req, res) {
-    console.log(req.body)
     var response = {};
     var IDs = await db.query(`SELECT id, companyId FROM user WHERE username = '${req.body.username}'`);
-    console.log(IDs)
     var companyName = await db.query(`SELECT name FROM company WHERE id = ${IDs[0].companyId}`);
     response.companyName = companyName[0].name;
     response.username = req.body.username;
@@ -297,7 +283,6 @@ app.post("/colleagueHistory", async function(req, res) {
     res.send(response);
 });
 
-
 app.post("/betHistoryUser", async function (req, res){
     let userBets = await dbquery(`
         SELECT user.username, company.name, bet.fixture_id, bet.fixture, bet.team, bet.amountPlaced, bet.amountwon, bet.odds, bet.amountwon, bet.fixture_date, bet.score
@@ -305,7 +290,7 @@ app.post("/betHistoryUser", async function (req, res){
         LEFT JOIN company on company.id = user.companyid 
         LEFT JOIN bet on bet.user_Id = user.id
         WHERE user.id = ${req.body.userID}
-        ORDER BY fixture_date DESC`)
+        ORDER BY fixture_date DESC`);
     res.json(userBets);
 });
 
@@ -354,7 +339,6 @@ app.post("/deleteAccount", async function(req,res) {
     if (inputPassword == dbPassword[0].password) {
         res.send("correct password")
         await db.query(`DELETE FROM user WHERE id = '${req.body.userID}'`);
-        // await db.query(`DELETE FROM bet WHERE user_id = '${req.body.userID}'`);
         bet_id =  await db.query(`SELECT id FROM bet WHERE user_id = ${req.body.userID}`);
         for (a = 0; a < bet_id.length; a++){
             await db.query(`DELETE FROM bet WHERE id = ${bet_id[a].id}`);
@@ -367,7 +351,7 @@ app.post("/leaveCompany", async function (req, res) {
     inputPassword = sha256(req.body.password);
     dbPassword = await db.query(`SELECT password FROM user WHERE id = ${req.body.userID}`);
     if (inputPassword == dbPassword[0].password) {
-        res.send("correct password")
+        res.send("correct password");
         await db.query(`UPDATE user SET companyId = NULL, points = 0 WHERE id = ${req.body.userID}`);
         bet_id =  await db.query(`SELECT id FROM bet WHERE user_id = ${req.body.userID}`);
         for (a = 0; a < bet_id.length; a++){
@@ -389,7 +373,7 @@ async function startingPoints() {
         };
     };
     ptsPerGame = 5;
-    var points = futureFixturesCount * ptsPerGame
+    var points = futureFixturesCount * ptsPerGame;
     return points;
 };
 
@@ -415,7 +399,6 @@ async function checkGames() {
         for (game of uniqueGames) {
             for (fixture of seasonFixtures) {
                 if (game.fixtureID == fixture.fixture_id && fixture.status == "Match Finished") {
-                    console.log(fixture);
                     var score = `${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`;
                     if (fixture.goalsHomeTeam > fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.homeTeam.team_name, score: score})}
                     else if (fixture.goalsHomeTeam < fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.awayTeam.team_name, score: score})}

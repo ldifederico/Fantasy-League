@@ -142,7 +142,7 @@ async function loadFixtures(gameWeek) {
                             class: `btn btn-outline-dark btn-sm betButton ${bet + i}`,
                             betID: i,
                             type: "button",
-                            style: "font-size: x-small; margin: 1%"
+                            style: "font-size: x-small; margin: 1%; background: #333a40; color: white"
                         }).text(`${bet}: ${fixtureOdds[a].odd}`).appendTo(".fixRow"+i);
                     };
                 }
