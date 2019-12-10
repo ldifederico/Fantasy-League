@@ -255,9 +255,9 @@ async function placeBet() {
             $(".funds"+number).remove();
             $(`.placeBet${number}`).hide()
             $(`.placeBet${number}, .Home${number}, .Away${number}, .Draw${number}`).hide();
-            $("<span>").addClass("rounded-circle").css({"color":"blue", "font-weight": "1000"}).text(bet.amount).appendTo(".fixRow"+number);
+            $("<span>").addClass("rounded-circle").css({"color":"brown", "font-weight": "1000"}).text(bet.amount).appendTo(".fixRow"+number);
             $("<span>").text("points for").appendTo(".fixRow"+number);
-            $("<span>").css({"color": "blue", "font-weight": "1000"}).text(bet.team).appendTo(".fixRow"+number);
+            $("<span>").css({"color": "brown", "font-weight": "1000"}).text(bet.team).appendTo(".fixRow"+number);
             updatePoints();
         }
         else if (status == "no funds") {
