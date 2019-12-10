@@ -414,17 +414,19 @@ async function checkGames() {
         seasonFixtures = data.data.api.fixtures;
         for (game of uniqueGames) {
             for (fixture of seasonFixtures) {
-                if (game.fixtureID == fixture.fixture_id && fixture.status == "Match Finsihed") {
-                    if (fixture.goalsHomeTeam > fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.homeTeam.team_name, score: `${goalsHomeTeam} - ${goalsAwayTeam}`})}
-                    else if (fixture.goalsHomeTeam < fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.awayTeam.team_name, score: `${goalsHomeTeam} - ${goalsAwayTeam}`})}
-                    else if (fixture.goalsHomeTeam = fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: "Draw", score: `${goalsHomeTeam} - ${goalsAwayTeam}`})};
-                };
+                if (game.fixtureID == fixture.fixture_id && fixture.status == "Match Finished") {
+                    console.log(fixture);
+                    var score = `${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`;
+                    if (fixture.goalsHomeTeam > fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.homeTeam.team_name, score: score})}
+                    else if (fixture.goalsHomeTeam < fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.awayTeam.team_name, score: score})}
+                    else if (fixture.goalsHomeTeam = fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: "Draw", score: score})};
+                };  
             };
         };
         if (completedGames !== []) {
             for (game of completedGames) {
                 bet_id =  await db.query(`SELECT id FROM bet WHERE fixture_id = ${game.fixtureID};`);
-                for (a = 0; a < bet_id.length; a++){
+                for (a = 0; a < bet_id.length; a++) {
                     await db.query(`UPDATE bet SET winningTeam = '${game.result}', score = '${game.score}' WHERE id = ${bet_id[a].id};`);
                     await db.query(`UPDATE bet SET amountwon = amountPlaced * odds WHERE id = ${bet_id[a].id} AND winningTeam = team`);
                     await db.query(`UPDATE bet SET amountwon = 0 WHERE id = ${bet_id[a].id} AND winningTeam != team`);
