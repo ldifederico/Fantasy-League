@@ -329,7 +329,7 @@ async function searchCompany() {
         updatePoints();
         $("#myModal").modal("toggle");
         $("#modalTitle").text(`Successfully joined ${$(this).attr("companyName")}`);
-        $("#modalMessage").text(`You haved joined ${$(this).attr("companyName")} and have ${response.points} points. Spend them wisely!`);
+        $("#modalMessage").text(`You haved joined ${$(this).attr("companyName")} and have ${response.points} points. Use them wisely!`);
     });
 };
 

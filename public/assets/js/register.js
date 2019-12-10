@@ -1,6 +1,6 @@
 // Detect Caps Lock
 // Get the input field
-var input = document.getElementById("myInput");
+// var input = document.getElementById("myInput");
 
 // Get the warning text
 var text = document.getElementById("text");
