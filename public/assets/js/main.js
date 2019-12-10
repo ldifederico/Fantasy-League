@@ -148,9 +148,9 @@ async function loadFixtures(gameWeek) {
                 }
                 else {
                     //show bet, if placed
-                    $("<span>").addClass("rounded-circle").css({"color": "blue", "font-weight": "1000"}).text(betInfo.amountPlaced).appendTo(".fixRow"+i);
+                    $("<span>").addClass("rounded-circle").css({"color": "brown", "font-weight": "1000"}).text(betInfo.amountPlaced).appendTo(".fixRow"+i);
                     $("<span>").text("points for").appendTo(".fixRow"+i);
-                    $("<span>").addClass("rounded-circle").css({"color": "blue", "font-weight": "1000"}).text(betInfo.team).appendTo(".fixRow"+i);
+                    $("<span>").addClass("rounded-circle").css({"color": "brown", "font-weight": "1000"}).text(betInfo.team).appendTo(".fixRow"+i);
                 };
             }
             else {
@@ -167,9 +167,9 @@ async function loadFixtures(gameWeek) {
                 $("<div>").addClass("card-text").text(`${fixture.homeTeam.team_name} vs. ${fixture.awayTeam.team_name}`).appendTo(".fixRow"+i).css("font-weight", "900");
                 $("<div>").addClass("card-text").text(`${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`).appendTo(".fixRow"+i);
                 if (betPlaced == true) {
-                    $("<span>").css({"color": "blue", "font-weight": "1000"}).text(betInfo.amountPlaced).appendTo(".fixRow"+i);
+                    $("<span>").css({"color": "brown", "font-weight": "1000"}).text(betInfo.amountPlaced).appendTo(".fixRow"+i);
                     $("<span>").text("points for").appendTo(".fixRow"+i);
-                    $("<span>").css({"color": "blue", "font-weight": "1000"}).text(betInfo.team).appendTo(".fixRow"+i);
+                    $("<span>").css({"color": "brown", "font-weight": "1000"}).text(betInfo.team).appendTo(".fixRow"+i);
                 };
             };
         };
@@ -255,9 +255,9 @@ async function placeBet() {
             $(".funds"+number).remove();
             $(`.placeBet${number}`).hide()
             $(`.placeBet${number}, .Home${number}, .Away${number}, .Draw${number}`).hide();
-            $("<span>").addClass("rounded-circle").css({"color":"blue", "font-weight": "1000"}).text(bet.amount).appendTo(".fixRow"+number);
+            $("<span>").addClass("rounded-circle").css({"color": "brown", "font-weight": "1000"}).text(bet.amount).appendTo(".fixRow"+number);
             $("<span>").text("points for").appendTo(".fixRow"+number);
-            $("<span>").css({"color": "blue", "font-weight": "1000"}).text(bet.team).appendTo(".fixRow"+number);
+            $("<span>").css({"color": "brown", "font-weight": "1000"}).text(bet.team).appendTo(".fixRow"+number);
             updatePoints();
         }
         else if (status == "no funds") {

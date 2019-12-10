@@ -137,85 +137,106 @@ async function getTeam() {
     allCookies = document.cookie.split(';');
     for (cookie of allCookies) {
         if (cookie.includes("teamName=")) {
-            teamName = cookie.substring(10);
+            teamName = cookie.substring(10).toLowerCase();
             document.cookie = "teamName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
         };
     };
     try {
-        settings.url = `https://api-football-v1.p.rapidapi.com/v2/teams/search/${teamName}`;
+        settings.url = `https://api-football-v1.p.rapidapi.com/v2/teams/league/524`;
         data = await $.get(settings);
-        teamData = data.api.teams[0];
-        var team = teams.filter(obj => {
-            return obj.teamName == teamData.name
-        });
-        $(".club").text(`${teamData.name}`).css("color", team[0].h2);
-        $(".teamLogo").attr("src", teamData.logo).css({"width": "40px", "height": "40px"});
-        $("body").css({"background" : `${team[0].containerBackground}`});
-
-        //Roster
-        settings.url = `https://api-football-v1.p.rapidapi.com/v2/players/squad/${teamData.team_id}/2019-2020`;
-        let roster = await $.get(settings);
-        i=1;
-        for (player of roster.api.players) {
-            $("<tr>").addClass("rosterRow"+i).appendTo(".rosterBody");
-            $("<td>").text(`${player.firstname} ${player.lastname}`).appendTo($(".rosterRow"+i));
-            $("<td>").text(player.position).appendTo($(".rosterRow"+i));
-            i++
-        }
-
-        //Fixtures
-        settings.url = `https://api-football-v1.p.rapidapi.com/v2/fixtures/team/${teamData.team_id}/524?timezone=Europe%2FLondon`;
-        data = await $.get(settings);
-        let fixtures = data.api.fixtures;
-        date_timestamp = Date.now().toString();
-        date_timestamp = date_timestamp.slice(0,-3);
-        var futureFixtures = [];
-        var pastFixtures = [];
-        for (fixture of fixtures) {
-            if (fixture.event_timestamp > date_timestamp) {futureFixtures.push(fixture)}
-            else {pastFixtures.push(fixture)};
-        };
-        i = 1;
-        for (fixture of futureFixtures) {
-            $("<tr>").addClass("fixtureRow"+i).appendTo(".fixtureBody").css("text-align", "center").css("display", "flex").css("flex-direction", "column");
-            $("<tr>").text(`${fixture.homeTeam.team_name} (H)`).appendTo($(".fixtureRow"+i)).css("font-weight", "900");
-            $("<tr>").text(` vs. `).appendTo($(".fixtureRow"+i)).css("font-size", "smaller");
-            $("<tr>").text(`${fixture.awayTeam.team_name} (A)`).appendTo($(".fixtureRow"+i)).css("font-weight", "900");
-            $("<tr>").text(`${fixture.event_date.slice(0,10)}`).appendTo($(".fixtureRow"+i)).css("font-size", "smaller");
-            $("<br>").appendTo($(".fixtureRow"+i));
-            i++
-        };
-        i = 1;
-        for (fixture of pastFixtures) {
-            $("<tr>").addClass("resultsRow"+i).appendTo(".resultsBody").css("text-align", "center").css("display", "flex").css("flex-direction", "column");
-            $("<tr>").text(`${fixture.homeTeam.team_name} (${fixture.goalsHomeTeam})`).appendTo($(".resultsRow"+i)).css("font-weight", "900");
-            $("<tr>").text(` vs. `).appendTo($(".resultsRow"+i)).css("font-size", "smaller");
-            $("<tr>").text(`${fixture.awayTeam.team_name} (${fixture.goalsAwayTeam}) `).appendTo($(".resultsRow"+i)).css("font-weight", "900");
-            $("<tr>").text(`${fixture.event_date.slice(0,10)}`).appendTo($(".resultsRow"+i)).css("font-size", "smaller");
-            $("<br>").appendTo($(".resultsRow"+i));
-            i++
-        }
-
-        //standings
-        settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
-        let standings = await $.get(settings);
-        console.log(standings)
-        i = 1;
-        for (team of standings.api.standings[0]) {
-            $("<tr>").addClass("row"+i).appendTo(".leagueBody");
-            $("<th>").attr({
-                scope: "row",
-                class: "header"+i,
-            }).text(i).appendTo(".row"+i);
-            $("<td>").text(team.teamName).appendTo($(".row"+i));
-            $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($(".row"+i));
-            $("<td>").text(team.points).appendTo($(".row"+i));
-            i++
-        };
     }
     catch {
+        data = "no response";
+    }
+    if (data == "no response") {
         $("#content").empty();
-        $("#header").text("No results for searched team.").css("font-size", "18px")
+        $("#header").text("Server is busy. Please try again later.").css("font-size", "18px");
+    }
+    else {
+        apiTeamData = data.api.teams;
+        var teamData
+        for (currentTeam of apiTeamData) {
+            if (currentTeam.name.toLowerCase() == teamName) {teamData = currentTeam}
+        }
+        if (teamData !== undefined) {
+            try {
+                var team = teams.filter(obj => {
+                    return obj.teamName == teamData.name
+                });
+                $(".club").text(`${teamData.name}`).css("color", team[0].h2);
+                $(".teamLogo").attr("src", teamData.logo).css({"width": "40px", "height": "40px"});
+                $("body").css({"background" : `${team[0].containerBackground}`});
+    
+                //Roster
+                settings.url = `https://api-football-v1.p.rapidapi.com/v2/players/squad/${teamData.team_id}/2019-2020`;
+                let roster = await $.get(settings);
+                i=1;
+                for (player of roster.api.players) {
+                    $("<tr>").addClass("rosterRow"+i).appendTo(".rosterBody");
+                    $("<td>").text(`${player.firstname} ${player.lastname}`).appendTo($(".rosterRow"+i));
+                    $("<td>").text(player.position).appendTo($(".rosterRow"+i));
+                    i++;
+                };
+    
+                //Fixtures
+                settings.url = `https://api-football-v1.p.rapidapi.com/v2/fixtures/team/${teamData.team_id}/524?timezone=Europe%2FLondon`;
+                data = await $.get(settings);
+                let fixtures = data.api.fixtures;
+                date_timestamp = Date.now().toString();
+                date_timestamp = date_timestamp.slice(0,-3);
+                var futureFixtures = [];
+                var pastFixtures = [];
+                for (fixture of fixtures) {
+                    if (fixture.event_timestamp > date_timestamp) {futureFixtures.push(fixture)}
+                    else {pastFixtures.push(fixture)};
+                };
+                i = 1;
+                for (fixture of futureFixtures) {
+                    $("<tr>").addClass("fixtureRow"+i).appendTo(".fixtureBody").css("text-align", "center").css("display", "flex").css("flex-direction", "column");
+                    $("<tr>").text(`${fixture.homeTeam.team_name} (H)`).appendTo($(".fixtureRow"+i)).css("font-weight", "900");
+                    $("<tr>").text(` vs. `).appendTo($(".fixtureRow"+i)).css("font-size", "smaller");
+                    $("<tr>").text(`${fixture.awayTeam.team_name} (A)`).appendTo($(".fixtureRow"+i)).css("font-weight", "900");
+                    $("<tr>").text(`${fixture.event_date.slice(0,10)}`).appendTo($(".fixtureRow"+i)).css("font-size", "smaller");
+                    $("<br>").appendTo($(".fixtureRow"+i));
+                    i++
+                };
+                i = 1;
+                for (fixture of pastFixtures) {
+                    $("<tr>").addClass("resultsRow"+i).appendTo(".resultsBody").css("text-align", "center").css("display", "flex").css("flex-direction", "column");
+                    $("<tr>").text(`${fixture.homeTeam.team_name} (${fixture.goalsHomeTeam})`).appendTo($(".resultsRow"+i)).css("font-weight", "900");
+                    $("<tr>").text(` vs. `).appendTo($(".resultsRow"+i)).css("font-size", "smaller");
+                    $("<tr>").text(`${fixture.awayTeam.team_name} (${fixture.goalsAwayTeam}) `).appendTo($(".resultsRow"+i)).css("font-weight", "900");
+                    $("<tr>").text(`${fixture.event_date.slice(0,10)}`).appendTo($(".resultsRow"+i)).css("font-size", "smaller");
+                    $("<br>").appendTo($(".resultsRow"+i));
+                    i++
+                }
+    
+                //standings
+                settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
+                let standings = await $.get(settings);
+                console.log(standings)
+                i = 1;
+                for (team of standings.api.standings[0]) {
+                    $("<tr>").addClass("row"+i).appendTo(".leagueBody");
+                    $("<th>").attr({
+                        scope: "row",
+                        class: "header"+i,
+                    }).text(i).appendTo(".row"+i);
+                    $("<td>").text(team.teamName).appendTo($(".row"+i));
+                    $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($(".row"+i));
+                    $("<td>").text(team.points).appendTo($(".row"+i));
+                    i++
+                };
+            }
+            catch {
+                $("#content").empty();
+                $("#header").text("Server is busy. Please try again later.").css("font-size", "18px");
+            };
+        }
+        else {
+            $("#content").empty();
+            $("#header").text("No results for searched team.").css("font-size", "18px");
+        };
     }
 };
 
