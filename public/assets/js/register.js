@@ -118,7 +118,8 @@ async function createNewUser(event) {
 
     if (response.text == "User exists") {
         if($("#exists")[0] == null) {
-            $("<p>").attr("id","exists").text("Account with that username/email already exists.").appendTo("#registerdiv");
+          $("#incorrect").remove();
+            $("<div>").attr("id","incorrect").css('color', 'red').addClass("mt-3").text("Account with that username/email already exists.").appendTo("#registerdiv");
         }
     }
     else {
@@ -127,7 +128,8 @@ async function createNewUser(event) {
     };
     }
     else{
-      $("<p>").attr("id","pass").text("Please enter matching passwords or check that input field meets specifications").appendTo("#registerdiv");
+      $("#incorrect").remove();
+      $("<div>").attr("id","incorrect").css('color', 'red').addClass("mt-3").text("Please enter matching passwords or check that input field meets specifications").appendTo("#registerdiv");
     } 
 };
 

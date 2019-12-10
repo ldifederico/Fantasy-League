@@ -80,17 +80,23 @@ async function showDeleteModal() {
     $("#modalBody").text("Are you sure you want to delete your account? There is no going back. Please type in your password below and click Delete.");
     $("#confirmButton").text("Delete");
     $('#myModal').modal('toggle');
-    // $("#confirmButton").on("click", deleteAccount);
+    $("#confirmButton").on("click", deleteAccount);
 };
 
 async function deleteAccount() {
     userID = {userID: localStorage.getItem("userID")};
-    $.ajax({
+    let response = $.ajax({
         method: "POST",
         url: "/deleteAccount",
         data: userID
     });
-    window.location.href = "/login.html";
+    if (response == "incorrect password") {
+        $("#confirmError").remove();
+        $("<p>").attr("id","confirmError").addClass("ml-3 mt-n2").css("color","red").text("Incorrect password").insertAfter("#confirmInput");
+    }
+    else if (response == "correct password") {
+        window.location.href = "/login.html";
+    }
 };
 
 async function showLeaveModal() {
@@ -110,7 +116,7 @@ async function leaveCompany() {
     });
     if (response == "incorrect password") {
         $("#confirmError").remove();
-        $("<p>").attr("id","confirmError").text("Incorrect password").appendTo("#confirmInput");
+        $("<p>").attr("id","confirmError").addClass("ml-3 mt-n2").css("color","red").text("Incorrect password").insertAfter("#confirmInput");
     }
     else if (response == "correct password"){
         localStorage.removeItem("companyID");
