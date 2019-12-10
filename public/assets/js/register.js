@@ -23,35 +23,41 @@ psw1.addEventListener("keyup", function(event) {
 // Toggle password visibility
 function showPassword() {
   var x = document.getElementById("psw");
+  var y = document.getElementById("psw1");
   if (x.type === "password") {
     x.type = "text";
   } else {
     x.type = "password";
   }
+  if (y.type === "password") {
+    y.type = "text";
+  } else {
+    y.type = "password";
+  }
 }
 
 // Verify password meets criteria
-var myInput = document.getElementById("psw");
+var psw = document.getElementById("psw");
 var letter = document.getElementById("letter");
 var capital = document.getElementById("capital");
 var number = document.getElementById("number");
 var length = document.getElementById("length");
 
 // When the user clicks on the password field, show the message box
-myInput.onfocus = function() {
+psw.onfocus = function() {
   document.getElementById("message").style.display = "block";
 }
 
 // When the user clicks outside of the password field, hide the message box
-myInput.onblur = function() {
+psw.onblur = function() {
   document.getElementById("message").style.display = "none";
 }
 
 // When the user starts to type something inside the password field
-myInput.onkeyup = function() {
+psw.onkeyup = function() {
   // Validate lowercase letters
   var lowerCaseLetters = /[a-z]/g;
-  if(myInput.value.match(lowerCaseLetters)) {  
+  if(psw.value.match(lowerCaseLetters)) {  
     letter.classList.remove("invalid");
     letter.classList.add("valid");
   } else {
@@ -61,7 +67,7 @@ myInput.onkeyup = function() {
   
   // Validate capital letters
   var upperCaseLetters = /[A-Z]/g;
-  if(myInput.value.match(upperCaseLetters)) {  
+  if(psw.value.match(upperCaseLetters)) {  
     capital.classList.remove("invalid");
     capital.classList.add("valid");
   } else {
@@ -71,7 +77,7 @@ myInput.onkeyup = function() {
 
   // Validate numbers
   var numbers = /[0-9]/g;
-  if(myInput.value.match(numbers)) {  
+  if(psw.value.match(numbers)) {  
     number.classList.remove("invalid");
     number.classList.add("valid");
   } else {
@@ -80,7 +86,7 @@ myInput.onkeyup = function() {
   }
   
   // Validate length
-  if(myInput.value.length >= 8) {
+  if(psw.value.length >= 8) {
     length.classList.remove("invalid");
     length.classList.add("valid");
   } else {
@@ -97,6 +103,7 @@ function validateForm() {
     return false;
   }
 }
+
 async function createNewUser(event) {
 
     event.preventDefault();
@@ -114,10 +121,10 @@ async function createNewUser(event) {
 
     if (data.password != "" && data.password1 != "" && data.firstName != "" && data.email != "" && data.username != "") {
       
-      //clear errors
+      // Clear errors
       $(".incorrect").remove();
 
-      //password validation
+      // Password validation
       var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
       var pwtest = re.test(data.password);
       if (pwtest == false) {
@@ -127,7 +134,7 @@ async function createNewUser(event) {
         $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Passwords do not match.").insertAfter("#psw1");
       }
 
-      //username validation
+      // Username validation
       var re2 = /^[a-z0-9]+$/i
       var usernametest = re2.test(data.username)
       console.log(usernametest)
@@ -135,7 +142,7 @@ async function createNewUser(event) {
         $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Username can only contain letters and numbers.").insertAfter("#username");
       }
 
-      //email validiation
+      // Email validiation
       var emailre = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
       var emailtest = emailre.test(data.email)
       if (emailtest == false) {
