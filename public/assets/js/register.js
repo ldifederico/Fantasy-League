@@ -132,7 +132,7 @@ async function createNewUser(event) {
       }
       else if (data.password1 !== data.password) {
         $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Passwords do not match.").insertAfter("#psw1");
-      }
+      };
 
       // Username validation
       var re2 = /^[a-z0-9]+$/i
@@ -140,19 +140,21 @@ async function createNewUser(event) {
       console.log(usernametest)
       if (usernametest == false) {
         $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Username can only contain letters and numbers.").insertAfter("#username");
-      }
+      };
 
       // Email validiation
       var emailre = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
       var emailtest = emailre.test(data.email)
       if (emailtest == false) {
         $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Email address is incorrect.").insertAfter("#email");
-      }
-    
+      };
+
+      data.errorCount = $(".incorrect").length
+      
       let response = await $.ajax({
-        url: "/register",
-        method: "POST",
-        data: data,
+          url: "/register",
+          method: "POST",
+          data: data,
       });
     
       if (response.user == "User exists") {

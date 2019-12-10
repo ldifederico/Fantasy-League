@@ -206,21 +206,21 @@ app.post("/register", async function(req,res) {
     let existEmail = await db.query(`SELECT email FROM user WHERE email = '${req.body.email}'`);
     if (existUser[0] !== undefined){
         response.user = "User exists"
-    }
+    };
     if (existEmail[0] !== undefined) {
         response.email = "Email exists"
-    }
-    console.log(Object.keys(response).length)
-    if (Object.keys(response).length == 0) {
+    };
+    console.log(Object.keys(response).length);
+    if (Object.keys(response).length == 0 && req.body.errorCount == 0) {
         console.log("here")
         await db.query(`INSERT INTO user (firstName, lastName, email, username, password, points, deduction_notification) VALUES ('${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.username}', '${sha256(req.body.password)}', 0, 0)`);
         let useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}'`);
         userid = useridObj[0].id;
         response.success = "Success"
         response.userID = userid
-    }
-    console.log(response)
-    res.send(response)
+    };
+    console.log(response);
+    res.send(response);
 });
 
 app.post("/group", async function (req, res) {
