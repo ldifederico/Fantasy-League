@@ -137,7 +137,7 @@ async function loadFixtures(gameWeek) {
                         placeholder: "Bet Amount",
                         style: "width: 100px; border-radius: 5px; margin-left: auto; margin-right: auto"
                     }).appendTo(".fixRow"+i);
-                    for ([a, bet] of ["Home", "Away", "Draw"].entries()){
+                    for ([a, bet] of ["Home", "Draw", "Away"].entries()){
                         $("<button>").attr({
                             class: `btn btn-outline-dark btn-sm betButton ${bet + i}`,
                             betID: i,

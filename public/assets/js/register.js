@@ -148,9 +148,9 @@ async function createNewUser(event) {
           $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Username is already taken.").insertAfter("#username");
       };
       if (response.email == "Email exists") {
-        $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Account with this email already exists.").insertAfter("#email");
+          $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Account with this email already exists.").insertAfter("#email");
       };
-      if (response.success == "Success") {
+      if ($(".incorrect").length == 0) {
         localStorage.setItem("userID", response.userID);
         window.location.href = "/main";
       };
