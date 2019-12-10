@@ -108,29 +108,57 @@ async function createNewUser(event) {
     console.log(data.password);
     console.log(data.password1);
 
-    if (data.password != "" && data.firstName != "" && data.email != "" && data.username != "" && data.password == data.password1) {
+    if (data.password != "" && data.password1 != "" && data.firstName != "" && data.email != "" && data.username != "") {
+      
+      //clear errors
+      $(".incorrect").remove();
 
+      //password validation
+      var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+      var pwtest = re.test(data.password);
+      if (pwtest == false) {
+        $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px", "max-width": "400px"}).text("Password must be at least 6 characters and contain a lower-case, upper-case, number, and special character.").insertAfter("#psw1");
+      }
+      else if (data.password1 !== data.password) {
+        $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Passwords do not match.").insertAfter("#psw1");
+      }
+
+      //username validation
+      var re2 = /^[a-z0-9]+$/i
+      var usernametest = re2.test(data.username)
+      console.log(usernametest)
+      if (usernametest == false) {
+        $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Username can only contain letters and numbers.").insertAfter("#username");
+      }
+
+      //email validiation
+      var emailre = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+      var emailtest = emailre.test(data.email)
+      if (emailtest == false) {
+        $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Email address is incorrect.").insertAfter("#email");
+      }
+    
       let response = await $.ajax({
         url: "/register",
         method: "POST",
         data: data,
-    });
-
-    if (response.text == "User exists") {
-        if($("#exists")[0] == null) {
-          $("#incorrect").remove();
-            $("<div>").attr("id","incorrect").css('color', 'red').addClass("mt-3").text("Account with that username/email already exists.").appendTo("#registerdiv");
-        }
+      });
+    
+      if (response.user == "User exists") {
+          $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Username is already taken.").insertAfter("#username");
+      };
+      if (response.email == "Email exists") {
+        $("<div>").addClass("mb-n2 mt-1 incorrect").css({'color': 'red', "font-size": "14px"}).text("Account with this email already exists.").insertAfter("#email");
+      };
+      if (response.success == "Success") {
+        localStorage.setItem("userID", response.userID);
+        window.location.href = "/main";
+      };
     }
     else {
-      localStorage.setItem("userID",response.text);
-      window.location.href = "/main";
+      $(".incorrect").remove();
+      $("<div>").css({'color': 'red', "max-width": "400px"}).addClass("mt-3 incorrect").text("Please enter matching passwords or check that input field meets specifications").appendTo("#registerdiv");
     };
-    }
-    else{
-      $("#incorrect").remove();
-      $("<div>").attr("id","incorrect").css('color', 'red').addClass("mt-3").text("Please enter matching passwords or check that input field meets specifications").appendTo("#registerdiv");
-    } 
 };
 
 $("#registerbtn").click(createNewUser);

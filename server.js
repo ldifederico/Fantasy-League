@@ -201,16 +201,26 @@ app.post("/profile", async function(req,res) {
 });
 
 app.post("/register", async function(req,res) {
-    let existUser = await db.query(`SELECT * FROM user WHERE username = '${req.body.username}' OR email = '${req.body.email}'`);
+    var response = {};
+    let existUser = await db.query(`SELECT * FROM user WHERE username = '${req.body.username}'`);
+    let existEmail = await db.query(`SELECT email FROM user WHERE email = '${req.body.email}'`);
     if (existUser[0] !== undefined){
-        res.send({text: "User exists"})
+        response.user = "User exists"
     }
-    else {
+    if (existEmail[0] !== undefined) {
+        response.email = "Email exists"
+    }
+    console.log(Object.keys(response).length)
+    if (Object.keys(response).length == 0) {
+        console.log("here")
         await db.query(`INSERT INTO user (firstName, lastName, email, username, password, points, deduction_notification) VALUES ('${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.username}', '${sha256(req.body.password)}', 0, 0)`);
         let useridObj = await db.query(`SELECT id FROM user WHERE username = '${req.body.username}'`);
         userid = useridObj[0].id;
-        res.send({text: userid});
-    };
+        response.success = "Success"
+        response.userID = userid
+    }
+    console.log(response)
+    res.send(response)
 });
 
 app.post("/group", async function (req, res) {
