@@ -147,7 +147,7 @@ async function getTeam() {
     }
     catch {
         data = "no response";
-    }
+    };
     if (data == "no response") {
         $("#content").empty();
         $("#header").text("Server is busy. Please try again later.").css("font-size", "18px");
@@ -155,9 +155,13 @@ async function getTeam() {
     else {
         apiTeamData = data.api.teams;
         var teamData
+        console.log(teamName)
         for (currentTeam of apiTeamData) {
-            if (currentTeam.name.toLowerCase() == teamName) {teamData = currentTeam}
-        }
+            console.log(currentTeam)
+            if (currentTeam.name.toLowerCase() == teamName) {
+                teamData = currentTeam
+            }
+        };
         if (teamData !== undefined) {
             try {
                 var team = teams.filter(obj => {
