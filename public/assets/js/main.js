@@ -195,7 +195,7 @@ async function loadCompany() {
         for ([index, user] of company.group.entries()) {
             i = index + 1;
             if (user.username == company.username[0].username) {
-                $("<tr>").addClass(`row${i} useritemm`).attr("username", user.username).css({"color": "white", "background-color": "#333a40"}).appendTo(".companyTable");
+                $("<tr>").addClass(`row${i} useritem`).attr("username", user.username).css({"color": "white", "background-color": "#333a40"}).appendTo(".companyTable");
             } 
             else {
                 $("<tr>").addClass(`row${i} useritem`).attr("username", user.username).appendTo(".companyTable");
