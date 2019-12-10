@@ -294,7 +294,6 @@ async function pointDeductions() {
 };
 
 async function searchCompany() {
-    $(".companyDisplay").attr("style", "display: none")
     if ($(".joinGroup")[0].value !== "") {
         groupName = $(".joinGroup")[0].value
     }
@@ -330,12 +329,11 @@ async function searchCompany() {
         updatePoints();
         $("#myModal").modal("toggle");
         $("#modalTitle").text(`Successfully joined ${$(this).attr("companyName")}`);
-        $("#modalMessage").text(`You haved joined ${$(this).attr("companyName")} and have ${response.points} points. Spend them wisely!`);
+        $("#modalMessage").text(`You haved joined ${$(this).attr("companyName")} and have ${response.points} points. Use them wisely!`);
     });
 };
 
 async function createCompany() {
-    $(".companyDisplay").attr("style", "display: none")
     if ($(".nameCompanyGroup")[0].value !== "") {
         groupName = $(".nameCompanyGroup")[0].value
     }
