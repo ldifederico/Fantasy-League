@@ -278,6 +278,7 @@ async function pointDeductions() {
 };
 
 async function searchCompany() {
+    $(".companyDisplay").attr("style", "display: none")
     if ($(".joinGroup")[0].value !== "") {
         groupName = $(".joinGroup")[0].value
     }
@@ -318,6 +319,7 @@ async function searchCompany() {
 };
 
 async function createCompany() {
+    $(".companyDisplay").attr("style", "display: none")
     if ($(".nameCompanyGroup")[0].value !== "") {
         groupName = $(".nameCompanyGroup")[0].value
     }
