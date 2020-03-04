@@ -1,4 +1,4 @@
-
+var quota
 var settings = {
 	"async": true,
 	"crossDomain": true,
@@ -7,13 +7,37 @@ var settings = {
 	"headers": {
 		"x-rapidapi-host": "api-football-v1.p.rapidapi.com",
 		"x-rapidapi-key": "f01f638c42msh4d70f52d10f6b45p1a4b54jsnc4117f6c2a19"
-	}
+    },
+    "success": function(data, status, xhr) {
+        quota = xhr.getResponseHeader('x-ratelimit-requests-remaining');
+    }
 };
+
+
+async function APIRequest(url) {
+    //Check if Football API has request remaining in daily quota
+    response = await $.post("/quotaCheck");
+    console.log(response);
+    if (response == "Confirmed") {
+        //Database confirms there are API requests remaining in today's quota. Executing API request
+        settings.url = url;
+        APIResult = await $.get(settings);
+        console.log(quota)
+        //Sending server updated quota information
+        $.post({
+            url: "/updateQuota",
+            data: {"quota": quota}
+        });
+        return APIResult;
+    }
+    else if (response == "Unconfirmd") {
+        return "Quota used";
+    };
+}
 
 async function loadStandings() {
     try {
-        settings.url = `https://api-football-v1.p.rapidapi.com/v2/leagueTable/524`;
-        let standings = await $.get(settings);
+        let standings = await APIRequest("https://api-football-v1.p.rapidapi.com/v2/leagueTable/524")
         for ([index,team] of standings.api.standings[0].entries()){
             i = index + 1
             $("<tr>").addClass("standRow"+i).appendTo(".leagueBody");
@@ -33,9 +57,9 @@ async function loadStandings() {
     catch {
         $("[flag=loadingStatus]").remove();
         $("<img>").attr("src", "/assets/media/exhausted.png").css({"height": "50px", "width": "50px", "margin-left": "auto", "margin-right": "auto"}).insertAfter(".epl");
-        $("<p>").text("Server busy. Please try again in a few minutes.").insertAfter(".epl");
+        $("<p>").text("Daily API quota has been exhausted, please try again tomorrow.").insertAfter(".epl");
         $("<img>").attr("src", "/assets/media/exhausted.png").css({"height": "50px", "width": "50px", "margin-left": "auto", "margin-right": "auto"}).insertAfter(".fixturesTitle");
-        $("<p>").text("Server busy. Please try again in a few minutes.").insertAfter(".fixturesTitle");
+        $("<p>").text("Daily API quota has been exhausted, please try again tomorrow.").insertAfter(".fixturesTitle");
     };
 };
 
@@ -63,6 +87,7 @@ async function loadFixtures(gameWeek) {
         if (fixture.round == gameWeek) {weekFixtures.push(fixture)};
     };
 
+    //Load any active user bets from DB
     let userID = ({userID: localStorage.getItem("userID")})
     let betHistory = await $.post({
         url: "/bets",
@@ -70,19 +95,23 @@ async function loadFixtures(gameWeek) {
         data: userID
     });
 
-    apiCalls = weekFixtures.map(fixture =>
-        //remove entire settings object, just need fixtureID passed in
-        settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": `https://api-football-v1.p.rapidapi.com/v2/odds/fixture/${fixture.fixture_id}`,
-            "method": "GET",
-            "headers": {
-                "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-                "x-rapidapi-key": "f01f638c42msh4d70f52d10f6b45p1a4b54jsnc4117f6c2a19"
-            }
-        }
-    );
+    //Load odds from DB
+
+
+
+    // apiCalls = weekFixtures.map(fixture =>
+    //     //remove entire settings object, just need fixtureID passed in
+    //     settings = {
+    //         "async": true,
+    //         "crossDomain": true,
+    //         "url": `https://api-football-v1.p.rapidapi.com/v2/odds/fixture/${fixture.fixture_id}`,
+    //         "method": "GET",
+    //         "headers": {
+    //             "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
+    //             "x-rapidapi-key": "f01f638c42msh4d70f52d10f6b45p1a4b54jsnc4117f6c2a19"
+    //         }
+    //     }
+    // );
 
     try {
         let allFixtureOdds = await Promise.all(apiCalls.map(url =>
@@ -102,7 +131,7 @@ async function loadFixtures(gameWeek) {
                 };
             }
             catch {
-                //Solution when odds not received from API
+                //Standard solution when odds not received from API
                 fixtureOdds[0].odd = 2.55;
                 fixtureOdds[1].odd = 5.10;
                 fixtureOdds[2].odd = 1.20;
@@ -362,11 +391,11 @@ async function createCompany() {
 };
 
 async function mainLoad() {
-    pointDeductions();
-    updatePoints();
+    // pointDeductions();
+    // updatePoints();
     loadStandings();
-    loadCompany();
-    loadFixtures(Date.now());
+    // loadCompany();
+    // loadFixtures(Date.now());
 };
 
 async function verify() {

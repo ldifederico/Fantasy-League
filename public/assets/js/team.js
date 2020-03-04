@@ -165,7 +165,7 @@ async function getTeam() {
         if (teamData !== undefined) {
             try {
                 var team = teams.filter(obj => {
-                    return obj.teamName == teamData.name
+                    return obj.teamName == teamData.name;
                 });
                 $(".club").text(`${teamData.name}`).css("color", team[0].h2);
                 $(".teamLogo").attr("src", teamData.logo).css({"width": "40px", "height": "40px"});
