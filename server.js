@@ -69,20 +69,12 @@ var settings = {
 };
 
 async function APIRequest(url) {
-    //Check if Football API has request remaining in daily quota
-    quotaStatus = await quotaCheck();
-    if (quotaStatus == "Confirmed") {
-        //Database confirms there are API requests remaining in today's quota. Executing API request
-        settings.url = url;
-        APIResult = await axios(settings);
-        console.log(`API Request approved - remaining quota: ${APIResult.headers['x-ratelimit-requests-remaining']}`)
-        //Update quota information in database
-        db.query(`UPDATE quota SET requests_remaining = ${APIResult.headers['x-ratelimit-requests-remaining']}, timestamp = ${getCurrentTimestamp()} WHERE id = 1`)
-        return APIResult;
-    }
-    else if (quotaStatus == "Unconfirmd") {
-        return "Quota used";
-    };
+    settings.url = url;
+    APIResult = await axios(settings);
+    console.log(`API Request executed for ${url}. Remaining quota: ${APIResult.headers['x-ratelimit-requests-remaining']}`);
+    //Update quota information in database
+    db.query(`UPDATE quota SET requests_remaining = ${APIResult.headers['x-ratelimit-requests-remaining']}, timestamp = ${getCurrentTimestamp()} WHERE id = 1`);
+    return APIResult;
 }
 
 var transporter = nodemailer.createTransport({
@@ -274,14 +266,13 @@ app.post("/createGroup", async function(req,res) {
     };
 });
 
-app.post("/loadOdds", async function(req, res) {
-    //Check if database odds need an update (API updates their data daily)
-    let lastUpdateTimestamp = (await db.query(`SELECT last_update_timestamp FROM odds`))[0].last_update_timestamp
-    let currentTimestamp = getCurrentTimestamp()
-    if (currentTimestamp - 86400 > lastUpdateTimestamp) {
-        
+app.post("/loadOdds", async function (req, res) {
+    let oddsData = []
+    for (fixture of req.body.fixtures) {
+        oddsData.push(await db.query(`SELECT * FROM odds WHERE fixture_id = ${fixture.fixture_id}`))
     }
-});
+    res.send(oddsData);
+})
 
 app.post("/bets", async function(req, res) {
     let userBets = await db.query(`SELECT fixture_id, fixture, team, amountPlaced, amountwon, odds, amountwon, fixture_date, score FROM bet WHERE user_Id = ${req.body.userID}`);
@@ -391,16 +382,17 @@ app.post("/leaveCompany", async function (req, res) {
 });
 
 app.post("/quotaCheck", async function (req, res) {
-    res.send(quotaCheck());
+    res.send((await quotaCheck()).toString());
 })
 
 app.post("/updateQuota", async function (req, res) {
-    db.query(`UPDATE quota SET requests_remaining = ${req.body.quota}, timestamp = ${getCurrentTimestamp()} WHERE id = 1`)
+    await db.query(`UPDATE quota SET requests_remaining = ${req.body.quota}, timestamp = ${getCurrentTimestamp()} WHERE id = 1`)
+    res.send("Quota Updated")
 })
 
 async function startingPoints() {
-    settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
-    let allFixtures = await axios(settings);
+    console.log("Calculating starting points for new user")
+    let allFixtures = await APIRequest("https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524")
     var futureFixturesCount = 0;
     date_timestamp = Date.now().toString();
     date_timestamp = date_timestamp.slice(0,-3);
@@ -414,28 +406,105 @@ async function startingPoints() {
     return points;
 };
 
-async function checkGames() {
-    //Run on server start and every 5 minutes thereafter to update database with final game scores, bet outcomes, etc..
+//Stores all functions/checks that need to be run daily
+async function dailyUpdate() {
+    //QUOTA CHECK AND THEN CONSOLE LOG THE LAST UPDATE IF QUOTA IS EMPTY
+    var lastUpdateStamp = await db.query(`SELECT last_update_stamp FROM info WHERE id = 1`);
+    let currentQuota = await quotaCheck();
+    if (currentQuota > 0) {
+        console.log(`Checking if database requires daily update...`);
+        var currentTimestamp = getCurrentTimestamp();
+        //Check if it's been 24 hours since last daily update
+        if (currentTimestamp - lastUpdateStamp[0].last_update_stamp > 86400) {
+            console.log(`Last update performed at ${timestampToDate(lastUpdateStamp[0].last_update_stamp)}, executing Daily Update...`);
+            //API quota has room, set last update stamp in DB and execute Daily Update functions
+
+            let APIdata = await APIRequest("https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524");
+
+            await pointPenalty(APIdata, currentTimestamp);
+            await checkGames(APIdata, currentTimestamp, "Daily");
+            await oddsUpdate();
+            //Update Database with new update timestamp
+            db.query(`UPDATE info SET last_update_stamp = ${currentTimestamp} WHERE id = 1`);
+            console.log(`Daily Update completed as of ${timestampToDate(getCurrentTimestamp())}.`)
+        }
+        else {
+            console.log(`Last Daily Update performed at ${timestampToDate(lastUpdateStamp[0].last_update_stamp)}, Daily Update is not required.`);
+        };
+    }
+    else if (currentQuota == 0) {
+        console.log(`Unable to run Daily Update function due to insufficient API Quota. Last update performed on ${timestampToDate(lastUpdateStamp)}`);
+    };
+};
+
+async function pointPenalty(APIdata, currentTimestamp) {
+    var fixtures = APIdata.data.api.fixtures
+    var storedGameWeek = (await db.query(`SELECT game_week FROM info WHERE id = 1`))[0].game_week;
+    //loop to find current game week
+    for (fixture of fixtures) {
+        if (fixture.event_timestamp > currentTimestamp) {
+            currentGameWeek = fixture.round.replace(/[^0-9]/g,'');
+            break;
+        };
+    };
+    // Check if current game week is newer than stored game week
+    if (currentGameWeek > storedGameWeek) {
+        //Calculate points penalty from the previous week
+        console.log("Daily Udate - Gameweek/point penalty: New game week! Executing point pentalty function")
+        let userBaseInCompanies = await db.query(`SELECT id FROM user WHERE companyId IS NOT NULL`);
+        let bettingUsers = await db.query(`SELECT user_Id FROM bet WHERE game_week = '${storedGameWeek}'`);
+        bettingUserArray = [];
+        for (user of bettingUsers) {
+            bettingUserArray.push(user.user_Id);
+        };
+        var nonBettingUsers = [];
+        uniqueBettingUserArray = [...new Set(bettingUserArray)];
+        for (user of userBaseInCompanies) {
+            var match = false;
+            for (bettingUser of uniqueBettingUserArray) {
+                if (bettingUser == user.id) {
+                    match = true;
+                };
+            };
+            if (match == false){
+                nonBettingUsers.push(user.id);
+            };
+        };
+        if (nonBettingUsers.length > 0) {
+            var deduction = 25;
+            let result = await db.query(`UPDATE user SET points = points - ${deduction} WHERE id in (${nonBettingUsers})`);
+            let result2 = await db.query(`UPDATE user SET deduction_notification = deduction_notification + ${deduction} WHERE id in (${nonBettingUsers})`);
+            console.log(`Daily Update - Gameweek/point penalty: ${nonBettingUsers.length} users had ${deduction} points deducted due to weekly inactviity.`)
+        }
+        else {
+            console.log("Daily Update - Gameweek/point penalty: No users have been penalized this week.")
+        }
+        //update game week in database
+        db.query(`UPDATE info SET game_week = ${currentGameWeek}`);
+    }
+    else {
+        console.log("Daily Update - Gameweek/point penalty: Still the same gameweek, no updates requited")
+    };
+};
+
+async function checkGames(APIdata, currentTimestamp, frequency) {
     var incompleteGames = [];
     var uniqueGames = [];
     var completedGames = [];
-    let games = await db.query("SELECT fixture_id FROM bet WHERE winningTeam IS NULL ");
-    if (games[0].fixture_id == !null) {
-        for (i = 0; i < games.length; i++) {
-            incompleteGames.push(games[i].fixture_id);
-        };
-        set = new Set(incompleteGames);
-        unique = [...set];
-        for (i = 0; i < unique.length; i++) {
-            uniqueGames.push({fixtureID: unique[i], result: ""}); 
-        };
-        data = await APIRequest("https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524")
-        if (data == "Quota used") {
-            console.log("Cannot update game outcomes (checkGames function), API quota has been exhauseted")
-        }
-        else {
-            console.log("Running checkGames function to update game outcames, API quota has room")
-            seasonFixtures = data.data.api.fixtures;
+    let games = await db.query("SELECT DISTINCT fixture_id, event_timestamp FROM bet WHERE winningTeam IS NULL ORDER BY event_timestamp ASC");
+    //Test if the oldest unfinished game has been completed (Start time + 2 hours), if so then make API call to update database
+    if (games.length !== 0 && games[0].event_timestamp + 7200 < currentTimestamp) {
+        console.log(`${frequency} Update - Check games: Database requires an update with game data from API.`);
+        if (games[0].fixture_id == !null) {
+            for (i = 0; i < games.length; i++) {
+                incompleteGames.push(games[i].fixture_id);
+            };
+            set = new Set(incompleteGames);
+            unique = [...set];
+            for (i = 0; i < unique.length; i++) {
+                uniqueGames.push({fixtureID: unique[i], result: ""}); 
+            };
+            let seasonFixtures = APIdata.data.api.fixtures;
             for (game of uniqueGames) {
                 for (fixture of seasonFixtures) {
                     if (game.fixtureID == fixture.fixture_id && fixture.status == "Match Finished") {
@@ -454,86 +523,47 @@ async function checkGames() {
                         await db.query(`UPDATE bet SET amountwon = amountPlaced * odds WHERE id = ${bet_id[a].id} AND winningTeam = team`);
                         await db.query(`UPDATE bet SET amountwon = 0 WHERE id = ${bet_id[a].id} AND winningTeam != team`);
                     };
-                    tempo = await db.query(`SELECT user_id, SUM(amountwon) FROM bet WHERE fixture_id = ${game.fixtureID} GROUP BY user_id;`);
+                    let tempo = await db.query(`SELECT user_id, SUM(amountwon) FROM bet WHERE fixture_id = ${game.fixtureID} GROUP BY user_id;`);
                     for(b = 0; b < tempo.length; b++){
                         await db.query(`UPDATE user SET points = points + ${tempo[b]['SUM(amountwon)']} WHERE id = ${tempo[b].user_id}`);
                     };
                 };
             };
-        }
-    };
-};
-
-async function dailyUpdate() {
-    //Update game week with new game fixtures (daily)
-    var nowStamp = Date.now().toString();
-    nowStamp = nowStamp.slice(0,-3);
-    var storedGameWeek = await db.query(`SELECT game_week FROM info WHERE id = 1`);
-    storedGameWeek = storedGameWeek[0].game_week;
-    var lastUpdateStamp = await db.query(`SELECT last_update_stamp FROM info WHERE id = 1`);
-    //Test if it's been 24 hours since last check to see if game week changed
-    if (nowStamp - 86400 > lastUpdateStamp[0].last_update_stamp) {
-        console.log("time to update")
-        // Has been 24 hours, set new last_update_stamp
-        db.query(`UPDATE info SET last_update_stamp = ${nowStamp} WHERE id = 1`)
-        //pull new game week data from API
-        
-        let data = await APIRequest("https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524")
-        if (data == "Quota used") {
-            console.log("Cannot update game outcomes (checkGames function), API quota has been exhauseted")
-        }
-        else {
-            fixtures = data.data.api.fixtures;
-            //loop to find current game week
-            for (fixture of fixtures) {
-                if (fixture.event_timestamp > nowStamp) {
-                    currentGameWeek = fixture.round.replace(/[^0-9]/g,'');
-                    break;
-                };
-            };
-            // Check if current game week is newer than stored game week
-            if (currentGameWeek > storedGameWeek) {
-                //execute points function for previous game week
-                pointPenalty(storedGameWeek);
-                //update game week in database
-                db.query(`UPDATE info SET game_week = ${currentGameWeek}`);
-            };
         };
+        console.log(`${frequency} Update - Check games: Updated ${completedGames.length} games in the database.`)
     }
     else {
-        console.log("already checked for new game week in the last 24 hours");
-    };
+        console.log(`${frequency} Update - Check games: Database is up to date with all game data from API.`)
+    }
 };
 
-async function pointPenalty(pastGameWeek) {
-    console.log("penalty function")
-    let userBaseInCompanies = await db.query(`SELECT id FROM user WHERE companyId IS NOT NULL`);
-    let bettingUsers = await db.query(`SELECT user_Id FROM bet WHERE game_week = '${pastGameWeek}'`);
-    bettingUserArray = [];
-    for (user of bettingUsers) {
-        bettingUserArray.push(user.user_Id);
-    };
-    var nonBettingUsers = [];
-    uniqueBettingUserArray = [...new Set(bettingUserArray)];
-    for (user of userBaseInCompanies) {
-        var match = false;
-        for (bettingUser of uniqueBettingUserArray) {
-            if (bettingUser == user.id) {
-                match = true;
+async function oddsUpdate() {
+    //(API updates their data daily)
+    let oddsAPIdata = (await APIRequest("https://api-football-v1.p.rapidapi.com/v2/odds/league/524")).data.api.odds;
+    let oddsDBdata = await db.query(`SELECT fixture_id FROM odds`);
+    var add = 0, update = 0, error = 0, match
+    for (fixtureAPI of oddsAPIdata) {
+        match = false;
+        //Try Catch for when the API does not provide complete/any odds
+        try {
+            for (fixtureDB of oddsDBdata) {
+                if (fixtureDB.fixture_id == fixtureAPI.fixture.fixture_id) {
+                    await db.query(`UPDATE odds SET home = ${fixtureAPI.bookmakers[0].bets[0].values[0].odd}, draw = ${fixtureAPI.bookmakers[0].bets[0].values[1].odd} , away = ${fixtureAPI.bookmakers[0].bets[0].values[2].odd} WHERE fixture_Id = ${fixtureDB.fixture_id}`);
+                    match = true;
+                    add++;
+                    //BREAK??
+                };
             };
-        };
-        if (match == false){
-            nonBettingUsers.push(user.id);
+            if (match == false) {
+                await db.query(`INSERT INTO odds (fixture_id, home, draw, away) VALUES (${fixtureAPI.fixture.fixture_id}, ${fixtureAPI.bookmakers[0].bets[0].values[0].odd}, ${fixtureAPI.bookmakers[0].bets[0].values[1].odd}, ${fixtureAPI.bookmakers[0].bets[0].values[2].odd})`);;
+                match++;
+            };
+        }
+        catch {
+            error++;
         };
     };
-    var deduction = 25;
-    console.log(userBaseInCompanies)
-    console.log(bettingUsers)
-    console.log(nonBettingUsers)
-    let result = await db.query(`UPDATE user SET points = points - ${deduction} WHERE id in (${nonBettingUsers})`);
-    console.log(result)
-    let result2 = await db.query(`UPDATE user SET deduction_notification = deduction_notification + ${deduction} WHERE id in (${nonBettingUsers})`);
-    console.log(result2)
+    console.log(`Daily Update - Odds Update: Added ${add} odds, Updated ${update} odds, Errors with ${error} odds.`)
 };
 
 //Handy functions
@@ -541,9 +571,23 @@ function getCurrentTimestamp() {
     var d = new Date();
     var datum = Date.parse(d);
     return datum/1000;
+};
+
+function timestampToDate(timestamp) {
+    var a = new Date(timestamp * 1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+    return time;
 }
 
 async function quotaCheck() {
+    console.log("Executing Quota Check...")
     //Calculate timestamp of last quota reset (11 AM daily)
     var lastQuotaReset = new Date();
     lastQuotaReset.setHours(11,0,0,0);
@@ -565,28 +609,40 @@ async function quotaCheck() {
 
     if (lastRequestTimestamp[0].timestamp < lastQuotaResetTimestamp) {
         //Quota has reset since last request, sending client confirmation to send API request
-        console.log("Quota has reset since last request, sending client confirmation to send API request")
-        return "Confirmed"
+        console.log(`Quota has reset since last request. Current API Quota is 100.`)
+        return 100
     }
     else {
         //Quote has not reset, still within today's quota. Determine if there is remaining requests
-        quota = await db.query(`SELECT requests_remaining FROM quota`);
+        quota = await db.query(`SELECT requests_remaining FROM quota `);
         if (quota[0].requests_remaining > 0) {
             //Room for more requests, sending client confirmation to send API request
-            console.log("Room for more requests, sending client confirmation to send API request")
-            return "Confirmed"
+            console.log(`API Quota has room for more requests. Current API Quota is ${quota[0].requests_remaining}.`)
+            return quota[0].requests_remaining
         }
         else {
             //Today's quota has been fully used, sending client rejection to send API request
-            console.log("Today's quota has been fully used, sending client rejection to send API request")
-            return "Unconfirmed"
+            console.log("Today's API Quota has been fully used.")
+            return quota[0].requests_remaining
         };
     };
 }
 
-
 //Initial and 5-min interval database update for final game scores
 dailyUpdate();
 setInterval(dailyUpdate, 86400000);
-checkGames();
-setInterval(checkGames, 300000)
+
+//Instead of running an API call every 5 minutes, store when games will be completed and check every 5 minutes if any games have been completed, then run API calls
+setInterval( async () => {
+    //Run quota check before CheckGames function
+    let currentQuota = await quotaCheck();
+    if (currentQuota > 0) {
+        let APIdata = await APIRequest("https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524");
+        let currentTimestamp = getCurrentTimestamp();
+        checkGames(APIdata, currentTimestamp, "5 Minute Interval");
+    }
+    else if (currentQuota == 0) {
+        console.log(`Unable to run Game Check (5 min interval) function due to insufficient API Quota.`);
+    };
+}, 300000);
+

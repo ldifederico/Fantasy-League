@@ -26,7 +26,7 @@ async function loadHistory() {
             $("<td>").text(bet.fixture_date).appendTo("#row"+i);
             $("<td>").text(bet.team).appendTo("#row"+i);
             $("<td>").text(bet.amountPlaced).appendTo("#row"+i);
-            $("<td>").text(bet.odds).appendTo("#row"+i);
+            $("<td>").text((Math.round(bet.odds * 100) / 100).toFixed(2)).appendTo("#row"+i);
             if (bet.amountwon > 0) {colour = "green"}
             else {colour = "red"};
             $("<td>").text(bet.amountwon).css("color",colour).appendTo("#row"+i);

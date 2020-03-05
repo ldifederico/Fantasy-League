@@ -16,21 +16,20 @@ var settings = {
 
 async function APIRequest(url) {
     //Check if Football API has request remaining in daily quota
-    response = await $.post("/quotaCheck");
-    console.log(response);
-    if (response == "Confirmed") {
+    currentQuota = await $.post("/quotaCheck");
+    if (currentQuota > 0) {
         //Database confirms there are API requests remaining in today's quota. Executing API request
         settings.url = url;
         APIResult = await $.get(settings);
-        console.log(quota)
         //Sending server updated quota information
-        $.post({
+        await $.ajax({
+            method: "POST",
             url: "/updateQuota",
             data: {"quota": quota}
         });
         return APIResult;
     }
-    else if (response == "Unconfirmd") {
+    else if (currentQuota == 0) {
         return "Quota used";
     };
 }
@@ -69,9 +68,8 @@ async function loadFixtures(gameWeek) {
         flag: "loadingStatus"
     }).insertAfter(".fixturesTitle");
     $("<p>").attr("flag","loadingStatus").text("Loading fixtures...").insertAfter(".fixturesTitle");
-    settings.url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524";
-    data = await $.get(settings);
-    fixtures = data.api.fixtures;
+    let fixtureData = await APIRequest("https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524")
+    fixtures = fixtureData.api.fixtures;
     if (!isNaN(gameWeek)) {
         date_timestamp = gameWeek.toString();
         date_timestamp = date_timestamp.slice(0,-3);
@@ -91,56 +89,29 @@ async function loadFixtures(gameWeek) {
     let userID = ({userID: localStorage.getItem("userID")})
     let betHistory = await $.post({
         url: "/bets",
-        method: "POST",
         data: userID
     });
 
-    //Load odds from DB
-
-
-
-    // apiCalls = weekFixtures.map(fixture =>
-    //     //remove entire settings object, just need fixtureID passed in
-    //     settings = {
-    //         "async": true,
-    //         "crossDomain": true,
-    //         "url": `https://api-football-v1.p.rapidapi.com/v2/odds/fixture/${fixture.fixture_id}`,
-    //         "method": "GET",
-    //         "headers": {
-    //             "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
-    //             "x-rapidapi-key": "f01f638c42msh4d70f52d10f6b45p1a4b54jsnc4117f6c2a19"
-    //         }
-    //     }
-    // );
-
-    try {
-        let allFixtureOdds = await Promise.all(apiCalls.map(url =>
-            $.get(url)
-        ));
-
+    //Load odds from DB and define standard odds when there is a lapse in API data
+    let oddsData = await $.post({
+        url: "/loadOdds",
+        data: {"fixtures" : weekFixtures}
+    });
+    var standardOdds = [2.55, 5.10, 1.20]
+    
         $("[flag=loadingStatus]").remove();
         $("<h6>").text("Game Week " + gameWeek.replace(/[^0-9]/g,'')).appendTo(".fixtures");
 
         for ([index, fixture] of weekFixtures.entries()) {
             i = index + 1;
-            //odds
-            try {
-                for (odds of allFixtureOdds) {
-                    if (odds.api.odds[0].fixture.fixture_id == fixture.fixture_id) 
-                        {fixtureOdds = odds.api.odds[0].bookmakers[0].bets[0].values};
-                };
-            }
-            catch {
-                //Standard solution when odds not received from API
-                fixtureOdds[0].odd = 2.55;
-                fixtureOdds[1].odd = 5.10;
-                fixtureOdds[2].odd = 1.20;
-            };
 
             $("<div>").addClass(`fixRow${i}`).addClass("container").appendTo(".fixtures")
             
+            //Displaying fixtures and odds on screen
             var betPlaced
             if (fixture.status == "Not Started") {
+                //Display fixture
+                console.log(fixture)
                 $("<p>").addClass("card-text").text(`${fixture.event_date.substring(0,10)}`).appendTo(".fixRow"+i)
                 $("<p>").attr({
                     class: `fixture${i} card-text`,
@@ -160,20 +131,35 @@ async function loadFixtures(gameWeek) {
                 };
                 //Betting input and buttons (show if not bet yet)
                 if (betPlaced == false) {
+                    //Show odds from database. Try Catch because API does not provide full odds data sometimes
                     $("<input>").attr({
                         class: `form-control form-control-sm my-1 placeBet${i}`,
                         type: "text",
                         placeholder: "Bet Amount",
                         style: "width: 100px; border-radius: 5px; margin-left: auto; margin-right: auto"
                     }).appendTo(".fixRow"+i);
-                    for ([a, bet] of ["Home", "Draw", "Away"].entries()){
-                        $("<button>").attr({
-                            class: `btn btn-outline-dark btn-sm betButton ${bet + i}`,
-                            betID: i,
-                            type: "button",
-                            style: "font-size: x-small; margin: 1%; background: #333a40; color: white"
-                        }).text(`${bet}: ${fixtureOdds[a].odd}`).appendTo(".fixRow"+i);
-                    };
+                    try {
+                        for ([a, bet] of ["Home", "Draw", "Away"].entries()){
+                            console.log(`${oddsData[index][0][bet.toLowerCase()]}`)
+                            $("<button>").attr({
+                                class: `btn btn-outline-dark btn-sm betButton ${bet + i}`,
+                                betID: i,
+                                type: "button",
+                                style: "font-size: x-small; margin: 1%; background: #333a40; color: white"
+                            }).text(`${bet}: ${(Math.round(oddsData[index][0][bet.toLowerCase()] * 100) / 100).toFixed(2)}`).appendTo(".fixRow"+i);
+                        };
+                    }
+                    catch {
+                        //Issues with API odds, using standard odds array defined above
+                        for ([a, bet] of ["Home", "Draw", "Away"].entries()){
+                            $("<button>").attr({
+                                class: `btn btn-outline-dark btn-sm betButton ${bet + i}`,
+                                betID: i,
+                                type: "button",
+                                style: "font-size: x-small; margin: 1%; background: #333a40; color: white"
+                            }).text(`${bet}: ${(Math.round(standardOdds[a] * 100) / 100).toFixed(2)}`).appendTo(".fixRow"+i);
+                        };
+                    }
                 }
                 else {
                     //show bet, if placed
@@ -203,12 +189,12 @@ async function loadFixtures(gameWeek) {
             };
         };
         $(".betButton").on("click", placeBet);
-    }
-    catch {
-        $("[flag=loadingStatus]").remove();
-        $("<img>").attr("src", "/assets/media/exhausted.png").css({"height": "50px", "width": "50px", "margin-left": "auto", "margin-right": "auto"}).insertAfter(".fixturesTitle");
-        $("<p>").text("Server busy. Please try again in a few minutes.").insertAfter(".fixturesTitle");
-    };
+
+    //SERVER ISSUES NOTIFICATION if needed
+    //     $("[flag=loadingStatus]").remove();
+    //     $("<img>").attr("src", "/assets/media/exhausted.png").css({"height": "50px", "width": "50px", "margin-left": "auto", "margin-right": "auto"}).insertAfter(".fixturesTitle");
+    //     $("<p>").text("Server busy. Please try again in a few minutes.").insertAfter(".fixturesTitle");
+
 };
 
 async function loadCompany() {
@@ -391,11 +377,11 @@ async function createCompany() {
 };
 
 async function mainLoad() {
-    // pointDeductions();
-    // updatePoints();
+    pointDeductions();
+    updatePoints();
     loadStandings();
-    // loadCompany();
-    // loadFixtures(Date.now());
+    loadCompany();
+    loadFixtures(Date.now());
 };
 
 async function verify() {
@@ -413,7 +399,6 @@ async function verify() {
 };
 
 verify();
-
 
 
 $("#searchSubmit").click( function() {
