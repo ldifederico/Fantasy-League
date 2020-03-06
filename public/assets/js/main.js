@@ -97,6 +97,7 @@ async function loadFixtures(gameWeek) {
         url: "/loadOdds",
         data: {"fixtures" : weekFixtures}
     });
+    console.log(oddsData)
     var standardOdds = [2.55, 5.10, 1.20]
     
         $("[flag=loadingStatus]").remove();
