@@ -35,30 +35,45 @@ async function APIRequest(url) {
 }
 
 async function loadStandings() {
+    let standingsData = await $.get("/getStoredStandings")
+    console.log(standingsData)
+
+
+    // let standings = await $.get("/getStoredStandings")
+
+    //Storing latest standings in database (in case API is down)
+    
+    // if (APIdata == "Quota used") {
+    //     standings = $.get("/getStoredStandings")
+    // }
+    // else {
+
+    // };
+
     try {
-        let standings = await APIRequest("https://api-football-v1.p.rapidapi.com/v2/leagueTable/524")
-        for ([index,team] of standings.api.standings[0].entries()){
+        for ([index,team] of standingsData.entries()){
+            console.log()
             i = index + 1
             $("<tr>").addClass("standRow"+i).appendTo(".leagueBody");
             $("<th>").attr({
                 scope: "row",
                 class: "header"+i,
             }).text(i).appendTo(".standRow"+i)
-            $("<td>").text(team.teamName).appendTo($(".standRow"+i));
-            $("<td>").text(team.all.matchsPlayed).appendTo($(".standRow"+i));
-            $("<td>").text(`${team.all.win}/${team.all.draw}/${team.all.lose}`).appendTo($(".standRow"+i));
-            $("<td>").text(team.all.goalsFor).appendTo($(".standRow"+i));
-            $("<td>").text(team.all.goalsAgainst).appendTo($(".standRow"+i));
-            $("<td>").text(team.goalsDiff).appendTo($(".standRow"+i));
+            $("<td>").text(team.club).appendTo($(".standRow"+i));
+            $("<td>").text(team.played).appendTo($(".standRow"+i));
+            $("<td>").text(`${team.win}/${team.draw}/${team.loss}`).appendTo($(".standRow"+i));
+            $("<td>").text(team.gf).appendTo($(".standRow"+i));
+            $("<td>").text(team.ga).appendTo($(".standRow"+i));
+            $("<td>").text(team.gd).appendTo($(".standRow"+i));
             $("<td>").text(team.points).appendTo($(".standRow"+i));
         };
     }
     catch {
         $("[flag=loadingStatus]").remove();
         $("<img>").attr("src", "/assets/media/exhausted.png").css({"height": "50px", "width": "50px", "margin-left": "auto", "margin-right": "auto"}).insertAfter(".epl");
-        $("<p>").text("Daily API quota has been exhausted, please try again tomorrow.").insertAfter(".epl");
-        $("<img>").attr("src", "/assets/media/exhausted.png").css({"height": "50px", "width": "50px", "margin-left": "auto", "margin-right": "auto"}).insertAfter(".fixturesTitle");
-        $("<p>").text("Daily API quota has been exhausted, please try again tomorrow.").insertAfter(".fixturesTitle");
+        $("<p>").text("Unable to load league standings.").insertAfter(".epl");
+        // $("<img>").attr("src", "/assets/media/exhausted.png").css({"height": "50px", "width": "50px", "margin-left": "auto", "margin-right": "auto"}).insertAfter(".fixturesTitle");
+        // $("<p>").text("Unable to load league standings.").insertAfter(".fixturesTitle");
     };
 };
 
@@ -97,7 +112,6 @@ async function loadFixtures(gameWeek) {
         url: "/loadOdds",
         data: {"fixtures" : weekFixtures}
     });
-    console.log(oddsData)
     var standardOdds = [2.55, 5.10, 1.20]
     
         $("[flag=loadingStatus]").remove();
@@ -112,7 +126,6 @@ async function loadFixtures(gameWeek) {
             var betPlaced
             if (fixture.status == "Not Started") {
                 //Display fixture
-                console.log(fixture)
                 $("<p>").addClass("card-text").text(`${fixture.event_date.substring(0,10)}`).appendTo(".fixRow"+i)
                 $("<p>").attr({
                     class: `fixture${i} card-text`,
@@ -141,7 +154,6 @@ async function loadFixtures(gameWeek) {
                     }).appendTo(".fixRow"+i);
                     try {
                         for ([a, bet] of ["Home", "Draw", "Away"].entries()){
-                            console.log(`${oddsData[index][0][bet.toLowerCase()]}`)
                             $("<button>").attr({
                                 class: `btn btn-outline-dark btn-sm betButton ${bet + i}`,
                                 betID: i,
@@ -163,7 +175,7 @@ async function loadFixtures(gameWeek) {
                     }
                 }
                 else {
-                    //show bet, if placed
+                    //User has placed a bet, so show this instead of odds
                     $("<span>").addClass("rounded-circle").css({"color": "brown", "font-weight": "1000"}).text(betInfo.amountPlaced).appendTo(".fixRow"+i);
                     $("<span>").text("points for").appendTo(".fixRow"+i);
                     $("<span>").addClass("rounded-circle").css({"color": "brown", "font-weight": "1000"}).text(betInfo.team).appendTo(".fixRow"+i);

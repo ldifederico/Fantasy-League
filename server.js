@@ -379,7 +379,7 @@ app.post("/leaveCompany", async function (req, res) {
         };
     }
     else { res.send("incorrect password") };
-});
+})
 
 app.post("/quotaCheck", async function (req, res) {
     res.send((await quotaCheck()).toString());
@@ -388,6 +388,11 @@ app.post("/quotaCheck", async function (req, res) {
 app.post("/updateQuota", async function (req, res) {
     await db.query(`UPDATE quota SET requests_remaining = ${req.body.quota}, timestamp = ${getCurrentTimestamp()} WHERE id = 1`)
     res.send("Quota Updated")
+})
+
+app.get("/getStoredStandings", async function (req, res) {
+    let standingsData = await db.query(`SELECT * FROM standings`);
+    res.send(standingsData);
 })
 
 async function startingPoints() {
@@ -424,6 +429,7 @@ async function dailyUpdate() {
             await pointPenalty(APIdata, currentTimestamp);
             await checkGames(APIdata, currentTimestamp, "Daily");
             await oddsUpdate();
+            await standingsUpdtate();
             //Update Database with new update timestamp
             db.query(`UPDATE info SET last_update_stamp = ${currentTimestamp} WHERE id = 1`);
             console.log(`Daily Update completed as of ${timestampToDate(getCurrentTimestamp())}.`)
@@ -450,40 +456,42 @@ async function pointPenalty(APIdata, currentTimestamp) {
     // Check if current game week is newer than stored game week
     if (currentGameWeek > storedGameWeek) {
         //Calculate points penalty from the previous week
-        console.log("Daily Udate - Gameweek/point penalty: New game week! Executing point pentalty function")
+        console.log("Daily Update - Gameweek/point penalty: New game week! Executing point pentalty function");
         let userBaseInCompanies = await db.query(`SELECT id FROM user WHERE companyId IS NOT NULL`);
-        let bettingUsers = await db.query(`SELECT user_Id FROM bet WHERE game_week = '${storedGameWeek}'`);
-        bettingUserArray = [];
-        for (user of bettingUsers) {
-            bettingUserArray.push(user.user_Id);
-        };
-        var nonBettingUsers = [];
-        uniqueBettingUserArray = [...new Set(bettingUserArray)];
-        for (user of userBaseInCompanies) {
-            var match = false;
-            for (bettingUser of uniqueBettingUserArray) {
-                if (bettingUser == user.id) {
-                    match = true;
+        for (x = storedGameWeek; x < currentGameWeek; x++) {
+            let bettingUsers = await db.query(`SELECT user_Id FROM bet WHERE game_week = '${storedGameWeek}'`);
+            let bettingUserArray = [];
+            for (user of bettingUsers) {
+                bettingUserArray.push(user.user_Id);
+            };
+            var nonBettingUsers = [];
+            uniqueBettingUserArray = [...new Set(bettingUserArray)];
+            for (user of userBaseInCompanies) {
+                var match = false;
+                for (bettingUser of uniqueBettingUserArray) {
+                    if (bettingUser == user.id) {
+                        match = true;
+                    };
+                };
+                if (match == false){
+                    nonBettingUsers.push(user.id);
                 };
             };
-            if (match == false){
-                nonBettingUsers.push(user.id);
+            if (nonBettingUsers.length > 0) {
+                var deduction = 25;
+                await db.query(`UPDATE user SET points = points - ${deduction} WHERE id in (${nonBettingUsers})`);
+                await db.query(`UPDATE user SET deduction_notification = deduction_notification + ${deduction} WHERE id in (${nonBettingUsers})`);
+                console.log(`Daily Update - Gameweek/point penalty: ${nonBettingUsers.length} users had ${deduction} points deducted due to inactivity in game week ${x}.`);
+            }
+            else {
+                console.log(`Daily Update - Gameweek/point penalty: No users have been penalized for game week ${x}.`)
             };
-        };
-        if (nonBettingUsers.length > 0) {
-            var deduction = 25;
-            let result = await db.query(`UPDATE user SET points = points - ${deduction} WHERE id in (${nonBettingUsers})`);
-            let result2 = await db.query(`UPDATE user SET deduction_notification = deduction_notification + ${deduction} WHERE id in (${nonBettingUsers})`);
-            console.log(`Daily Update - Gameweek/point penalty: ${nonBettingUsers.length} users had ${deduction} points deducted due to weekly inactviity.`)
-        }
-        else {
-            console.log("Daily Update - Gameweek/point penalty: No users have been penalized this week.")
         }
         //update game week in database
         db.query(`UPDATE info SET game_week = ${currentGameWeek}`);
     }
     else {
-        console.log("Daily Update - Gameweek/point penalty: Still the same gameweek, no updates requited")
+        console.log("Daily Update - Gameweek/point penalty: The game week has not changed, therefore no updates are required.")
     };
 };
 
@@ -495,7 +503,10 @@ async function checkGames(APIdata, currentTimestamp, frequency) {
     //Test if the oldest unfinished game has been completed (Start time + 2 hours), if so then make API call to update database
     if (games.length !== 0 && games[0].event_timestamp + 7200 < currentTimestamp) {
         console.log(`${frequency} Update - Check games: Database requires an update with game data from API.`);
-        if (games[0].fixture_id == !null) {
+        if (APIData == "Request data") {
+            APIdata = await APIRequest("https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524");
+        };
+        if (games[0].fixture_id !== null) {
             for (i = 0; i < games.length; i++) {
                 incompleteGames.push(games[i].fixture_id);
             };
@@ -511,7 +522,7 @@ async function checkGames(APIdata, currentTimestamp, frequency) {
                         var score = `${fixture.goalsHomeTeam} - ${fixture.goalsAwayTeam}`;
                         if (fixture.goalsHomeTeam > fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.homeTeam.team_name, score: score})}
                         else if (fixture.goalsHomeTeam < fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: fixture.awayTeam.team_name, score: score})}
-                        else if (fixture.goalsHomeTeam = fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: "Draw", score: score})};
+                        else if (fixture.goalsHomeTeam == fixture.goalsAwayTeam) {completedGames.push({fixtureID: game.fixtureID, result: "Draw", score: score})};
                     };  
                 };
             };
@@ -566,6 +577,22 @@ async function oddsUpdate() {
     console.log(`Daily Update - Odds Update: Added ${add} odds, Updated ${update} odds, Errors with ${error} odds.`)
 };
 
+async function standingsUpdtate() {
+    let standings = (await APIRequest("https://api-football-v1.p.rapidapi.com/v2/leagueTable/524")).data.api.standings[0];
+    if (standings.length > 0) {
+        //New data is available, remove old data and insert new data in database
+        await db.query(`TRUNCATE TABLE standings`);
+        for (team of standings) {
+            await db.query(`INSERT INTO standings (ranking, club, played, win, draw, loss, ga, gf, gd, points) 
+            VALUES (${team.rank}, "${team.teamName}", ${team.all.matchsPlayed}, ${team.all.win}, ${team.all.draw}, ${team.all.lose}, ${team.all.goalsAgainst}, ${team.all.goalsFor}, ${team.goalsDiff}, ${team.points})`);
+        };
+        console.log(`Daily Update - Standings Update: Updated EPL standings in the database.`)
+    }
+    else {
+        console.log(`Daily Update - Standings Update: Unable to update EPL standings in databse due to API error.`)
+    };
+}
+
 //Handy functions
 function getCurrentTimestamp() {
     var d = new Date();
@@ -600,7 +627,9 @@ async function quotaCheck() {
         //quota reset was yesterday
         lastQuotaReset.setDate(lastQuotaReset.getDate() - 1);
     }
-    console.log(`Last quota reset time was: ${lastQuotaReset}`);
+    let nextQuotaReset = new Date();
+    nextQuotaReset.setHours(11,0,0,0);
+    nextQuotaReset = nextQuotaReset.setDate(lastQuotaReset.getDate() + 1);
     var d2 = Date.parse(lastQuotaReset);
     lastQuotaResetTimestamp = d2/1000;
 
@@ -622,7 +651,7 @@ async function quotaCheck() {
         }
         else {
             //Today's quota has been fully used, sending client rejection to send API request
-            console.log("Today's API Quota has been fully used.")
+            console.log(`Today's API Quota has been fully used. API Quota will reset at ${nextQuotaReset}`)
             return quota[0].requests_remaining
         };
     };
@@ -637,12 +666,11 @@ setInterval( async () => {
     //Run quota check before CheckGames function
     let currentQuota = await quotaCheck();
     if (currentQuota > 0) {
-        let APIdata = await APIRequest("https://api-football-v1.p.rapidapi.com/v2/fixtures/league/524");
         let currentTimestamp = getCurrentTimestamp();
-        checkGames(APIdata, currentTimestamp, "5 Minute Interval");
+        checkGames("Request data", currentTimestamp, "5 Minute Interval");
     }
     else if (currentQuota == 0) {
         console.log(`Unable to run Game Check (5 min interval) function due to insufficient API Quota.`);
     };
-}, 300000);
+}, 30000);
 
