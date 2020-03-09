@@ -552,22 +552,21 @@ async function oddsUpdate() {
     //(API updates their data daily)
     let oddsAPIdata = (await APIRequest("https://api-football-v1.p.rapidapi.com/v2/odds/league/524")).data.api.odds;
     let oddsDBdata = await db.query(`SELECT fixture_id FROM odds`);
-    var add = 0, update = 0, error = 0, match
+    var add = 0, update = 0, error = 0, match = false;
     for (fixtureAPI of oddsAPIdata) {
-        match = false;
         //Try Catch for when the API does not provide complete/any odds
         try {
             for (fixtureDB of oddsDBdata) {
                 if (fixtureDB.fixture_id == fixtureAPI.fixture.fixture_id) {
                     await db.query(`UPDATE odds SET home = ${fixtureAPI.bookmakers[0].bets[0].values[0].odd}, draw = ${fixtureAPI.bookmakers[0].bets[0].values[1].odd} , away = ${fixtureAPI.bookmakers[0].bets[0].values[2].odd} WHERE fixture_Id = ${fixtureDB.fixture_id}`);
                     match = true;
-                    add++;
+                    match++;
                     //BREAK??
                 };
             };
             if (match == false) {
                 await db.query(`INSERT INTO odds (fixture_id, home, draw, away) VALUES (${fixtureAPI.fixture.fixture_id}, ${fixtureAPI.bookmakers[0].bets[0].values[0].odd}, ${fixtureAPI.bookmakers[0].bets[0].values[1].odd}, ${fixtureAPI.bookmakers[0].bets[0].values[2].odd})`);;
-                match++;
+                add++;
             };
         }
         catch {
@@ -672,5 +671,5 @@ setInterval( async () => {
     else if (currentQuota == 0) {
         console.log(`Unable to run Game Check (5 min interval) function due to insufficient API Quota.`);
     };
-}, 30000);
+}, 3000000);
 
